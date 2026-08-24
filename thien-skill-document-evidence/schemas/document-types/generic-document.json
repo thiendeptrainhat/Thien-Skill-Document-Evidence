@@ -1,0 +1,262 @@
+{
+  "$schema": "../common/document-profile.schema.json",
+  "schema_id": "profile.generic-document",
+  "schema_name": "Generic document extraction profile",
+  "document_type": "GENERIC_DOCUMENT",
+  "version": "1.0.0",
+  "jurisdictions": [
+    "JURISDICTION_NEUTRAL"
+  ],
+  "effective_date": null,
+  "extends": null,
+  "required_fields": [
+    "document_title",
+    "document_number",
+    "document_date",
+    "language"
+  ],
+  "optional_fields": [
+    "parties",
+    "reference_ids",
+    "currency",
+    "total_amount",
+    "summary_text",
+    "signature_present",
+    "stamp_present"
+  ],
+  "field_definitions": [
+    {
+      "field_name": "document_title",
+      "field_label": "Document title",
+      "field_group": "document",
+      "data_type": "TEXT",
+      "required": true,
+      "critical": false,
+      "multiple": false,
+      "normalization": [
+        "PRESERVE_RAW",
+        "UNICODE_NFC",
+        "TRIM_OUTER_WHITESPACE"
+      ],
+      "sensitivity": "STANDARD"
+    },
+    {
+      "field_name": "document_number",
+      "field_label": "Document number",
+      "field_group": "reference",
+      "data_type": "IDENTIFIER",
+      "required": true,
+      "critical": true,
+      "multiple": false,
+      "normalization": [
+        "PRESERVE_RAW",
+        "IDENTIFIER_AS_TEXT",
+        "TRIM_OUTER_WHITESPACE"
+      ],
+      "sensitivity": "STANDARD"
+    },
+    {
+      "field_name": "document_date",
+      "field_label": "Document date",
+      "field_group": "date",
+      "data_type": "DATE",
+      "required": true,
+      "critical": true,
+      "multiple": false,
+      "normalization": [
+        "PRESERVE_RAW",
+        "ISO_DATE_WHEN_UNAMBIGUOUS"
+      ],
+      "sensitivity": "STANDARD"
+    },
+    {
+      "field_name": "language",
+      "field_label": "Document language",
+      "field_group": "document",
+      "data_type": "TEXT",
+      "required": true,
+      "critical": false,
+      "multiple": true,
+      "normalization": [
+        "PRESERVE_RAW",
+        "UPPERCASE_CODE_WHEN_SOURCE_CASE_NOT_MEANINGFUL"
+      ],
+      "sensitivity": "STANDARD"
+    },
+    {
+      "field_name": "parties",
+      "field_label": "Named parties",
+      "field_group": "party",
+      "data_type": "LIST",
+      "required": false,
+      "critical": false,
+      "multiple": true,
+      "normalization": [
+        "PRESERVE_RAW",
+        "UNICODE_NFC"
+      ],
+      "sensitivity": "PERSONAL_DATA"
+    },
+    {
+      "field_name": "reference_ids",
+      "field_label": "Reference identifiers",
+      "field_group": "reference",
+      "data_type": "LIST",
+      "required": false,
+      "critical": false,
+      "multiple": true,
+      "normalization": [
+        "PRESERVE_RAW",
+        "IDENTIFIER_AS_TEXT"
+      ],
+      "sensitivity": "STANDARD"
+    },
+    {
+      "field_name": "currency",
+      "field_label": "Currency",
+      "field_group": "amount",
+      "data_type": "TEXT",
+      "required": false,
+      "critical": true,
+      "multiple": false,
+      "normalization": [
+        "PRESERVE_RAW",
+        "ISO_CURRENCY_CODE_WHEN_EXPLICIT"
+      ],
+      "sensitivity": "STANDARD"
+    },
+    {
+      "field_name": "total_amount",
+      "field_label": "Total amount",
+      "field_group": "amount",
+      "data_type": "CURRENCY_AMOUNT",
+      "required": false,
+      "critical": true,
+      "multiple": false,
+      "normalization": [
+        "PRESERVE_RAW",
+        "DECIMAL_CANONICAL_STRING"
+      ],
+      "sensitivity": "FINANCIAL_SENSITIVE"
+    },
+    {
+      "field_name": "summary_text",
+      "field_label": "Source-based summary text",
+      "field_group": "content",
+      "data_type": "TEXT",
+      "required": false,
+      "critical": false,
+      "multiple": false,
+      "normalization": [
+        "PRESERVE_RAW",
+        "UNICODE_NFC"
+      ],
+      "sensitivity": "STANDARD"
+    },
+    {
+      "field_name": "signature_present",
+      "field_label": "Signature presence indicator",
+      "field_group": "execution",
+      "data_type": "BOOLEAN",
+      "required": false,
+      "critical": false,
+      "multiple": false,
+      "normalization": [
+        "PRESERVE_RAW"
+      ],
+      "sensitivity": "PERSONAL_DATA"
+    },
+    {
+      "field_name": "stamp_present",
+      "field_label": "Stamp presence indicator",
+      "field_group": "execution",
+      "data_type": "BOOLEAN",
+      "required": false,
+      "critical": false,
+      "multiple": false,
+      "normalization": [
+        "PRESERVE_RAW"
+      ],
+      "sensitivity": "STANDARD"
+    }
+  ],
+  "line_item_definitions": [],
+  "validation_rules": [
+    {
+      "rule_id": "generic.required-status",
+      "rule_type": "REQUIRED_STATUS",
+      "fields": [
+        "document_title",
+        "document_number",
+        "document_date",
+        "language"
+      ],
+      "severity": "HIGH",
+      "description": "Required fields must have an explicit field status even when no value is readable."
+    },
+    {
+      "rule_id": "generic.identifier-text",
+      "rule_type": "IDENTIFIER_AS_TEXT",
+      "fields": [
+        "document_number",
+        "reference_ids"
+      ],
+      "severity": "HIGH",
+      "description": "Identifiers remain text so leading zeros and source punctuation are preserved."
+    },
+    {
+      "rule_id": "generic.date-ambiguity",
+      "rule_type": "DATE_AMBIGUITY",
+      "fields": [
+        "document_date"
+      ],
+      "severity": "HIGH",
+      "description": "A date is not normalized when locale or order is ambiguous."
+    },
+    {
+      "rule_id": "generic.amount-currency",
+      "rule_type": "CURRENCY_CONSISTENCY",
+      "fields": [
+        "total_amount",
+        "currency"
+      ],
+      "severity": "HIGH",
+      "description": "An amount and its explicit currency are retained as separate linked values."
+    }
+  ],
+  "reconciliation_keys": [
+    {
+      "key_id": "generic.document-number-date",
+      "fields": [
+        "document_number",
+        "document_date"
+      ],
+      "strength": "SECONDARY",
+      "candidate_only": true
+    }
+  ],
+  "human_review_rules": [
+    {
+      "condition": "CRITICAL_FIELD_LOW_OR_UNKNOWN_CONFIDENCE",
+      "field_scope": [
+        "document_number",
+        "document_date",
+        "currency",
+        "total_amount"
+      ],
+      "action": "HUMAN_REVIEW_REQUIRED"
+    },
+    {
+      "condition": "MISSING_OR_TRUNCATED_PAGE",
+      "field_scope": [],
+      "action": "HUMAN_REVIEW_REQUIRED"
+    }
+  ],
+  "claim_boundaries": [
+    "NO_AUTHENTICITY_CONCLUSION",
+    "NO_SIGNATURE_AUTHENTICATION",
+    "NO_LEGAL_OPINION",
+    "NO_FRAUD_CONCLUSION",
+    "NO_CONTROL_EFFECTIVENESS_CONCLUSION"
+  ]
+}

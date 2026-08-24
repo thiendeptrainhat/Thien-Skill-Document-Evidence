@@ -1,0 +1,38 @@
+{
+  "name": "thien-skill-document-evidence",
+  "version": "1.0.0",
+  "description": "Extract, verify, reconcile, and package document evidence with traceable provenance and controlled human review.",
+  "author": {
+    "name": "Tran Ngoc Thien",
+    "email": "thien.8888@gmail.com"
+  },
+  "license": "Tran Ngoc Thien's Skills Commercial Source-Available License 2.0",
+  "keywords": [
+    "document-intelligence",
+    "evidence",
+    "reconciliation",
+    "provenance",
+    "human-review"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Thien Skill — Document Intelligence, Evidence & Reconciliation",
+    "shortDescription": "Extract and reconcile traceable document evidence",
+    "longDescription": "A traceable document-intelligence skill for extraction, page-level evidence, reconciliation, exception handling, controlled review, and reusable evidence packages.",
+    "developerName": "Tran Ngoc Thien",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Build an evidence register from these documents.",
+      "Extract fields and cite page-level evidence.",
+      "Reconcile this document package and flag exceptions."
+    ],
+    "brandColor": "#001838",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/logo.png",
+    "logoDark": "./assets/logo.png"
+  }
+}

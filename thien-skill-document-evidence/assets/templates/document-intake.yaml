@@ -1,0 +1,46 @@
+schema_version: "1.0.0"
+template_id: document-intake
+template_status: DRAFT
+purpose: Capture authorization, scope, document sources, processing constraints, and approval gates before document handling.
+required_context:
+  - task_id
+  - objective
+  - intended_use
+  - authorized_scope
+  - document_sources
+  - data_classification
+  - output_format
+  - output_location
+  - human_approval_requirements
+context_values: {}
+document_sources: []
+expected_document_types: []
+expected_fields: []
+matching_rules: []
+tolerances: []
+processing_controls:
+  original_read_only: true
+  working_copy_required_for_transformation: true
+  execute_embedded_content: false
+  open_embedded_urls: false
+  cloud_processing_allowed: null
+  local_processing_required: null
+  chain_of_custody_required: false
+  redaction_required: null
+  password_bypass_allowed: false
+authorization:
+  status: PENDING_HUMAN_CONFIRMATION
+  authorization_references: []
+  approved_sources: []
+  approved_operations: []
+  prohibited_operations: []
+  approved_audience: []
+missing_value_semantics:
+  - UNKNOWN
+  - NOT_PROVIDED
+  - NOT_APPLICABLE
+  - AMBIGUOUS
+  - PENDING_HUMAN_CONFIRMATION
+assumptions: []
+limitations: []
+unresolved_issues: []

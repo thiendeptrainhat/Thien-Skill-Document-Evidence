@@ -1,0 +1,37 @@
+schema_version: "1.0.0"
+template_id: redaction-log
+log_status: DRAFT
+purpose: Control proposed and executed redactions while preserving the original and requiring verification before disclosure.
+redaction_events: []
+required_record_fields:
+  - redaction_event_id
+  - evidence_id
+  - source_document_id
+  - derivative_document_id
+  - status
+  - method
+  - regions
+  - performed_at
+  - performed_by
+  - approval_status
+  - approval_reference
+  - verification_status
+  - notes
+methods:
+  - FULL_REDACTION
+  - PARTIAL_MASKING
+  - PSEUDONYMIZATION
+  - ROLE_BASED
+  - PAGE_LEVEL
+  - FIELD_LEVEL
+  - NOT_EXECUTED
+controls:
+  modify_original: false
+  visual_overlay_only_accepted_as_redaction: false
+  derivative_required_for_executed_redaction: true
+  copy_and_search_verification_required: true
+  approval_required_before_disclosure: true
+  automatic_external_sharing: false
+qa_status: NOT_TESTED
+human_approval_status: NOT_REQUESTED
+limitations: []

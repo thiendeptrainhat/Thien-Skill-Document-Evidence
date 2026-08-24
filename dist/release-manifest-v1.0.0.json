@@ -1,0 +1,47 @@
+{
+  "artifacts": [
+    {
+      "file_count": 74,
+      "format": "native-openai-plugin",
+      "path": "openai/Thien-Skill-Document-Evidence-OpenAI-v1.0.0.zip",
+      "platform": "openai",
+      "root_layout": "thien-skill-document-evidence/",
+      "sha256": "cb8aa92c2e47d81ef1e75f8cbe0c530e343b6746829dd18a441751de675e2f40",
+      "size_bytes": 3691590
+    },
+    {
+      "file_count": 71,
+      "format": "native-claude-plugin",
+      "path": "claude/Thien-Skill-Document-Evidence-Claude-v1.0.0.zip",
+      "platform": "claude",
+      "root_layout": "thien-skill-document-evidence/",
+      "sha256": "38243aa58c953a3092ac4ce611f6d7315bceaa4dc686131b4e5704de7a83db5c",
+      "size_bytes": 2589344
+    },
+    {
+      "file_count": 65,
+      "format": "universal-agent-skill",
+      "path": "universal/Thien-Skill-Document-Evidence-Universal-v1.0.0.zip",
+      "platform": "universal",
+      "root_layout": "thien-skill-document-evidence/",
+      "sha256": "79ca2f44e11577852363d2ab3f83fe42c0e5f0b641aa4c8a9596ab7525c58624",
+      "size_bytes": 2554162
+    }
+  ],
+  "canonical_file_count": 62,
+  "canonical_sha256": "9d4e2620204873d51bf4a13865ca9e04bdf636cb6bc20a428b427bb302ebb4b6",
+  "canonical_source": "thien-skill-document-evidence",
+  "display_name": "Thien Skill — Document Intelligence, Evidence & Reconciliation",
+  "license": "Tran Ngoc Thien's Skills Commercial Source-Available License 2.0",
+  "parity": {
+    "core_sha256": "fbcb900bbad4414edfa1299ca171a5db653fbbb97159128ba5a183ee2c3d5caf",
+    "path": "PARITY-v1.0.0.json",
+    "status": "PASS"
+  },
+  "release_date": "2026-08-23",
+  "repository_status": "private",
+  "schema_version": 1,
+  "skill_id": "thien-skill-document-evidence",
+  "status": "Testing",
+  "version": "1.0.0"
+}

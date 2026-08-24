@@ -1,0 +1,314 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "document-profile.schema.json",
+  "title": "Document-type extraction profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_name",
+    "document_type",
+    "version",
+    "jurisdictions",
+    "effective_date",
+    "extends",
+    "required_fields",
+    "optional_fields",
+    "field_definitions",
+    "line_item_definitions",
+    "validation_rules",
+    "reconciliation_keys",
+    "human_review_rules",
+    "claim_boundaries"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "../common/document-profile.schema.json"
+    },
+    "schema_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "schema_name": {
+      "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+    },
+    "document_type": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]*$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "jurisdictions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 2
+      }
+    },
+    "effective_date": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "extends": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "required_fields": {
+      "$ref": "#/$defs/fieldNameList"
+    },
+    "optional_fields": {
+      "$ref": "#/$defs/fieldNameList"
+    },
+    "field_definitions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/fieldDefinition"
+      }
+    },
+    "line_item_definitions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/fieldDefinition"
+      }
+    },
+    "validation_rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rule_id",
+          "rule_type",
+          "fields",
+          "severity",
+          "description"
+        ],
+        "properties": {
+          "rule_id": {
+            "$ref": "shared-definitions.schema.json#/$defs/identifier"
+          },
+          "rule_type": {
+            "enum": [
+              "REQUIRED_STATUS",
+              "IDENTIFIER_AS_TEXT",
+              "FORMAT",
+              "DATE_AMBIGUITY",
+              "DATE_ORDER",
+              "ARITHMETIC_SUM",
+              "MULTIPLICATION",
+              "CURRENCY_CONSISTENCY",
+              "AMOUNT_IN_WORDS_COMPARE",
+              "REFERENCE_CONSISTENCY",
+              "PAGE_TOTAL_RECONCILIATION",
+              "SIGNATURE_PRESENCE_ONLY",
+              "CROSS_FIELD_CONSISTENCY"
+            ]
+          },
+          "fields": {
+            "$ref": "#/$defs/fieldNameList"
+          },
+          "severity": {
+            "enum": [
+              "INFO",
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "description": {
+            "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "reconciliation_keys": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key_id",
+          "fields",
+          "strength",
+          "candidate_only"
+        ],
+        "properties": {
+          "key_id": {
+            "$ref": "shared-definitions.schema.json#/$defs/identifier"
+          },
+          "fields": {
+            "$ref": "#/$defs/fieldNameList"
+          },
+          "strength": {
+            "enum": [
+              "PRIMARY",
+              "SECONDARY",
+              "SUPPORTING"
+            ]
+          },
+          "candidate_only": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "human_review_rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "condition",
+          "field_scope",
+          "action"
+        ],
+        "properties": {
+          "condition": {
+            "enum": [
+              "CRITICAL_FIELD_LOW_OR_UNKNOWN_CONFIDENCE",
+              "AMBIGUOUS_DATE_OR_LOCALE",
+              "ENGINE_DISAGREEMENT",
+              "CROSS_FIELD_VALIDATION_FAILURE",
+              "MISSING_OR_TRUNCATED_PAGE",
+              "INCOMPLETE_TABLE",
+              "HANDWRITTEN_CORRECTION",
+              "BANK_ACCOUNT_CONFLICT",
+              "MATERIAL_CLAUSE_OR_OBLIGATION",
+              "UNMATCHED_MATERIAL_AMOUNT"
+            ]
+          },
+          "field_scope": {
+            "$ref": "#/$defs/fieldNameList"
+          },
+          "action": {
+            "const": "HUMAN_REVIEW_REQUIRED"
+          }
+        }
+      }
+    },
+    "claim_boundaries": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "NO_AUTHENTICITY_CONCLUSION",
+          "NO_SIGNATURE_AUTHENTICATION",
+          "NO_LEGAL_OPINION",
+          "NO_FRAUD_CONCLUSION",
+          "NO_CONTROL_EFFECTIVENESS_CONCLUSION"
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "fieldNameList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*$"
+      }
+    },
+    "fieldDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field_name",
+        "field_label",
+        "field_group",
+        "data_type",
+        "required",
+        "critical",
+        "multiple",
+        "normalization",
+        "sensitivity"
+      ],
+      "properties": {
+        "field_name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "field_label": {
+          "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+        },
+        "field_group": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "data_type": {
+          "enum": [
+            "TEXT",
+            "INTEGER",
+            "DECIMAL",
+            "PERCENTAGE",
+            "CURRENCY_AMOUNT",
+            "DATE",
+            "DATETIME",
+            "BOOLEAN",
+            "IDENTIFIER",
+            "BANK_ACCOUNT",
+            "TAX_IDENTIFIER",
+            "PHONE",
+            "EMAIL",
+            "ADDRESS",
+            "QUANTITY",
+            "UNIT_OF_MEASURE",
+            "CLAUSE_TEXT",
+            "REFERENCE",
+            "LIST",
+            "TABLE",
+            "JSON_OBJECT"
+          ]
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "critical": {
+          "type": "boolean"
+        },
+        "multiple": {
+          "type": "boolean"
+        },
+        "normalization": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "PRESERVE_RAW",
+              "IDENTIFIER_AS_TEXT",
+              "UNICODE_NFC",
+              "TRIM_OUTER_WHITESPACE",
+              "COLLAPSE_WHITESPACE",
+              "DECIMAL_CANONICAL_STRING",
+              "ISO_DATE_WHEN_UNAMBIGUOUS",
+              "ISO_CURRENCY_CODE_WHEN_EXPLICIT",
+              "UPPERCASE_CODE_WHEN_SOURCE_CASE_NOT_MEANINGFUL"
+            ]
+          }
+        },
+        "sensitivity": {
+          "enum": [
+            "STANDARD",
+            "PERSONAL_DATA",
+            "FINANCIAL_SENSITIVE",
+            "LEGAL_SENSITIVE",
+            "SECURITY_SENSITIVE"
+          ]
+        }
+      }
+    }
+  }
+}

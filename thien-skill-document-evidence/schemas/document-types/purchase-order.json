@@ -1,0 +1,66 @@
+{
+  "$schema": "../common/document-profile.schema.json",
+  "schema_id": "profile.purchase-order",
+  "schema_name": "Purchase order extraction profile",
+  "document_type": "PURCHASE_ORDER",
+  "version": "1.0.0",
+  "jurisdictions": ["JURISDICTION_NEUTRAL"],
+  "effective_date": null,
+  "extends": "profile.generic-document",
+  "required_fields": ["po_number", "po_date", "buyer_name", "vendor_name", "currency", "total_po_amount"],
+  "optional_fields": ["requisition_number", "quotation_reference", "contract_number", "vendor_code", "vendor_tax_id", "ship_to", "bill_to", "delivery_location", "payment_terms", "delivery_terms", "incoterm", "exchange_rate", "approval_status", "approvers", "cost_center", "project", "plant", "amendment_number", "cancellation_status"],
+  "field_definitions": [
+    {"field_name": "po_number", "field_label": "Purchase order number", "field_group": "header", "data_type": "IDENTIFIER", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT", "TRIM_OUTER_WHITESPACE"], "sensitivity": "STANDARD"},
+    {"field_name": "po_date", "field_label": "Purchase order date", "field_group": "date", "data_type": "DATE", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "ISO_DATE_WHEN_UNAMBIGUOUS"], "sensitivity": "STANDARD"},
+    {"field_name": "buyer_name", "field_label": "Buyer name", "field_group": "buyer", "data_type": "TEXT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC", "TRIM_OUTER_WHITESPACE"], "sensitivity": "STANDARD"},
+    {"field_name": "vendor_name", "field_label": "Vendor name", "field_group": "vendor", "data_type": "TEXT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC", "TRIM_OUTER_WHITESPACE"], "sensitivity": "STANDARD"},
+    {"field_name": "currency", "field_label": "Purchase order currency", "field_group": "amount", "data_type": "TEXT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "ISO_CURRENCY_CODE_WHEN_EXPLICIT"], "sensitivity": "STANDARD"},
+    {"field_name": "total_po_amount", "field_label": "Total purchase order amount", "field_group": "amount", "data_type": "CURRENCY_AMOUNT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "requisition_number", "field_label": "Purchase requisition number", "field_group": "reference", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "quotation_reference", "field_label": "Quotation reference", "field_group": "reference", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "contract_number", "field_label": "Contract number", "field_group": "reference", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "LEGAL_SENSITIVE"},
+    {"field_name": "vendor_code", "field_label": "Vendor code", "field_group": "vendor", "data_type": "IDENTIFIER", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "vendor_tax_id", "field_label": "Vendor tax identifier", "field_group": "vendor", "data_type": "TAX_IDENTIFIER", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "ship_to", "field_label": "Ship-to address", "field_group": "delivery", "data_type": "ADDRESS", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC", "COLLAPSE_WHITESPACE"], "sensitivity": "STANDARD"},
+    {"field_name": "bill_to", "field_label": "Bill-to address", "field_group": "delivery", "data_type": "ADDRESS", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC", "COLLAPSE_WHITESPACE"], "sensitivity": "STANDARD"},
+    {"field_name": "delivery_location", "field_label": "Delivery location", "field_group": "delivery", "data_type": "ADDRESS", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "STANDARD"},
+    {"field_name": "payment_terms", "field_label": "Payment terms", "field_group": "commercial", "data_type": "TEXT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "LEGAL_SENSITIVE"},
+    {"field_name": "delivery_terms", "field_label": "Delivery terms", "field_group": "commercial", "data_type": "TEXT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "LEGAL_SENSITIVE"},
+    {"field_name": "incoterm", "field_label": "Incoterm when stated", "field_group": "commercial", "data_type": "TEXT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UPPERCASE_CODE_WHEN_SOURCE_CASE_NOT_MEANINGFUL"], "sensitivity": "STANDARD"},
+    {"field_name": "exchange_rate", "field_label": "Exchange rate", "field_group": "amount", "data_type": "DECIMAL", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "approval_status", "field_label": "Document approval status", "field_group": "approval", "data_type": "TEXT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "STANDARD"},
+    {"field_name": "approvers", "field_label": "Named approvers", "field_group": "approval", "data_type": "LIST", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "PERSONAL_DATA"},
+    {"field_name": "cost_center", "field_label": "Cost center", "field_group": "accounting", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "project", "field_label": "Project reference", "field_group": "accounting", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "plant", "field_label": "Plant reference", "field_group": "delivery", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "amendment_number", "field_label": "Amendment or version number", "field_group": "version", "data_type": "IDENTIFIER", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "cancellation_status", "field_label": "Cancellation status", "field_group": "version", "data_type": "TEXT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "STANDARD"}
+  ],
+  "line_item_definitions": [
+    {"field_name": "po_line", "field_label": "Purchase order line", "field_group": "line", "data_type": "IDENTIFIER", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "item_code", "field_label": "Item code", "field_group": "line", "data_type": "IDENTIFIER", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "description", "field_label": "Item or service description", "field_group": "line", "data_type": "TEXT", "required": true, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "STANDARD"},
+    {"field_name": "ordered_quantity", "field_label": "Ordered quantity", "field_group": "line", "data_type": "QUANTITY", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "STANDARD"},
+    {"field_name": "unit_of_measure", "field_label": "Unit of measure", "field_group": "line", "data_type": "UNIT_OF_MEASURE", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "TRIM_OUTER_WHITESPACE"], "sensitivity": "STANDARD"},
+    {"field_name": "unit_price", "field_label": "Unit price", "field_group": "line", "data_type": "CURRENCY_AMOUNT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "line_value", "field_label": "Line value", "field_group": "line", "data_type": "CURRENCY_AMOUNT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "promised_delivery_date", "field_label": "Promised delivery date", "field_group": "line", "data_type": "DATE", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "ISO_DATE_WHEN_UNAMBIGUOUS"], "sensitivity": "STANDARD"}
+  ],
+  "validation_rules": [
+    {"rule_id": "po.required-status", "rule_type": "REQUIRED_STATUS", "fields": ["po_number", "po_date", "buyer_name", "vendor_name", "currency", "total_po_amount"], "severity": "CRITICAL", "description": "Critical purchase-order fields require explicit records and statuses."},
+    {"rule_id": "po.identifier-text", "rule_type": "IDENTIFIER_AS_TEXT", "fields": ["po_number", "vendor_code", "vendor_tax_id", "contract_number", "amendment_number"], "severity": "HIGH", "description": "Purchase-order identifiers remain text and preserve leading zeros."},
+    {"rule_id": "po.line-total", "rule_type": "MULTIPLICATION", "fields": ["ordered_quantity", "unit_price", "line_value"], "severity": "HIGH", "description": "Ordered quantity multiplied by unit price is compared with the stated line value."},
+    {"rule_id": "po.grand-total", "rule_type": "ARITHMETIC_SUM", "fields": ["line_value", "total_po_amount"], "severity": "CRITICAL", "description": "Line values are reconciled with the stated purchase-order total."}
+  ],
+  "reconciliation_keys": [
+    {"key_id": "po.number-vendor", "fields": ["po_number", "vendor_tax_id"], "strength": "PRIMARY", "candidate_only": false},
+    {"key_id": "po.contract-vendor", "fields": ["contract_number", "vendor_tax_id"], "strength": "SECONDARY", "candidate_only": true},
+    {"key_id": "po.amount-date", "fields": ["total_po_amount", "currency", "po_date"], "strength": "SUPPORTING", "candidate_only": true}
+  ],
+  "human_review_rules": [
+    {"condition": "CRITICAL_FIELD_LOW_OR_UNKNOWN_CONFIDENCE", "field_scope": ["po_number", "po_date", "vendor_tax_id", "currency", "total_po_amount"], "action": "HUMAN_REVIEW_REQUIRED"},
+    {"condition": "AMBIGUOUS_DATE_OR_LOCALE", "field_scope": ["po_date"], "action": "HUMAN_REVIEW_REQUIRED"},
+    {"condition": "INCOMPLETE_TABLE", "field_scope": ["total_po_amount"], "action": "HUMAN_REVIEW_REQUIRED"}
+  ],
+  "claim_boundaries": ["NO_AUTHENTICITY_CONCLUSION", "NO_SIGNATURE_AUTHENTICATION", "NO_LEGAL_OPINION", "NO_FRAUD_CONCLUSION", "NO_CONTROL_EFFECTIVENESS_CONCLUSION"]
+}

@@ -1,0 +1,83 @@
+TRAN NGOC THIEN'S SKILL
+THIEN SKILL — DOCUMENT INTELLIGENCE, EVIDENCE & RECONCILIATION
+THÔNG BÁO / NOTICE
+
+## Bản tiếng Việt — ưu tiên áp dụng
+
+Bản quyền © 2026 Tran Ngoc Thien. Bảo lưu mọi quyền.
+
+Skill `thien-skill-document-evidence`, phiên bản `1.0.0`, ngày áp dụng
+`23 August 2026`, thuộc nhãn `Tran Ngoc Thien's Skill`. Repository và các bản
+phân phối có tình trạng `PRIVATE`. Nền tảng dự kiến: OpenAI, Anthropic Claude và
+Universal.
+
+Tài liệu chỉ được cấp quyền khi tồn tại Công cụ cấp quyền hợp lệ theo
+`Tran Ngoc Thien's Skills Commercial Source-Available License 2.0`. Việc xem
+source, truy cập repository/workspace, clone, fork, tải xuống, nhận package/ZIP,
+có listing, được thêm vào Team kỹ thuật, có khả năng cài đặt hoặc sở hữu bản sao
+không tự cấp quyền cài đặt, sử dụng, tải lên, sao chép, sửa đổi, phân phối, công
+khai, cung cấp dịch vụ, huấn luyện AI hoặc khai thác thương mại.
+
+Đọc `LICENSE` tại root repository hoặc `LICENSE.md` trong canonical
+skill/package cùng `LICENSE-APPLICATION.md`. Bản tiếng Việt ưu tiên áp dụng; thứ
+tự ưu tiên tài liệu do Giấy phép chung quy định. Liên hệ cấp quyền:
+Tran Ngoc Thien, `thien.8888@gmail.com`, Ho Chi Minh, Vietnam.
+
+Skill hỗ trợ trích xuất, provenance, liên kết hồ sơ, đối soát, exception/review
+queue và controlled handoff. Skill không xác thực tài liệu, không quyết định giá
+trị chứng cứ, không đưa ý kiến pháp lý/kiểm toán, không chứng nhận assurance hay
+tuân thủ, không kết luận gian lận/điều tra và không phê duyệt production. Output
+trọng yếu phải được con người có thẩm quyền kiểm tra và phê duyệt.
+
+Giấy phép không tạo quyền truy cập, căn cứ xử lý dữ liệu hoặc quyền tải dữ liệu
+cá nhân, dữ liệu Khách hàng, bí mật kinh doanh hay tài liệu mật lên dịch vụ bên
+ngoài. Người sử dụng phải tự tuân thủ pháp luật, bảo mật và điều khoản nền tảng.
+
+Tài liệu chính thức, brief người dùng, nguồn tham khảo và tài sản bên thứ ba
+không được Chủ sở hữu nhận là sở hữu hoặc tái cấp phép. Xem
+`THIRD-PARTY-NOTICES.md`. Logo/icon TDTN chỉ được hiển thị nguyên vẹn cùng bản
+Skill/package được cấp quyền hợp lệ; không có quyền độc lập đối với logo, nhãn
+hiệu, tên hoặc dấu hiệu nhận diện. Xem `assets/brand/PROVENANCE.md` trong
+canonical skill/package hoặc
+`thien-skill-document-evidence/assets/brand/PROVENANCE.md` tại root repository.
+
+## English version — Vietnamese version prevails
+
+Copyright © 2026 Tran Ngoc Thien. All rights reserved.
+
+Skill `thien-skill-document-evidence`, version `1.0.0`, application date
+`23 August 2026`, is issued under the `Tran Ngoc Thien's Skill` label. The
+repository and distributions are `PRIVATE`. Intended platforms: OpenAI,
+Anthropic Claude, and Universal.
+
+Material is licensed only when a valid Granting Instrument exists under the
+`Tran Ngoc Thien's Skills Commercial Source-Available License 2.0`. Viewing
+source, accessing a repository/workspace, cloning, forking, downloading,
+receiving a package/ZIP, seeing a listing, joining a technical team, having
+installation capability, or possessing a copy does not itself grant rights to
+install, use, upload, copy, modify, distribute, make public, provide services,
+train AI, or exploit the Skill commercially.
+
+Read `LICENSE` at repository root or `LICENSE.md` in the canonical Skill/package
+together with `LICENSE-APPLICATION.md`. The Vietnamese version prevails, and
+the Master License controls document priority. Licensing contact: Tran Ngoc
+Thien, `thien.8888@gmail.com`, Ho Chi Minh, Vietnam.
+
+The Skill supports extraction, provenance, package linking, reconciliation,
+exception/review queues, and controlled handoff. It does not authenticate
+documents, determine evidentiary weight, provide legal/audit opinions, certify
+assurance or compliance, make fraud/investigative findings, or grant production
+approval. Material Output requires authorized human review and approval.
+
+The License creates no source-access right, lawful data-processing ground, or
+authority to upload personal data, Client data, trade secrets, or confidential
+material to an external service. Users must independently comply with law,
+confidentiality duties, and platform terms.
+
+Official material, the user-supplied brief, reference sources, and third-party
+assets are not claimed as owned or relicensed by the Owner. See
+`THIRD-PARTY-NOTICES.md`. TDTN logo/icon files may be displayed intact only with
+a validly licensed Skill/package; no independent logo, trademark, name, or
+identifier right is granted. See `assets/brand/PROVENANCE.md` in the canonical
+Skill/package or `thien-skill-document-evidence/assets/brand/PROVENANCE.md` at
+repository root.

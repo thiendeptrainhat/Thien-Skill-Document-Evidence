@@ -1,0 +1,298 @@
+{
+  "$schema": "../../schemas/common/reconciliation-config.schema.json",
+  "schema_version": "1.0.0",
+  "config_id": "template.procurement-three-way",
+  "config_version": "1.0.0",
+  "mode": "THREE_WAY",
+  "grain": "LINE_ITEM",
+  "roles": [
+    {
+      "role_id": "PO",
+      "source_kind": "DOCUMENT",
+      "document_types": [
+        "PURCHASE_ORDER"
+      ],
+      "required": true,
+      "field_mappings": {
+        "po_number": "po_number",
+        "po_line": "po_line",
+        "item_code": "item_code",
+        "quantity": "ordered_quantity",
+        "unit_price": "unit_price",
+        "currency": "currency"
+      }
+    },
+    {
+      "role_id": "GRN",
+      "source_kind": "DOCUMENT",
+      "document_types": [
+        "GOODS_RECEIPT"
+      ],
+      "required": true,
+      "field_mappings": {
+        "po_number": "po_number",
+        "po_line": "po_line",
+        "item_code": "item_code",
+        "quantity": "accepted_quantity"
+      }
+    },
+    {
+      "role_id": "INVOICE",
+      "source_kind": "DOCUMENT",
+      "document_types": [
+        "INVOICE"
+      ],
+      "required": true,
+      "field_mappings": {
+        "po_number": "po_number",
+        "po_line": "po_line",
+        "item_code": "item_code",
+        "quantity": "quantity",
+        "unit_price": "unit_price",
+        "currency": "currency"
+      }
+    }
+  ],
+  "link_rules": [
+    {
+      "rule_id": "template.po-grn",
+      "left_role": "PO",
+      "right_role": "GRN",
+      "cardinality": "ONE_TO_MANY",
+      "components": [
+        {
+          "component_id": "template.po-grn-number",
+          "left_field": "po_number",
+          "right_field": "po_number",
+          "comparator": "IDENTIFIER_EXACT",
+          "normalizers": [
+            "IDENTIFIER_PRESERVE"
+          ],
+          "required": true,
+          "candidate_only": false,
+          "tolerance": {
+            "status": "NOT_APPLICABLE",
+            "value": null,
+            "unit": "NOT_APPLICABLE",
+            "basis": null,
+            "owner": null,
+            "approval_reference": null,
+            "approval_status": "NOT_REQUESTED"
+          }
+        },
+        {
+          "component_id": "template.po-grn-quantity",
+          "left_field": "quantity",
+          "right_field": "quantity",
+          "comparator": "DECIMAL_ABSOLUTE",
+          "normalizers": [
+            "DECIMAL_CANONICAL_STRING"
+          ],
+          "required": true,
+          "candidate_only": false,
+          "tolerance": {
+            "status": "NOT_PROVIDED",
+            "value": null,
+            "unit": "QUANTITY",
+            "basis": null,
+            "owner": null,
+            "approval_reference": null,
+            "approval_status": "UNKNOWN"
+          }
+        }
+      ],
+      "partial_policy": {
+        "mode": "HUMAN_REVIEW_REQUIRED",
+        "allowed_relation": "NOT_APPLICABLE",
+        "aggregation_id": null,
+        "basis": null,
+        "owner": null,
+        "approval_reference": null,
+        "approval_status": "UNKNOWN"
+      },
+      "missing_field_policy": "HUMAN_REVIEW_REQUIRED",
+      "multiple_candidate_policy": "AMBIGUOUS_MATCH"
+    },
+    {
+      "rule_id": "template.po-invoice",
+      "left_role": "PO",
+      "right_role": "INVOICE",
+      "cardinality": "ONE_TO_MANY",
+      "components": [
+        {
+          "component_id": "template.po-invoice-number",
+          "left_field": "po_number",
+          "right_field": "po_number",
+          "comparator": "IDENTIFIER_EXACT",
+          "normalizers": [
+            "IDENTIFIER_PRESERVE"
+          ],
+          "required": true,
+          "candidate_only": false,
+          "tolerance": {
+            "status": "NOT_APPLICABLE",
+            "value": null,
+            "unit": "NOT_APPLICABLE",
+            "basis": null,
+            "owner": null,
+            "approval_reference": null,
+            "approval_status": "NOT_REQUESTED"
+          }
+        },
+        {
+          "component_id": "template.po-invoice-price",
+          "left_field": "unit_price",
+          "right_field": "unit_price",
+          "comparator": "DECIMAL_ABSOLUTE",
+          "normalizers": [
+            "DECIMAL_CANONICAL_STRING"
+          ],
+          "required": true,
+          "candidate_only": false,
+          "tolerance": {
+            "status": "NOT_PROVIDED",
+            "value": null,
+            "unit": "ABSOLUTE_AMOUNT",
+            "basis": null,
+            "owner": null,
+            "approval_reference": null,
+            "approval_status": "UNKNOWN"
+          }
+        }
+      ],
+      "partial_policy": {
+        "mode": "HUMAN_REVIEW_REQUIRED",
+        "allowed_relation": "NOT_APPLICABLE",
+        "aggregation_id": null,
+        "basis": null,
+        "owner": null,
+        "approval_reference": null,
+        "approval_status": "UNKNOWN"
+      },
+      "missing_field_policy": "HUMAN_REVIEW_REQUIRED",
+      "multiple_candidate_policy": "AMBIGUOUS_MATCH"
+    },
+    {
+      "rule_id": "template.grn-invoice",
+      "left_role": "GRN",
+      "right_role": "INVOICE",
+      "cardinality": "MANY_TO_MANY_WITH_EXPLICIT_BRIDGE",
+      "components": [
+        {
+          "component_id": "template.grn-invoice-number",
+          "left_field": "po_number",
+          "right_field": "po_number",
+          "comparator": "IDENTIFIER_EXACT",
+          "normalizers": [
+            "IDENTIFIER_PRESERVE"
+          ],
+          "required": true,
+          "candidate_only": false,
+          "tolerance": {
+            "status": "NOT_APPLICABLE",
+            "value": null,
+            "unit": "NOT_APPLICABLE",
+            "basis": null,
+            "owner": null,
+            "approval_reference": null,
+            "approval_status": "NOT_REQUESTED"
+          }
+        },
+        {
+          "component_id": "template.grn-invoice-quantity",
+          "left_field": "quantity",
+          "right_field": "quantity",
+          "comparator": "DECIMAL_ABSOLUTE",
+          "normalizers": [
+            "DECIMAL_CANONICAL_STRING"
+          ],
+          "required": true,
+          "candidate_only": false,
+          "tolerance": {
+            "status": "NOT_PROVIDED",
+            "value": null,
+            "unit": "QUANTITY",
+            "basis": null,
+            "owner": null,
+            "approval_reference": null,
+            "approval_status": "UNKNOWN"
+          }
+        }
+      ],
+      "partial_policy": {
+        "mode": "HUMAN_REVIEW_REQUIRED",
+        "allowed_relation": "NOT_APPLICABLE",
+        "aggregation_id": null,
+        "basis": null,
+        "owner": null,
+        "approval_reference": null,
+        "approval_status": "UNKNOWN"
+      },
+      "missing_field_policy": "HUMAN_REVIEW_REQUIRED",
+      "multiple_candidate_policy": "AMBIGUOUS_MATCH"
+    }
+  ],
+  "aggregation_rules": [
+    {
+      "aggregation_id": "template.po-quantity-by-line",
+      "role_id": "PO",
+      "group_by_fields": [
+        "po_number",
+        "po_line"
+      ],
+      "value_field": "quantity",
+      "operation": "SUM_DECIMAL",
+      "result_field": "ordered_quantity_total"
+    },
+    {
+      "aggregation_id": "template.grn-quantity-by-line",
+      "role_id": "GRN",
+      "group_by_fields": [
+        "po_number",
+        "po_line"
+      ],
+      "value_field": "quantity",
+      "operation": "SUM_DECIMAL",
+      "result_field": "accepted_quantity_total"
+    },
+    {
+      "aggregation_id": "template.invoice-quantity-by-line",
+      "role_id": "INVOICE",
+      "group_by_fields": [
+        "po_number",
+        "po_line"
+      ],
+      "value_field": "quantity",
+      "operation": "SUM_DECIMAL",
+      "result_field": "invoiced_quantity_total"
+    }
+  ],
+  "currency_policy": {
+    "mode": "EXACT_CURRENCY_ONLY",
+    "approved_rate_source": null,
+    "approval_reference": null,
+    "approval_status": "NOT_REQUESTED"
+  },
+  "date_policy": {
+    "input_representation": "UNRESOLVED",
+    "locale": null,
+    "timezone": null,
+    "ambiguous_date_policy": "HUMAN_REVIEW_REQUIRED"
+  },
+  "output_statuses": [
+    "EXACT_MATCH",
+    "WITHIN_TOLERANCE",
+    "STRONG_CANDIDATE",
+    "PARTIAL_MATCH",
+    "AMBIGUOUS_MATCH",
+    "CONFLICTING_MATCH",
+    "UNMATCHED",
+    "NOT_APPLICABLE",
+    "HUMAN_REVIEW_REQUIRED"
+  ],
+  "human_approval": {
+    "status": "PENDING",
+    "owner": null,
+    "approval_reference": null
+  }
+}

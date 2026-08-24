@@ -1,0 +1,46 @@
+schema_version: "1.0.0"
+template_id: human-review-queue
+queue_status: DRAFT
+purpose: Route material ambiguity, conflicts, low confidence, missing evidence, and validation failures to authorized reviewers.
+review_items: []
+required_record_fields:
+  - review_item_id
+  - document_id
+  - evidence_id
+  - field_id
+  - issue_type
+  - raw_value
+  - candidate_values
+  - source_reference
+  - reason_for_review
+  - risk_level
+  - reviewer
+  - reviewed_value
+  - review_decision
+  - review_note
+  - reviewed_at
+  - second_review_required
+  - status
+  - approval_status
+allowed_decisions:
+  - ACCEPT_EXTRACTED_VALUE
+  - CORRECT_VALUE
+  - MARK_ILLEGIBLE
+  - MARK_NOT_PRESENT
+  - MARK_NOT_APPLICABLE
+  - MARK_CONFLICTING
+  - ESCALATE
+  - REQUEST_BETTER_COPY
+  - REJECT_DOCUMENT_FOR_STATED_USE
+  - REQUIRE_SPECIALIST_REVIEW
+allowed_statuses:
+  - REQUIRED
+  - PENDING
+  - IN_PROGRESS
+  - COMPLETED
+  - ESCALATED
+invariants:
+  raw_value_preserved_after_correction: true
+  candidate_values_preserved: true
+  silent_resolution_allowed: false
+qa_status: NOT_TESTED

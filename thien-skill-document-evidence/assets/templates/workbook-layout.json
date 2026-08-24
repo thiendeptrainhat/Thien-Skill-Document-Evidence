@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0.0",
+  "template_id": "document-evidence-workbook-layout",
+  "workbook_role": "Structured review view of a canonical extraction package; not original evidence or source of truth.",
+  "compatibility_targets": [
+    "Excel 2019",
+    "Microsoft 365"
+  ],
+  "global_controls": {
+    "macro_enabled": false,
+    "external_links_allowed": false,
+    "merged_cells_in_data_sheets": false,
+    "freeze_header_rows": true,
+    "filters_enabled": true,
+    "identifiers_stored_as_text": true,
+    "formula_injection_protection": true,
+    "silent_row_truncation_allowed": false,
+    "source_values_are_formulas": false
+  },
+  "always_created_sheets": [
+    "00_README",
+    "16_FIELD_DICTIONARY",
+    "18_QA_RESULTS",
+    "19_RUN_LOG"
+  ],
+  "conditional_sheets": [
+    {"sheet": "01_DOCUMENT_INDEX", "source_collection": "document_inventory", "row_grain": "one row per document"},
+    {"sheet": "02_DOCUMENT_FIELDS", "source_collection": "extracted_fields", "row_grain": "one row per field record"},
+    {"sheet": "03_LINE_ITEMS", "source_collection": "line_items", "row_grain": "one row per logical line item"},
+    {"sheet": "08_CONTRACT_CLAUSES", "source_collection": "contract_clauses", "row_grain": "one row per clause"},
+    {"sheet": "09_CONTRACT_OBLIGATIONS", "source_collection": "contract_obligations", "row_grain": "one row per obligation"},
+    {"sheet": "11_DOCUMENT_LINKS", "source_collection": "document_links", "row_grain": "one row per candidate or confirmed link"},
+    {"sheet": "12_RECONCILIATION", "source_collection": "reconciliation_results", "row_grain": "one row per reconciliation result or flattened rule result"},
+    {"sheet": "13_DISCREPANCIES", "source_collection": "discrepancies", "row_grain": "one row per discrepancy"},
+    {"sheet": "14_EVIDENCE_REGISTER", "source_collection": "evidence_register", "row_grain": "one row per evidence item"},
+    {"sheet": "15_CHAIN_OF_CUSTODY", "source_collection": "chain_of_custody", "row_grain": "one row per actual custody event"},
+    {"sheet": "17_HUMAN_REVIEW", "source_collection": "human_review_queue", "row_grain": "one row per review item"}
+  ],
+  "overflow_policy": {
+    "maximum_excel_rows_per_sheet": 1048576,
+    "control_workbook_required": true,
+    "sidecar_formats": [
+      "CSV",
+      "JSONL",
+      "PARQUET"
+    ],
+    "create_partial_workbook_without_sidecar": false,
+    "record_sidecar_checksum_and_count": true
+  },
+  "formula_safety": {
+    "untrusted_prefixes": [
+      "=",
+      "+",
+      "-",
+      "@"
+    ],
+    "canonical_raw_value_preserved_outside_formula_context": true,
+    "display_value_written_as_literal": true,
+    "formula_injection_flag_required": true
+  },
+  "qa_requirements": [
+    "Workbook opens without repair warning.",
+    "No VBA project, macro, or external link relationship exists.",
+    "Data-sheet row counts reconcile to canonical package counts.",
+    "Identifier fields preserve leading zeros.",
+    "No source-derived text is emitted as an executable formula.",
+    "No empty conditional sheet is created."
+  ]
+}

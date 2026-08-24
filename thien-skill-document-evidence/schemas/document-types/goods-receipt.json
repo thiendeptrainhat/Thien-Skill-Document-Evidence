@@ -1,0 +1,63 @@
+{
+  "$schema": "../common/document-profile.schema.json",
+  "schema_id": "profile.goods-receipt",
+  "schema_name": "Goods receipt and warehouse receipt extraction profile",
+  "document_type": "GOODS_RECEIPT",
+  "version": "1.0.0",
+  "jurisdictions": ["JURISDICTION_NEUTRAL"],
+  "effective_date": null,
+  "extends": "profile.generic-document",
+  "required_fields": ["grn_number", "receipt_date", "po_number", "vendor_name", "receiving_entity"],
+  "optional_fields": ["posting_date", "delivery_note_number", "invoice_reference", "plant", "warehouse", "storage_location", "vehicle_reference", "receiver", "inspector", "receiving_timestamp", "signature_present", "stamp_present", "exception_note"],
+  "field_definitions": [
+    {"field_name": "grn_number", "field_label": "Goods receipt number", "field_group": "header", "data_type": "IDENTIFIER", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "receipt_date", "field_label": "Receipt date", "field_group": "date", "data_type": "DATE", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "ISO_DATE_WHEN_UNAMBIGUOUS"], "sensitivity": "STANDARD"},
+    {"field_name": "po_number", "field_label": "Purchase order number", "field_group": "reference", "data_type": "IDENTIFIER", "required": true, "critical": true, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "vendor_name", "field_label": "Vendor name", "field_group": "vendor", "data_type": "TEXT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "STANDARD"},
+    {"field_name": "receiving_entity", "field_label": "Receiving entity", "field_group": "receipt", "data_type": "TEXT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "STANDARD"},
+    {"field_name": "posting_date", "field_label": "Posting date", "field_group": "date", "data_type": "DATE", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "ISO_DATE_WHEN_UNAMBIGUOUS"], "sensitivity": "STANDARD"},
+    {"field_name": "delivery_note_number", "field_label": "Delivery note number", "field_group": "reference", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "invoice_reference", "field_label": "Invoice reference", "field_group": "reference", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "plant", "field_label": "Plant", "field_group": "location", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "warehouse", "field_label": "Warehouse", "field_group": "location", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "storage_location", "field_label": "Storage location", "field_group": "location", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "vehicle_reference", "field_label": "Vehicle reference", "field_group": "transport", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "PERSONAL_DATA"},
+    {"field_name": "receiver", "field_label": "Receiver", "field_group": "approval", "data_type": "TEXT", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "PERSONAL_DATA"},
+    {"field_name": "inspector", "field_label": "Inspector", "field_group": "approval", "data_type": "TEXT", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "PERSONAL_DATA"},
+    {"field_name": "receiving_timestamp", "field_label": "Receiving timestamp", "field_group": "date", "data_type": "DATETIME", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW"], "sensitivity": "STANDARD"},
+    {"field_name": "signature_present", "field_label": "Signature presence indicator", "field_group": "approval", "data_type": "BOOLEAN", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW"], "sensitivity": "PERSONAL_DATA"},
+    {"field_name": "stamp_present", "field_label": "Stamp presence indicator", "field_group": "approval", "data_type": "BOOLEAN", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW"], "sensitivity": "STANDARD"},
+    {"field_name": "exception_note", "field_label": "Receipt exception note", "field_group": "exception", "data_type": "TEXT", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "STANDARD"}
+  ],
+  "line_item_definitions": [
+    {"field_name": "grn_line", "field_label": "Goods receipt line", "field_group": "line", "data_type": "IDENTIFIER", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "po_line", "field_label": "Purchase order line", "field_group": "line_reference", "data_type": "IDENTIFIER", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "item_code", "field_label": "Item code", "field_group": "line", "data_type": "IDENTIFIER", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "description", "field_label": "Item description", "field_group": "line", "data_type": "TEXT", "required": true, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "STANDARD"},
+    {"field_name": "ordered_quantity", "field_label": "Ordered quantity", "field_group": "quantity", "data_type": "QUANTITY", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "STANDARD"},
+    {"field_name": "delivered_quantity", "field_label": "Delivered quantity", "field_group": "quantity", "data_type": "QUANTITY", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "STANDARD"},
+    {"field_name": "accepted_quantity", "field_label": "Accepted quantity", "field_group": "quantity", "data_type": "QUANTITY", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "STANDARD"},
+    {"field_name": "rejected_quantity", "field_label": "Rejected quantity", "field_group": "quantity", "data_type": "QUANTITY", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "STANDARD"},
+    {"field_name": "damaged_quantity", "field_label": "Damaged quantity", "field_group": "quantity", "data_type": "QUANTITY", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "STANDARD"},
+    {"field_name": "unit_of_measure", "field_label": "Unit of measure", "field_group": "quantity", "data_type": "UNIT_OF_MEASURE", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW"], "sensitivity": "STANDARD"},
+    {"field_name": "batch_lot_serial", "field_label": "Batch, lot or serial reference", "field_group": "traceability", "data_type": "REFERENCE", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "quality_status", "field_label": "Quality or inspection status", "field_group": "quality", "data_type": "TEXT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "STANDARD"}
+  ],
+  "validation_rules": [
+    {"rule_id": "grn.required-status", "rule_type": "REQUIRED_STATUS", "fields": ["grn_number", "receipt_date", "po_number", "vendor_name", "receiving_entity"], "severity": "CRITICAL", "description": "Critical receipt fields require explicit records and statuses."},
+    {"rule_id": "grn.identifier-text", "rule_type": "IDENTIFIER_AS_TEXT", "fields": ["grn_number", "po_number", "delivery_note_number", "invoice_reference"], "severity": "HIGH", "description": "Receipt and matching identifiers remain text."},
+    {"rule_id": "grn.quantity-consistency", "rule_type": "ARITHMETIC_SUM", "fields": ["delivered_quantity", "accepted_quantity", "rejected_quantity", "damaged_quantity"], "severity": "HIGH", "description": "Accepted, rejected and damaged quantities are compared with delivered quantity without inferring blank values as zero."},
+    {"rule_id": "grn.signature-presence", "rule_type": "SIGNATURE_PRESENCE_ONLY", "fields": ["signature_present", "stamp_present"], "severity": "INFO", "description": "Only presence is recorded; authenticity and authority are not inferred."}
+  ],
+  "reconciliation_keys": [
+    {"key_id": "grn.po-line", "fields": ["po_number", "grn_line", "po_line"], "strength": "PRIMARY", "candidate_only": false},
+    {"key_id": "grn.number", "fields": ["grn_number"], "strength": "PRIMARY", "candidate_only": false},
+    {"key_id": "grn.vendor-date", "fields": ["vendor_name", "receipt_date"], "strength": "SUPPORTING", "candidate_only": true}
+  ],
+  "human_review_rules": [
+    {"condition": "CRITICAL_FIELD_LOW_OR_UNKNOWN_CONFIDENCE", "field_scope": ["grn_number", "po_number", "receipt_date", "delivered_quantity", "accepted_quantity"], "action": "HUMAN_REVIEW_REQUIRED"},
+    {"condition": "HANDWRITTEN_CORRECTION", "field_scope": ["delivered_quantity", "accepted_quantity", "rejected_quantity"], "action": "HUMAN_REVIEW_REQUIRED"},
+    {"condition": "INCOMPLETE_TABLE", "field_scope": ["delivered_quantity", "accepted_quantity"], "action": "HUMAN_REVIEW_REQUIRED"}
+  ],
+  "claim_boundaries": ["NO_AUTHENTICITY_CONCLUSION", "NO_SIGNATURE_AUTHENTICATION", "NO_LEGAL_OPINION", "NO_FRAUD_CONCLUSION", "NO_CONTROL_EFFECTIVENESS_CONCLUSION"]
+}

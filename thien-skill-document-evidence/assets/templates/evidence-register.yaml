@@ -1,0 +1,52 @@
+schema_version: "1.0.0"
+template_id: evidence-register
+register_status: DRAFT
+purpose: Index evidence objects without asserting authenticity, admissibility, or complete custody.
+evidence_items: []
+required_record_fields:
+  - schema_version
+  - record_version
+  - evidence_id
+  - document_id
+  - engagement_id
+  - case_id
+  - evidence_type
+  - title
+  - source
+  - acquisition
+  - locations
+  - checksum
+  - copy_role
+  - reliability
+  - custody_status
+  - data_classification
+  - access_restrictions
+  - redaction_status
+  - related_objects
+  - review_status
+  - claim_limits
+  - notes
+reliability_classes:
+  - ORIGINAL_SYSTEM_RECORD
+  - ORIGINAL_DIGITAL_DOCUMENT
+  - ORIGINAL_PHYSICAL_DOCUMENT_SCAN
+  - CERTIFIED_COPY
+  - CONTROLLED_SYSTEM_EXPORT
+  - WORKING_COPY
+  - THIRD_PARTY_DOCUMENT
+  - SCREENSHOT
+  - OCR_DERIVED_DATA
+  - USER_PROVIDED_COPY
+  - UNVERIFIED_COPY
+  - INCOMPLETE_DOCUMENT
+  - ALTERED_WORKING_COPY
+  - UNKNOWN_ORIGIN
+invariants:
+  checksum_proves_authenticity: false
+  register_proves_admissibility: false
+  ocr_is_independent_evidence: false
+  custody_events_must_reflect_actual_events: true
+  original_and_derivative_ids_must_differ: true
+qa_status: NOT_TESTED
+human_approval_status: NOT_REQUESTED
+limitations: []

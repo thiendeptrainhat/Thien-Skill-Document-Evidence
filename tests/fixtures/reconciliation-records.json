@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "pkg-partial-001",
+  "records": [
+    {
+      "record_id": "po-001",
+      "role": "PO",
+      "source_reference": "po/001.json",
+      "fields": {
+        "po_number": "000123",
+        "quantity": "100.00",
+        "currency": "VND"
+      }
+    },
+    {
+      "record_id": "invoice-001",
+      "role": "INVOICE",
+      "source_reference": "invoice/001.json",
+      "fields": {
+        "po_number": "000123",
+        "quantity": "50.00",
+        "currency": "VND"
+      }
+    }
+  ]
+}

@@ -1,0 +1,630 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "reconciliation-config.schema.json",
+  "title": "Deterministic document reconciliation configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "config_id",
+    "config_version",
+    "mode",
+    "grain",
+    "roles",
+    "link_rules",
+    "aggregation_rules",
+    "currency_policy",
+    "date_policy",
+    "output_statuses",
+    "human_approval"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "../../schemas/common/reconciliation-config.schema.json"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "config_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "config_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "mode": {
+      "enum": [
+        "TWO_WAY",
+        "THREE_WAY",
+        "FOUR_WAY",
+        "ERP_DOCUMENT",
+        "CUSTOM_DETERMINISTIC"
+      ]
+    },
+    "grain": {
+      "enum": [
+        "DOCUMENT",
+        "LINE_ITEM",
+        "PAYMENT_ALLOCATION",
+        "MIXED_WITH_EXPLICIT_ROLLUP"
+      ]
+    },
+    "roles": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "role_id",
+          "source_kind",
+          "document_types",
+          "required",
+          "field_mappings"
+        ],
+        "properties": {
+          "role_id": {
+            "$ref": "shared-definitions.schema.json#/$defs/identifier"
+          },
+          "source_kind": {
+            "enum": [
+              "DOCUMENT",
+              "SYSTEM_RECORD"
+            ]
+          },
+          "document_types": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Z][A-Z0-9_]*$"
+            }
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "field_mappings": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+            }
+          }
+        }
+      }
+    },
+    "link_rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rule_id",
+          "left_role",
+          "right_role",
+          "cardinality",
+          "components",
+          "partial_policy",
+          "missing_field_policy",
+          "multiple_candidate_policy"
+        ],
+        "properties": {
+          "rule_id": {
+            "$ref": "shared-definitions.schema.json#/$defs/identifier"
+          },
+          "left_role": {
+            "$ref": "shared-definitions.schema.json#/$defs/identifier"
+          },
+          "right_role": {
+            "$ref": "shared-definitions.schema.json#/$defs/identifier"
+          },
+          "cardinality": {
+            "enum": [
+              "ONE_TO_ONE",
+              "ONE_TO_MANY",
+              "MANY_TO_ONE",
+              "MANY_TO_MANY_WITH_EXPLICIT_BRIDGE"
+            ]
+          },
+          "components": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "component_id",
+                "left_field",
+                "right_field",
+                "comparator",
+                "normalizers",
+                "required",
+                "candidate_only",
+                "tolerance"
+              ],
+              "properties": {
+                "component_id": {
+                  "$ref": "shared-definitions.schema.json#/$defs/identifier"
+                },
+                "left_field": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                },
+                "right_field": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                },
+                "comparator": {
+                  "$ref": "#/$defs/comparator"
+                },
+                "normalizers": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "$ref": "#/$defs/normalizer"
+                  }
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "candidate_only": {
+                  "type": "boolean"
+                },
+                "tolerance": {
+                  "$ref": "#/$defs/tolerance"
+                }
+              }
+            }
+          },
+          "partial_policy": {
+            "$ref": "#/$defs/partialPolicy"
+          },
+          "missing_field_policy": {
+            "enum": [
+              "UNMATCHED",
+              "BLOCK_RULE",
+              "HUMAN_REVIEW_REQUIRED"
+            ]
+          },
+          "multiple_candidate_policy": {
+            "const": "AMBIGUOUS_MATCH"
+          }
+        }
+      }
+    },
+    "aggregation_rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "aggregation_id",
+          "role_id",
+          "group_by_fields",
+          "value_field",
+          "operation",
+          "result_field"
+        ],
+        "properties": {
+          "aggregation_id": {
+            "$ref": "shared-definitions.schema.json#/$defs/identifier"
+          },
+          "role_id": {
+            "$ref": "shared-definitions.schema.json#/$defs/identifier"
+          },
+          "group_by_fields": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            }
+          },
+          "value_field": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "operation": {
+            "enum": [
+              "SUM_DECIMAL",
+              "COUNT_RECORDS",
+              "MIN_DECIMAL",
+              "MAX_DECIMAL"
+            ]
+          },
+          "result_field": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          }
+        }
+      }
+    },
+    "currency_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "approved_rate_source",
+        "approval_reference",
+        "approval_status"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "EXACT_CURRENCY_ONLY",
+            "CONVERSION_WITH_APPROVED_RATE"
+          ]
+        },
+        "approved_rate_source": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "approval_reference": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "approval_status": {
+          "$ref": "shared-definitions.schema.json#/$defs/humanApprovalStatus"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "CONVERSION_WITH_APPROVED_RATE"
+              }
+            },
+            "required": [
+              "mode"
+            ]
+          },
+          "then": {
+            "properties": {
+              "approved_rate_source": {
+                "type": "string",
+                "minLength": 1
+              },
+              "approval_reference": {
+                "type": "string",
+                "minLength": 1
+              },
+              "approval_status": {
+                "const": "APPROVED"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "date_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_representation",
+        "locale",
+        "timezone",
+        "ambiguous_date_policy"
+      ],
+      "properties": {
+        "input_representation": {
+          "enum": [
+            "ISO_8601",
+            "SOURCE_WITH_EXPLICIT_LOCALE",
+            "UNRESOLVED"
+          ]
+        },
+        "locale": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "timezone": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ambiguous_date_policy": {
+          "const": "HUMAN_REVIEW_REQUIRED"
+        }
+      }
+    },
+    "output_statuses": {
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 9,
+      "maxItems": 9,
+      "items": {
+        "$ref": "shared-definitions.schema.json#/$defs/matchStatus"
+      }
+    },
+    "human_approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "owner",
+        "approval_reference"
+      ],
+      "properties": {
+        "status": {
+          "$ref": "shared-definitions.schema.json#/$defs/humanApprovalStatus"
+        },
+        "owner": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "approval_reference": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  },
+  "$defs": {
+    "comparator": {
+      "enum": [
+        "EXACT_TEXT",
+        "NORMALIZED_TEXT",
+        "IDENTIFIER_EXACT",
+        "DECIMAL_ABSOLUTE",
+        "DECIMAL_RELATIVE",
+        "DATE_WINDOW",
+        "BOOLEAN_EXACT",
+        "SET_CONTAINS"
+      ]
+    },
+    "normalizer": {
+      "enum": [
+        "NONE",
+        "TRIM_OUTER_WHITESPACE",
+        "COLLAPSE_WHITESPACE",
+        "UNICODE_NFKC",
+        "CASEFOLD",
+        "IDENTIFIER_PRESERVE",
+        "DECIMAL_CANONICAL_STRING"
+      ]
+    },
+    "partialPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "allowed_relation",
+        "aggregation_id",
+        "basis",
+        "owner",
+        "approval_reference",
+        "approval_status"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "ALLOW_WHEN_DOCUMENTED",
+            "DISALLOW",
+            "HUMAN_REVIEW_REQUIRED"
+          ]
+        },
+        "allowed_relation": {
+          "enum": [
+            "LEFT_LESS_THAN_OR_EQUAL_RIGHT",
+            "RIGHT_LESS_THAN_OR_EQUAL_LEFT",
+            "AGGREGATED_PARTIAL_WITHIN_BASE",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "aggregation_id": {
+          "oneOf": [
+            {
+              "$ref": "shared-definitions.schema.json#/$defs/identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "basis": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "owner": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "approval_reference": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "approval_status": {
+          "$ref": "shared-definitions.schema.json#/$defs/humanApprovalStatus"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "ALLOW_WHEN_DOCUMENTED"
+              }
+            },
+            "required": [
+              "mode"
+            ]
+          },
+          "then": {
+            "properties": {
+              "allowed_relation": {
+                "enum": [
+                  "LEFT_LESS_THAN_OR_EQUAL_RIGHT",
+                  "RIGHT_LESS_THAN_OR_EQUAL_LEFT",
+                  "AGGREGATED_PARTIAL_WITHIN_BASE"
+                ]
+              },
+              "basis": {
+                "type": "string",
+                "minLength": 1
+              },
+              "owner": {
+                "type": "string",
+                "minLength": 1
+              },
+              "approval_reference": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "allowed_relation": {
+                "const": "NOT_APPLICABLE"
+              },
+              "aggregation_id": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "allowed_relation": {
+                "const": "AGGREGATED_PARTIAL_WITHIN_BASE"
+              }
+            },
+            "required": [
+              "allowed_relation"
+            ]
+          },
+          "then": {
+            "properties": {
+              "aggregation_id": {
+                "$ref": "shared-definitions.schema.json#/$defs/identifier"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "tolerance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "value",
+        "unit",
+        "basis",
+        "owner",
+        "approval_reference",
+        "approval_status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "PROVIDED",
+            "NOT_PROVIDED",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "value": {
+          "oneOf": [
+            {
+              "$ref": "shared-definitions.schema.json#/$defs/decimalString"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "unit": {
+          "enum": [
+            "ABSOLUTE_AMOUNT",
+            "RELATIVE_PERCENT",
+            "QUANTITY",
+            "CALENDAR_DAYS",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "basis": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "owner": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "approval_reference": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "approval_status": {
+          "$ref": "shared-definitions.schema.json#/$defs/humanApprovalStatus"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "PROVIDED"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "$ref": "shared-definitions.schema.json#/$defs/decimalString"
+              },
+              "basis": {
+                "type": "string",
+                "minLength": 1
+              },
+              "owner": {
+                "type": "string",
+                "minLength": 1
+              },
+              "approval_reference": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

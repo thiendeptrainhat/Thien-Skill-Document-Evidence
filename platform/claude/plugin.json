@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "thien-skill-document-evidence",
+  "displayName": "Thien Skill — Document Intelligence, Evidence & Reconciliation",
+  "version": "1.0.0",
+  "description": "Extract, verify, reconcile, and package document evidence with traceable provenance and controlled human review.",
+  "author": {
+    "name": "Tran Ngoc Thien",
+    "email": "thien.8888@gmail.com"
+  },
+  "license": "Tran Ngoc Thien's Skills Commercial Source-Available License 2.0",
+  "keywords": [
+    "document-intelligence",
+    "evidence",
+    "reconciliation",
+    "provenance",
+    "human-review"
+  ]
+}

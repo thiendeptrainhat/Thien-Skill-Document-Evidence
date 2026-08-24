@@ -1,0 +1,446 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "runtime-adapter-output.schema.json",
+  "title": "Runtime text, layout, OCR, vision or redaction adapter output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "adapter_run_id",
+    "input_document_id",
+    "working_copy_document_id",
+    "adapter_type",
+    "adapter_name",
+    "adapter_version",
+    "execution_mode",
+    "network_used",
+    "external_processing_approval",
+    "data_classification",
+    "input_checksum",
+    "status",
+    "started_at",
+    "completed_at",
+    "retry_count",
+    "parameters",
+    "pages",
+    "derivative_document_id",
+    "redaction_log_reference",
+    "warnings",
+    "security_flags"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "adapter_run_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "input_document_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "working_copy_document_id": {
+      "oneOf": [
+        {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "adapter_type": {
+      "enum": [
+        "NATIVE_TEXT",
+        "PDF_LAYOUT",
+        "OCR",
+        "VISION",
+        "REDACTION"
+      ]
+    },
+    "adapter_name": {
+      "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+    },
+    "adapter_version": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "execution_mode": {
+      "enum": [
+        "LOCAL",
+        "HOST_TOOL",
+        "APPROVED_CLOUD",
+        "MANUAL",
+        "NOT_EXECUTED"
+      ]
+    },
+    "network_used": {
+      "type": "boolean"
+    },
+    "external_processing_approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required",
+        "status",
+        "approval_reference"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "status": {
+          "$ref": "shared-definitions.schema.json#/$defs/humanApprovalStatus"
+        },
+        "approval_reference": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "data_classification": {
+      "$ref": "shared-definitions.schema.json#/$defs/dataClassification"
+    },
+    "input_checksum": {
+      "$ref": "shared-definitions.schema.json#/$defs/checksum"
+    },
+    "status": {
+      "enum": [
+        "SUCCEEDED",
+        "SUCCEEDED_WITH_WARNINGS",
+        "PARTIAL",
+        "FAILED",
+        "BLOCKED",
+        "NOT_EXECUTED"
+      ]
+    },
+    "started_at": {
+      "$ref": "shared-definitions.schema.json#/$defs/timestampOrState"
+    },
+    "completed_at": {
+      "$ref": "shared-definitions.schema.json#/$defs/timestampOrState"
+    },
+    "retry_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2
+    },
+    "parameters": {
+      "type": "object",
+      "description": "Recorded non-secret adapter parameters; document content is never executable configuration."
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "page_number",
+          "language",
+          "raw_text",
+          "words",
+          "lines",
+          "tables",
+          "regions",
+          "engine_confidence",
+          "warnings"
+        ],
+        "properties": {
+          "page_number": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "language": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 2
+            }
+          },
+          "raw_text": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "words": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/textRegion"
+            }
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/textRegion"
+            }
+          },
+          "tables": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "table_id",
+                "row_count",
+                "column_count",
+                "cells",
+                "bounding_box",
+                "confidence"
+              ],
+              "properties": {
+                "table_id": {
+                  "$ref": "shared-definitions.schema.json#/$defs/identifier"
+                },
+                "row_count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "column_count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cells": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "row",
+                      "column",
+                      "text",
+                      "row_span",
+                      "column_span"
+                    ],
+                    "properties": {
+                      "row": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "column": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "text": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "row_span": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "column_span": {
+                        "type": "integer",
+                        "minimum": 1
+                      }
+                    }
+                  }
+                },
+                "bounding_box": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/$defs/boundingBox"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "confidence": {
+                  "$ref": "shared-definitions.schema.json#/$defs/confidence"
+                }
+              }
+            }
+          },
+          "regions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "region_id",
+                "region_type",
+                "bounding_box",
+                "text",
+                "confidence"
+              ],
+              "properties": {
+                "region_id": {
+                  "$ref": "shared-definitions.schema.json#/$defs/identifier"
+                },
+                "region_type": {
+                  "enum": [
+                    "TEXT",
+                    "TABLE",
+                    "SIGNATURE_CANDIDATE",
+                    "STAMP_CANDIDATE",
+                    "BARCODE",
+                    "QR_CODE",
+                    "HANDWRITING_CANDIDATE",
+                    "REDACTION_REGION",
+                    "OTHER"
+                  ]
+                },
+                "bounding_box": {
+                  "$ref": "#/$defs/boundingBox"
+                },
+                "text": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "confidence": {
+                  "$ref": "shared-definitions.schema.json#/$defs/confidence"
+                }
+              }
+            }
+          },
+          "engine_confidence": {
+            "$ref": "shared-definitions.schema.json#/$defs/confidence"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "derivative_document_id": {
+      "oneOf": [
+        {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "redaction_log_reference": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "security_flags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "network_used": {
+            "const": true
+          }
+        },
+        "required": [
+          "network_used"
+        ]
+      },
+      "then": {
+        "properties": {
+          "external_processing_approval": {
+            "properties": {
+              "required": {
+                "const": true
+              },
+              "status": {
+                "const": "APPROVED"
+              },
+              "approval_reference": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "boundingBox": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coordinate_system",
+        "x",
+        "y",
+        "width",
+        "height"
+      ],
+      "properties": {
+        "coordinate_system": {
+          "enum": [
+            "PIXEL",
+            "PDF_POINT",
+            "NORMALIZED_0_1"
+          ]
+        },
+        "x": {
+          "type": "number",
+          "minimum": 0
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0
+        },
+        "width": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "height": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    },
+    "textRegion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "bounding_box",
+        "confidence"
+      ],
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "bounding_box": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/boundingBox"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "confidence": {
+          "$ref": "shared-definitions.schema.json#/$defs/confidence"
+        }
+      }
+    }
+  }
+}

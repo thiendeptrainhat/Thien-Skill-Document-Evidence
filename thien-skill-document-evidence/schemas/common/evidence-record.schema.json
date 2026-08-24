@@ -1,0 +1,331 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "evidence-record.schema.json",
+  "title": "Evidence record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_version",
+    "evidence_id",
+    "document_id",
+    "engagement_id",
+    "case_id",
+    "evidence_type",
+    "title",
+    "source",
+    "acquisition",
+    "locations",
+    "checksum",
+    "copy_role",
+    "reliability",
+    "custody_status",
+    "data_classification",
+    "access_restrictions",
+    "redaction_status",
+    "related_objects",
+    "review_status",
+    "claim_limits",
+    "notes"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "record_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "evidence_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "document_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "engagement_id": {
+      "oneOf": [
+        {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "case_id": {
+      "oneOf": [
+        {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "evidence_type": {
+      "enum": [
+        "ORIGINAL_DIGITAL_DOCUMENT",
+        "ORIGINAL_PHYSICAL_DOCUMENT_SCAN",
+        "CERTIFIED_COPY",
+        "CONTROLLED_SYSTEM_EXPORT",
+        "WORKING_COPY",
+        "THIRD_PARTY_DOCUMENT",
+        "SCREENSHOT",
+        "OCR_DERIVED_DATA",
+        "USER_PROVIDED_COPY",
+        "UNVERIFIED_COPY",
+        "INCOMPLETE_DOCUMENT",
+        "ALTERED_WORKING_COPY",
+        "UNKNOWN_ORIGIN"
+      ]
+    },
+    "title": {
+      "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_type",
+        "source_reference",
+        "provided_by",
+        "received_by",
+        "custodian"
+      ],
+      "properties": {
+        "source_type": {
+          "enum": [
+            "FILE_SYSTEM",
+            "CONTROLLED_EXPORT",
+            "PHYSICAL_SCAN",
+            "USER_UPLOAD",
+            "AUTHORIZED_CONNECTOR",
+            "UNKNOWN"
+          ]
+        },
+        "source_reference": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provided_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "received_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "custodian": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "acquisition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "received_at",
+        "captured_at",
+        "method",
+        "authorization_reference"
+      ],
+      "properties": {
+        "received_at": {
+          "$ref": "shared-definitions.schema.json#/$defs/timestampOrState"
+        },
+        "captured_at": {
+          "$ref": "shared-definitions.schema.json#/$defs/timestampOrState"
+        },
+        "method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authorization_reference": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "locations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "original_location_reference",
+        "working_copy_location_reference"
+      ],
+      "properties": {
+        "original_location_reference": {
+          "type": "string",
+          "minLength": 1
+        },
+        "working_copy_location_reference": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "checksum": {
+      "$ref": "shared-definitions.schema.json#/$defs/checksum"
+    },
+    "copy_role": {
+      "enum": [
+        "ORIGINAL",
+        "WORKING_COPY",
+        "DERIVATIVE"
+      ]
+    },
+    "reliability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "assessment_status",
+        "basis",
+        "corroborating_evidence_ids",
+        "limitations"
+      ],
+      "properties": {
+        "classification": {
+          "enum": [
+            "ORIGINAL_SYSTEM_RECORD",
+            "ORIGINAL_DIGITAL_DOCUMENT",
+            "ORIGINAL_PHYSICAL_DOCUMENT_SCAN",
+            "CERTIFIED_COPY",
+            "CONTROLLED_SYSTEM_EXPORT",
+            "WORKING_COPY",
+            "THIRD_PARTY_DOCUMENT",
+            "SCREENSHOT",
+            "OCR_DERIVED_DATA",
+            "USER_PROVIDED_COPY",
+            "UNVERIFIED_COPY",
+            "INCOMPLETE_DOCUMENT",
+            "ALTERED_WORKING_COPY",
+            "UNKNOWN_ORIGIN"
+          ]
+        },
+        "assessment_status": {
+          "enum": [
+            "ASSESSED",
+            "PARTIALLY_ASSESSED",
+            "NOT_ASSESSED",
+            "HUMAN_REVIEW_REQUIRED"
+          ]
+        },
+        "basis": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "corroborating_evidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "shared-definitions.schema.json#/$defs/identifier"
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "custody_status": {
+      "enum": [
+        "NOT_REQUIRED",
+        "NOT_STARTED",
+        "IN_PROGRESS",
+        "COMPLETE_FOR_RECORDED_SCOPE",
+        "GAP_IDENTIFIED",
+        "HUMAN_REVIEW_REQUIRED"
+      ]
+    },
+    "data_classification": {
+      "$ref": "shared-definitions.schema.json#/$defs/dataClassification"
+    },
+    "access_restrictions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "redaction_status": {
+      "enum": [
+        "NOT_REQUIRED",
+        "NOT_STARTED",
+        "PROPOSED",
+        "IN_PROGRESS",
+        "COMPLETED_PENDING_APPROVAL",
+        "APPROVED_FOR_STATED_AUDIENCE",
+        "REJECTED",
+        "UNKNOWN"
+      ]
+    },
+    "related_objects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "object_type",
+          "object_id"
+        ],
+        "properties": {
+          "object_type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "object_id": {
+            "$ref": "shared-definitions.schema.json#/$defs/identifier"
+          }
+        }
+      }
+    },
+    "review_status": {
+      "$ref": "shared-definitions.schema.json#/$defs/humanReviewStatus"
+    },
+    "claim_limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "checksum_proves_authenticity",
+        "record_proves_admissibility",
+        "ocr_is_independent_evidence"
+      ],
+      "properties": {
+        "checksum_proves_authenticity": {
+          "const": false
+        },
+        "record_proves_admissibility": {
+          "const": false
+        },
+        "ocr_is_independent_evidence": {
+          "const": false
+        }
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

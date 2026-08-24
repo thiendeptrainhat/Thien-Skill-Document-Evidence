@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "line-item.schema.json",
+  "title": "Document line-item record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_version",
+    "line_item_id",
+    "document_id",
+    "evidence_id",
+    "profile_id",
+    "profile_version",
+    "table_id",
+    "logical_sequence",
+    "source_pages",
+    "source_rows",
+    "raw_cells",
+    "field_ids",
+    "validation_status",
+    "row_confidence",
+    "reconciliation_key",
+    "human_review_status",
+    "notes"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "record_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "line_item_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "document_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "evidence_id": {
+      "oneOf": [
+        {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "profile_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "profile_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "table_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "logical_sequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "source_pages": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      }
+    },
+    "source_rows": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "raw_cells": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "field_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "shared-definitions.schema.json#/$defs/identifier"
+      }
+    },
+    "validation_status": {
+      "$ref": "shared-definitions.schema.json#/$defs/validationStatus"
+    },
+    "row_confidence": {
+      "$ref": "shared-definitions.schema.json#/$defs/confidence"
+    },
+    "reconciliation_key": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key_fields",
+        "key_status"
+      ],
+      "properties": {
+        "key_fields": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "key_status": {
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "MISSING",
+            "AMBIGUOUS"
+          ]
+        }
+      }
+    },
+    "human_review_status": {
+      "$ref": "shared-definitions.schema.json#/$defs/humanReviewStatus"
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

@@ -1,0 +1,466 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "extracted-field.schema.json",
+  "title": "Extracted field record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_version",
+    "field_id",
+    "document_id",
+    "evidence_id",
+    "profile_id",
+    "profile_version",
+    "field_name",
+    "field_label",
+    "field_group",
+    "values",
+    "data_type",
+    "unit",
+    "currency",
+    "field_status",
+    "status_flags",
+    "provenance",
+    "extraction",
+    "confidence",
+    "validation",
+    "human_review",
+    "formula_injection_flag",
+    "notes"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "record_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "field_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "document_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "evidence_id": {
+      "oneOf": [
+        {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "profile_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "profile_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "field_name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "field_label": {
+      "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+    },
+    "field_group": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "values": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "raw_value",
+        "normalized_value",
+        "display_value"
+      ],
+      "properties": {
+        "raw_value": {
+          "$ref": "#/$defs/value"
+        },
+        "normalized_value": {
+          "$ref": "#/$defs/value"
+        },
+        "display_value": {
+          "$ref": "#/$defs/value"
+        }
+      }
+    },
+    "data_type": {
+      "enum": [
+        "TEXT",
+        "INTEGER",
+        "DECIMAL",
+        "PERCENTAGE",
+        "CURRENCY_AMOUNT",
+        "DATE",
+        "DATETIME",
+        "BOOLEAN",
+        "IDENTIFIER",
+        "BANK_ACCOUNT",
+        "TAX_IDENTIFIER",
+        "PHONE",
+        "EMAIL",
+        "ADDRESS",
+        "QUANTITY",
+        "UNIT_OF_MEASURE",
+        "CLAUSE_TEXT",
+        "REFERENCE",
+        "LIST",
+        "TABLE",
+        "JSON_OBJECT"
+      ]
+    },
+    "unit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "currency": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "field_status": {
+      "$ref": "shared-definitions.schema.json#/$defs/fieldStatus"
+    },
+    "status_flags": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "shared-definitions.schema.json#/$defs/fieldStatus"
+      }
+    },
+    "provenance": {
+      "$ref": "shared-definitions.schema.json#/$defs/provenanceReference"
+    },
+    "extraction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "adapter_name",
+        "adapter_version",
+        "run_id",
+        "normalization_rules"
+      ],
+      "properties": {
+        "method": {
+          "enum": [
+            "NATIVE_TEXT",
+            "LAYOUT_TABLE",
+            "OCR_ADAPTER",
+            "VISION_ADAPTER",
+            "HUMAN_TRANSCRIPTION",
+            "RULE_DERIVED",
+            "IMPORTED_STRUCTURED_DATA"
+          ]
+        },
+        "adapter_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "adapter_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "run_id": {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        "normalization_rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "rule_id",
+              "rule_version",
+              "locale",
+              "result"
+            ],
+            "properties": {
+              "rule_id": {
+                "$ref": "shared-definitions.schema.json#/$defs/identifier"
+              },
+              "rule_version": {
+                "type": "string",
+                "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+              },
+              "locale": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "result": {
+                "$ref": "shared-definitions.schema.json#/$defs/validationStatus"
+              }
+            }
+          }
+        }
+      }
+    },
+    "confidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ocr",
+        "layout",
+        "extraction",
+        "normalization",
+        "validation",
+        "overall"
+      ],
+      "properties": {
+        "ocr": {
+          "$ref": "shared-definitions.schema.json#/$defs/confidence"
+        },
+        "layout": {
+          "$ref": "shared-definitions.schema.json#/$defs/confidence"
+        },
+        "extraction": {
+          "$ref": "shared-definitions.schema.json#/$defs/confidence"
+        },
+        "normalization": {
+          "$ref": "shared-definitions.schema.json#/$defs/confidence"
+        },
+        "validation": {
+          "$ref": "shared-definitions.schema.json#/$defs/confidence"
+        },
+        "overall": {
+          "$ref": "shared-definitions.schema.json#/$defs/confidence"
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "rules_applied",
+        "results"
+      ],
+      "properties": {
+        "status": {
+          "$ref": "shared-definitions.schema.json#/$defs/validationStatus"
+        },
+        "rules_applied": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "shared-definitions.schema.json#/$defs/identifier"
+          }
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "rule_id",
+              "status",
+              "message"
+            ],
+            "properties": {
+              "rule_id": {
+                "$ref": "shared-definitions.schema.json#/$defs/identifier"
+              },
+              "status": {
+                "$ref": "shared-definitions.schema.json#/$defs/validationStatus"
+              },
+              "message": {
+                "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+              }
+            }
+          }
+        }
+      }
+    },
+    "human_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required",
+        "status",
+        "reviewer",
+        "reviewed_value",
+        "reviewed_at",
+        "decision",
+        "note"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "status": {
+          "$ref": "shared-definitions.schema.json#/$defs/humanReviewStatus"
+        },
+        "reviewer": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reviewed_value": {
+          "$ref": "#/$defs/value"
+        },
+        "reviewed_at": {
+          "oneOf": [
+            {
+              "$ref": "shared-definitions.schema.json#/$defs/timestampOrState"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "decision": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "formula_injection_flag": {
+      "type": "boolean"
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "data_type": {
+            "enum": [
+              "IDENTIFIER",
+              "BANK_ACCOUNT",
+              "TAX_IDENTIFIER",
+              "PHONE",
+              "REFERENCE"
+            ]
+          }
+        },
+        "required": [
+          "data_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "values": {
+            "properties": {
+              "raw_value": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "normalized_value": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "display_value": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "field_status": {
+            "enum": [
+              "NOT_PRESENT",
+              "NOT_APPLICABLE"
+            ]
+          }
+        },
+        "required": [
+          "field_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "values": {
+            "properties": {
+              "raw_value": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "field_status": {
+            "const": "HUMAN_REVIEW_REQUIRED"
+          }
+        },
+        "required": [
+          "field_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "human_review": {
+            "properties": {
+              "required": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "value": {
+      "type": [
+        "string",
+        "number",
+        "integer",
+        "boolean",
+        "array",
+        "object",
+        "null"
+      ]
+    }
+  }
+}

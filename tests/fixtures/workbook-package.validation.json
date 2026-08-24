@@ -1,0 +1,24 @@
+{
+  "decision_scope": "STRUCTURAL_VALIDATION_ONLY",
+  "errors": [],
+  "report_type": "SCHEMA_AND_PACKAGE_VALIDATION",
+  "run_manifest": {
+    "deterministic": true,
+    "domain_results_sha256": "5be3fe91caa7aba9c8301ef55b1f934c48482cd0fefc749518ea302dc7c6cd26",
+    "input_sha256": "78eda7ebe666b660a6da16c97770cd8540a5ac5f4238480105b636d0b0131fa5",
+    "run_id": "validation-1d112a9ea5e6fbfde8e2c8df",
+    "schema_sha256": "8ab0cb449c18a7e2f7431b5b4e7e275ad1281c42d27459d0866b28ce70d6ed2f",
+    "timestamp": "NOT_RECORDED_FOR_DETERMINISTIC_OUTPUT",
+    "tool": "thien-record-validator",
+    "tool_version": "1.0.0",
+    "validator_engine": "INTERNAL_DRAFT_2020_SUBSET"
+  },
+  "schema_version": "1.0.0",
+  "status": "PASS",
+  "summary": {
+    "invalid_count": 0,
+    "package_error_count": 0,
+    "record_count": 1,
+    "valid_count": 1
+  }
+}

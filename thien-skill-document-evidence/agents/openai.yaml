@@ -1,0 +1,10 @@
+interface:
+  display_name: "Thien Skill — Document Intelligence, Evidence & Reconciliation"
+  short_description: "Trích xuất, đối soát và truy nguyên chứng từ"
+  icon_small: "./assets/brand/icon-128.png"
+  icon_large: "./assets/brand/logo-large.png"
+  brand_color: "#001838"
+  default_prompt: "Dùng $thien-skill-document-evidence để kiểm kê, trích xuất, đối soát và tạo gói bằng chứng có provenance từ bộ tài liệu này."
+
+policy:
+  allow_implicit_invocation: true

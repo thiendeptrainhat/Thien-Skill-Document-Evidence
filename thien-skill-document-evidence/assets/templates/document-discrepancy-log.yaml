@@ -1,0 +1,47 @@
+schema_version: "1.0.0"
+template_id: document-discrepancy-log
+register_status: DRAFT
+purpose: Preserve differences and alternative explanations for human disposition without fraud or materiality conclusions.
+discrepancies: []
+required_record_fields:
+  - discrepancy_id
+  - document_package_id
+  - document_ids
+  - field_or_rule
+  - values
+  - difference
+  - tolerance
+  - discrepancy_type
+  - severity
+  - possible_explanations
+  - supporting_evidence_ids
+  - validation_status
+  - owner
+  - human_review_status
+  - handoff_target
+discrepancy_types:
+  - MISSING_DOCUMENT
+  - MISSING_PAGE
+  - MISSING_FIELD
+  - AMOUNT_MISMATCH
+  - QUANTITY_MISMATCH
+  - PRICE_MISMATCH
+  - TAX_MISMATCH
+  - DATE_MISMATCH
+  - PARTY_MISMATCH
+  - BANK_ACCOUNT_MISMATCH
+  - REFERENCE_MISMATCH
+  - SIGNATURE_MISSING
+  - APPROVAL_MISSING
+  - DUPLICATE_DOCUMENT
+  - VERSION_CONFLICT
+  - SYSTEM_DOCUMENT_MISMATCH
+  - UNRESOLVED_OCR
+  - AMBIGUOUS_MATCH
+  - CURRENCY_MISMATCH
+invariants:
+  difference_is_immaterial_without_approved_tolerance: false
+  discrepancy_is_fraud: false
+  contradictory_values_are_preserved: true
+qa_status: NOT_TESTED
+limitations: []

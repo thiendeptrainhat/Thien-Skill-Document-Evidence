@@ -1,0 +1,35 @@
+schema_version: "1.0.0"
+template_id: contract-obligation-register
+register_status: DRAFT
+purpose: Capture source-based obligation mechanics for human review without deciding compliance or breach.
+obligations: []
+required_record_fields:
+  - obligation_id
+  - contract_id
+  - clause_id
+  - obligated_party
+  - beneficiary_party
+  - action_required
+  - object_or_deliverable
+  - trigger
+  - condition
+  - start_date
+  - due_date
+  - recurrence
+  - evidence_required
+  - consequence_of_nonperformance
+  - status
+  - source_reference
+  - extraction_confidence
+  - human_review_status
+allowed_statuses:
+  - EXTRACTED_SOURCE_TEXT
+  - INFERRED_STRUCTURE
+  - HUMAN_VERIFIED
+  - HUMAN_REVIEW_REQUIRED
+claim_boundaries:
+  compliant_or_breached_determined: false
+  legal_effect_determined: false
+  operational_performance_inferred: false
+qa_status: NOT_TESTED
+limitations: []

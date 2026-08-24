@@ -1,0 +1,34 @@
+schema_version: "1.0.0"
+template_id: contract-clause-register
+register_status: DRAFT
+purpose: Preserve clause text, structure, page provenance, version relationships, and review state without legal opinion.
+clauses: []
+required_record_fields:
+  - clause_id
+  - document_id
+  - contract_id
+  - clause_number
+  - clause_title
+  - clause_type
+  - clause_text_raw
+  - clause_text_normalized
+  - page_start
+  - page_end
+  - source_reference
+  - party_affected
+  - cross_references
+  - amended_by
+  - supersedes
+  - extraction_confidence
+  - human_review_status
+  - legal_review_required
+version_controls:
+  preserve_base_clause: true
+  amendments_create_relationships: true
+  silent_overwrite_allowed: false
+claim_boundaries:
+  legal_opinion_created: false
+  enforceability_conclusion_created: false
+  compliance_conclusion_created: false
+qa_status: NOT_TESTED
+limitations: []

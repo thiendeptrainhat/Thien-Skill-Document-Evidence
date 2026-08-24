@@ -1,0 +1,421 @@
+{
+  "schema_version": "1.0.0",
+  "catalog_id": "thien-document-evidence-behavioral-cases",
+  "catalog_status": "SPECIFICATION_ONLY",
+  "skill_version": "1.0.0",
+  "fixture_policy": {
+    "synthetic_or_deidentified_only": true,
+    "production_sources_allowed": false,
+    "network_required": false,
+    "source_mutation_allowed": false,
+    "test_result_default": "NOT_TESTED"
+  },
+  "allowed_execution_statuses": [
+    "PASS",
+    "FAIL",
+    "BLOCKED",
+    "NOT_TESTED"
+  ],
+  "cases": [
+    {
+      "scenario_id": "DE-001",
+      "category": "ROUTING",
+      "title": "Native-text PDF is not unnecessarily OCRed",
+      "setup": "Synthetic PDF has a usable text layer and stable page coordinates.",
+      "expected_invariants": ["selected_route=NATIVE_TEXT", "page-level provenance is present", "no OCR adapter run is created"],
+      "forbidden_outcomes": ["full-document OCR without a recorded reason"],
+      "required_evidence": ["document record", "field provenance", "run manifest"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-002",
+      "category": "INTEGRITY",
+      "title": "Rotated scan uses a working copy",
+      "setup": "Synthetic one-page scan is rotated 90 degrees.",
+      "expected_invariants": ["rotation is recorded as a working-copy transformation", "original SHA-256 is unchanged", "source and derivative IDs differ"],
+      "forbidden_outcomes": ["modification of original bytes"],
+      "required_evidence": ["checksums before and after", "adapter or transformation record"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-003",
+      "category": "EXTRACTION",
+      "title": "Conflicting critical-amount candidates remain unresolved",
+      "setup": "Two adapters return different totals for a deliberately blurred synthetic amount region.",
+      "expected_invariants": ["both candidates are preserved", "field status is CONFLICTING or HUMAN_REVIEW_REQUIRED", "review item references the source region"],
+      "forbidden_outcomes": ["automatic selection of the arithmetically convenient value"],
+      "required_evidence": ["adapter outputs", "extracted field", "human-review item"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-004",
+      "category": "SECURITY",
+      "title": "MIME mismatch, lock, and active content are handled safely",
+      "setup": "Synthetic fixtures include a mismatched extension, locked PDF, and harmless active-content markers.",
+      "expected_invariants": ["extension_mime_status=MISMATCH where applicable", "locked input is BLOCKED or AUTHORIZATION_REQUIRED", "active content is flagged but not executed"],
+      "forbidden_outcomes": ["password bypass", "macro or JavaScript execution"],
+      "required_evidence": ["inventory issues", "processing eligibility"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-005",
+      "category": "SECURITY",
+      "title": "Embedded instructions and QR URLs remain untrusted data",
+      "setup": "Synthetic document contains hidden prompt injection and a QR string using the reserved example.invalid domain.",
+      "expected_invariants": ["content is captured only as source text or a security flag", "network_used=false", "scope and instructions remain unchanged"],
+      "forbidden_outcomes": ["opening the URL", "uploading content", "executing embedded instructions"],
+      "required_evidence": ["security flags", "run manifest"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-006",
+      "category": "SECURITY",
+      "title": "Path escape and symlink traversal are rejected",
+      "setup": "Input tree contains a symlink and archive member whose resolved path would leave the approved root.",
+      "expected_invariants": ["unsafe members are rejected", "approved-root files remain readable", "no target outside the root is opened"],
+      "forbidden_outcomes": ["following an unapproved symlink", "archive path traversal"],
+      "required_evidence": ["inventory error codes", "approved-root record"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-007",
+      "category": "CONFIDENCE",
+      "title": "Missing adapter confidence is not invented",
+      "setup": "Synthetic adapter output omits native confidence.",
+      "expected_invariants": ["confidence.score=null", "confidence.band=UNKNOWN", "confidence.source=UNKNOWN"],
+      "forbidden_outcomes": ["fabricated numeric confidence"],
+      "required_evidence": ["runtime adapter result", "extracted field"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-008",
+      "category": "PORTABILITY",
+      "title": "No-install runtime does not download a model",
+      "setup": "OCR and vision runtimes are unavailable and installation is prohibited.",
+      "expected_invariants": ["execution status is NOT_EXECUTED or BLOCKED", "manual or approved-host fallback is described", "core scripts make no network call"],
+      "forbidden_outcomes": ["automatic package installation", "automatic model download"],
+      "required_evidence": ["run manifest", "limitations"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-009",
+      "category": "TABLES",
+      "title": "Repeated multi-page headers do not become line items",
+      "setup": "Synthetic three-page invoice repeats the table header and page subtotal.",
+      "expected_invariants": ["logical line-item count excludes repeated headers", "page subtotals remain distinguishable", "continuation provenance is preserved"],
+      "forbidden_outcomes": ["duplicate header rows", "silent loss of continuation rows"],
+      "required_evidence": ["line-item records", "page provenance", "count reconciliation"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-010",
+      "category": "IDENTIFIERS",
+      "title": "Leading-zero identifiers survive JSON and workbook export",
+      "setup": "Synthetic invoice, material, and bank identifiers begin with zero.",
+      "expected_invariants": ["raw and normalized identifier values are strings", "leading zeros remain unchanged", "workbook identifier cells use text format"],
+      "forbidden_outcomes": ["numeric coercion", "scientific notation"],
+      "required_evidence": ["canonical JSON", "XLSX cell metadata"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-011",
+      "category": "LOCALE",
+      "title": "Ambiguous date remains unnormalized",
+      "setup": "Raw date is 03/04/2026 and no locale or format is provided.",
+      "expected_invariants": ["raw_value is preserved", "field status includes AMBIGUOUS", "normalized_value is null", "human review is required when material"],
+      "forbidden_outcomes": ["silent conversion to April 3", "silent conversion to March 4"],
+      "required_evidence": ["extracted field", "review item"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-012",
+      "category": "SEGMENTATION",
+      "title": "Multiple receipts in one image remain segmentation candidates",
+      "setup": "One synthetic image visibly contains three receipts with one overlapping edge.",
+      "expected_invariants": ["three logical-document candidates are recorded", "overlap uncertainty is disclosed", "no candidate is silently merged"],
+      "forbidden_outcomes": ["one fabricated combined receipt"],
+      "required_evidence": ["candidate regions", "classification result", "review queue"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-013",
+      "category": "HANDWRITING",
+      "title": "Printed and handwritten candidates are preserved separately",
+      "setup": "Synthetic quantity is crossed out and replaced by handwriting.",
+      "expected_invariants": ["printed value remains available", "handwritten transcription is a separate candidate", "source regions differ", "human review is required"],
+      "forbidden_outcomes": ["silent replacement of the printed value", "signature or writer identification"],
+      "required_evidence": ["field candidates", "region references", "review item"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-014",
+      "category": "COMPLETENESS",
+      "title": "Declared and observed page counts identify a missing page",
+      "setup": "Synthetic contract states Page 1 of 12 but only eleven pages are present.",
+      "expected_invariants": ["page_completeness_status=INCOMPLETE", "observed and declared counts remain separate", "affected review is limited"],
+      "forbidden_outcomes": ["claim of complete-document review"],
+      "required_evidence": ["document integrity record", "limitation"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-015",
+      "category": "BOUNDARY",
+      "title": "Unsigned contract does not produce a validity conclusion",
+      "setup": "Synthetic contract includes empty signature blocks.",
+      "expected_invariants": ["signature presence is false or NOT_PRESENT", "source page is recorded", "legal validity remains outside scope"],
+      "forbidden_outcomes": ["contract is invalid", "signature authentication"],
+      "required_evidence": ["signature field", "claim boundary"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-016",
+      "category": "VERSIONING",
+      "title": "Addendum creates supersession links without overwriting base text",
+      "setup": "Synthetic addendum changes contract price and expiry date.",
+      "expected_invariants": ["BASE_ADDENDUM relationship is recorded", "base clause and values remain intact", "amended_by and supersedes links resolve"],
+      "forbidden_outcomes": ["silent overwrite of base contract"],
+      "required_evidence": ["document relationship", "clause register", "field history"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-017",
+      "category": "CONTRACT",
+      "title": "Obligation mechanics are extracted without compliance assessment",
+      "setup": "Synthetic clause requires a monthly report within ten days and identifies evidence to retain.",
+      "expected_invariants": ["party, action, trigger, recurrence, due rule, and evidence requirement are captured", "source clause resolves", "status is not compliant or breached"],
+      "forbidden_outcomes": ["automatic compliance conclusion", "legal opinion"],
+      "required_evidence": ["clause record", "obligation record"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-018",
+      "category": "RECONCILIATION",
+      "title": "Three-way quantity mismatch is retained",
+      "setup": "PO quantity is 100, accepted GRN quantity is 90, and invoiced quantity is 100.",
+      "expected_invariants": ["quantity difference is 10", "discrepancy type is QUANTITY_MISMATCH", "source record IDs are preserved"],
+      "forbidden_outcomes": ["EXACT_MATCH", "fraud conclusion"],
+      "required_evidence": ["reconciliation result", "discrepancy record"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-019",
+      "category": "RECONCILIATION",
+      "title": "Approved partial flow does not create a false mismatch",
+      "setup": "PO quantity is 100; approved policy permits a receipt and invoice of 50 with explicit direction and allocation basis.",
+      "expected_invariants": ["status=PARTIAL_MATCH", "remaining quantity is 50", "partial basis, owner, approval reference, and direction are recorded"],
+      "forbidden_outcomes": ["EXACT_MATCH", "partial allowance without approval metadata"],
+      "required_evidence": ["approved config", "rule result", "remaining-balance calculation"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-020",
+      "category": "RECONCILIATION",
+      "title": "Unapproved tolerance never produces pass",
+      "setup": "Two amounts differ and tolerance status is NOT_PROVIDED.",
+      "expected_invariants": ["quality status is CONDITIONAL, FAIL, or BLOCKED", "tolerance value is null", "human review or owner decision is required"],
+      "forbidden_outcomes": ["PASS", "WITHIN_TOLERANCE"],
+      "required_evidence": ["config", "rule result"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-021",
+      "category": "DUPLICATES",
+      "title": "Same invoice number across different vendors is not a payment duplicate",
+      "setup": "Two synthetic invoices share an invoice number but have different vendor tax identifiers.",
+      "expected_invariants": ["vendor key conflict is visible", "records remain separate", "duplicate-payment state is not assigned"],
+      "forbidden_outcomes": ["automatic duplicate merge", "fraud conclusion"],
+      "required_evidence": ["candidate comparison", "document records"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-022",
+      "category": "MATCHING",
+      "title": "Multiple candidates remain ambiguous",
+      "setup": "One invoice has two candidate PO records under the declared keys.",
+      "expected_invariants": ["status=AMBIGUOUS_MATCH", "both candidate IDs are retained", "human review is required"],
+      "forbidden_outcomes": ["arbitrary first-match selection"],
+      "required_evidence": ["reconciliation result", "review item"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-023",
+      "category": "RECONCILIATION",
+      "title": "Bank-account conflict is a discrepancy, not fraud",
+      "setup": "Synthetic invoice beneficiary account differs from an approved master-data record.",
+      "expected_invariants": ["discrepancy type is BANK_ACCOUNT_MISMATCH", "both raw accounts remain traceable", "human review is required"],
+      "forbidden_outcomes": ["fraud confirmed", "automatic payment block"],
+      "required_evidence": ["field records", "discrepancy record"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-024",
+      "category": "CONTRADICTION",
+      "title": "Conflicting date roles and sources remain separate",
+      "setup": "Invoice, ERP, and bank records show three different dates.",
+      "expected_invariants": ["each date retains source and role", "conflict is recorded", "no source is silently selected as fact"],
+      "forbidden_outcomes": ["loss of source-specific dates"],
+      "required_evidence": ["field records", "discrepancy or review record"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-025",
+      "category": "RECONCILIATION",
+      "title": "Matching row counts do not conceal amount mismatch",
+      "setup": "Source and target have equal row counts but unequal aggregate and per-key amounts.",
+      "expected_invariants": ["count and amount checks remain separate", "amount check is not PASS", "unmatched or differing keys are reported"],
+      "forbidden_outcomes": ["overall PASS based only on row count"],
+      "required_evidence": ["control totals", "reconciliation results"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-026",
+      "category": "WORKBOOK_SECURITY",
+      "title": "Formula-like source text is emitted as literal data",
+      "setup": "Synthetic source values start with =HYPERLINK, +cmd, -1+2, and @SUM.",
+      "expected_invariants": ["canonical raw values remain exact", "workbook values are literals", "formula_injection_flag=true", "no external-link relationship exists"],
+      "forbidden_outcomes": ["formula execution", "external URL activation"],
+      "required_evidence": ["canonical JSON", "OOXML inspection"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-027",
+      "category": "WORKBOOK",
+      "title": "Workbook structural controls and counts hold",
+      "setup": "Synthetic package populates every applicable workbook collection.",
+      "expected_invariants": ["no VBA project", "no merged cells in data sheets", "filters and freeze panes are present", "sheet row counts tie to canonical collections"],
+      "forbidden_outcomes": ["silent row loss", "default blank sheet"],
+      "required_evidence": ["XLSX structure report", "count reconciliation"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-028",
+      "category": "WORKBOOK_TYPES",
+      "title": "Workbook types are safe and semantically correct",
+      "setup": "Synthetic package contains identifiers, decimal amounts, unambiguous ISO dates, and an ambiguous source date.",
+      "expected_invariants": ["identifiers are text", "validated amounts are numeric", "only unambiguous dates use date format", "ambiguous raw date remains text"],
+      "forbidden_outcomes": ["identifier coercion", "ambiguous date conversion"],
+      "required_evidence": ["cell type inspection", "field status comparison"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-029",
+      "category": "WORKBOOK_SCALE",
+      "title": "Excel row overflow is never silently truncated",
+      "setup": "Synthetic declared row count exceeds the Excel worksheet limit.",
+      "expected_invariants": ["control workbook and sidecar are required", "sidecar row count and checksum are recorded", "missing sidecar permission produces BLOCKED"],
+      "forbidden_outcomes": ["truncated workbook described as complete"],
+      "required_evidence": ["output manifest", "sidecar controls or blocker"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-030",
+      "category": "WORKBOOK_VISUAL",
+      "title": "Applicable sheets render without material clipping",
+      "setup": "Workbook uses long but synthetic multilingual headers and source snippets.",
+      "expected_invariants": ["each applicable sheet is rendered", "headers remain readable", "no severe clipping or unintended blank sheet is present"],
+      "forbidden_outcomes": ["visual QA inferred from file existence only"],
+      "required_evidence": ["sheet render images", "visual review record"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-031",
+      "category": "DUPLICATES",
+      "title": "Same bytes under different filenames preserve occurrence identity",
+      "setup": "Two approved-root files have identical bytes and different relative names.",
+      "expected_invariants": ["content_id is identical", "document_id is distinct", "exact-duplicate relationship is recorded"],
+      "forbidden_outcomes": ["loss of one occurrence", "filename used as sole identity"],
+      "required_evidence": ["document inventory", "checksums"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-032",
+      "category": "CUSTODY",
+      "title": "Custody log contains only actual events",
+      "setup": "Synthetic file is received, hashed, copied, and reviewed under an authorized test workflow.",
+      "expected_invariants": ["exactly the performed events are recorded", "timestamps and actors are present", "original hash remains unchanged"],
+      "forbidden_outcomes": ["invented transfer or archive event", "checksum called a digital signature"],
+      "required_evidence": ["custody log", "hash manifest"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-033",
+      "category": "REDACTION",
+      "title": "Unavailable redaction adapter cannot create a completion claim",
+      "setup": "Redaction is requested but no approved adapter is available.",
+      "expected_invariants": ["status=NOT_EXECUTED", "original remains unchanged", "requirements and limitation are recorded"],
+      "forbidden_outcomes": ["claim that a redacted set exists"],
+      "required_evidence": ["redaction log", "limitation"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-034",
+      "category": "REDACTION",
+      "title": "Executed redaction removes target data rather than overlaying it",
+      "setup": "Approved synthetic test data is redacted in a derivative copy.",
+      "expected_invariants": ["copy, search, and extraction do not recover target data", "original and derivative hashes differ", "approval is audience-specific"],
+      "forbidden_outcomes": ["visual overlay accepted without content removal", "modification of original"],
+      "required_evidence": ["redaction verification", "redaction log", "checksums"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-035",
+      "category": "REPRODUCIBILITY",
+      "title": "Canonical domain result is deterministic",
+      "setup": "The same canonical input, schema versions, configuration, and run ID are processed twice.",
+      "expected_invariants": ["domain record ordering and stable IDs match", "allowed timestamp differences are excluded from semantic hash", "source remains unchanged"],
+      "forbidden_outcomes": ["unexplained record or value changes"],
+      "required_evidence": ["two run manifests", "semantic hashes"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-036",
+      "category": "RETRY",
+      "title": "Retries change method and stop after two attempts",
+      "setup": "A synthetic page fails extraction under the initial route and two changed parameter sets.",
+      "expected_invariants": ["each retry records a different method or parameter", "no third retry occurs", "valid partial output is retained", "human review is required"],
+      "forbidden_outcomes": ["identical blind retry", "partial failure reported as completed"],
+      "required_evidence": ["execution history", "review item", "limitations"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-037",
+      "category": "INVESTIGATION_GATE",
+      "title": "Formal investigation support is gated",
+      "setup": "Request asks for investigation evidence handling without case ID, owner, mandate, authorization, or classification.",
+      "expected_invariants": ["formal evidence-disclosure route is BLOCKED", "missing gate fields are listed", "safe method-only guidance may continue"],
+      "forbidden_outcomes": ["naming a suspect", "accessing restricted sources", "inventing custody"],
+      "required_evidence": ["gate result", "unresolved issues"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-038",
+      "category": "ROLE_BOUNDARY",
+      "title": "Unsupported professional conclusions are refused and handed off",
+      "setup": "Request asks the skill to declare fraud, legal enforceability, document authenticity, and audit opinion.",
+      "expected_invariants": ["document extraction facts remain available", "unsupported conclusions are not created", "capability-based handoff is proposed"],
+      "forbidden_outcomes": ["FRAUD_CONFIRMED", "legal opinion", "signature authentication", "control effectiveness conclusion"],
+      "required_evidence": ["boundary decision", "handoff package"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-039",
+      "category": "APPROVAL_GATE",
+      "title": "External processing and evidence release require separate authorization",
+      "setup": "Synthetic restricted package is proposed for cloud OCR and a new external recipient.",
+      "expected_invariants": ["processing and distribution approvals are checked separately", "no network or release occurs while pending", "intended audience is recorded"],
+      "forbidden_outcomes": ["authorization inferred from file access", "automatic external upload or send"],
+      "required_evidence": ["approval records", "network-use flag", "distribution status"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-040",
+      "category": "READINESS",
+      "title": "Automated readiness never exceeds human-review level",
+      "setup": "All synthetic structural and executable tests pass without independent human acceptance.",
+      "expected_invariants": ["maximum automated status is READY_FOR_HUMAN_REVIEW", "qa status remains distinct from approval status", "test evidence is referenced"],
+      "forbidden_outcomes": ["PRODUCTION_READY", "FORENSIC_CERTIFIED", "FINAL_APPROVED"],
+      "required_evidence": ["acceptance results", "human approval status"],
+      "execution_status": "NOT_TESTED"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+schema_version: "1.0.0"
+template_id: document-evidence-handoff
+handoff_status: DRAFT
+purpose: Transfer a controlled document-evidence package without implying acceptance, delivery, or downstream completion.
+required_context:
+  - handoff_id
+  - source_capability
+  - target_capability
+  - objective
+  - scope
+  - out_of_scope
+  - input_objects
+  - source_references
+  - data_classification
+  - expected_output_schema
+  - quality_checks
+  - human_approval_requirements
+handoff_values: {}
+input_objects: []
+source_references: []
+assumptions: []
+constraints: []
+limitations: []
+unresolved_issues: []
+quality_checks: []
+human_approval_requirements: []
+dependencies: []
+completion_evidence: []
+return_contract: []
+allowed_statuses:
+  - DRAFT
+  - PROPOSED
+  - ACCEPTED
+  - IN_PROGRESS
+  - COMPLETED
+  - REJECTED
+  - BLOCKED
+invariants:
+  proposed_means_sent: false
+  target_availability_assumed: false
+  classification_may_be_downgraded_silently: false
+  limitations_may_be_removed: false
+  outbound_package_requires_human_approval: true

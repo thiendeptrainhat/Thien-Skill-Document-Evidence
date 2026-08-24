@@ -1,0 +1,959 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "pkg.synthetic-0001",
+  "package_version": "1.0.0",
+  "skill_id": "thien-skill-document-evidence",
+  "skill_version": "1.0.0",
+  "run_id": "run.synthetic-0001",
+  "engagement_id": "engagement.synthetic-0001",
+  "case_id": "case.synthetic-0001",
+  "route": "REVIEW_REPERFORM",
+  "status": "READY_FOR_HUMAN_REVIEW",
+  "run_manifest": {
+    "started_at": "2026-08-23T08:00:00+07:00",
+    "completed_at": "2026-08-23T08:05:00+07:00",
+    "execution_status": "SUCCEEDED_WITH_WARNINGS",
+    "parent_run_id": null,
+    "schema_versions": {
+      "extraction_package": "1.0.0"
+    },
+    "tool_versions": {
+      "build_workbook": "1.0.0"
+    },
+    "source_content_ids": [
+      "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    ],
+    "config_checksums": {
+      "reconciliation": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "record_counts": {
+      "documents": 1,
+      "evidence": 1,
+      "fields": 6,
+      "line_items": 1,
+      "reconciliations": 1
+    },
+    "retry_count": 0,
+    "execution_history": [
+      {
+        "step_id": "workbook.forward-test",
+        "status": "SUCCEEDED",
+        "method_change": null,
+        "timestamp": "2026-08-23T08:05:00+07:00"
+      }
+    ]
+  },
+  "document_inventory": [
+    {
+      "schema_version": "1.0.0",
+      "record_version": 1,
+      "document_id": "doc.invoice-000123",
+      "content_id": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "evidence_ids": [
+        "evidence.invoice-000123"
+      ],
+      "package_id": "pkg.synthetic-0001",
+      "file": {
+        "original_filename": "invoice-000123.pdf",
+        "source_reference": "fixtures/invoice-000123.pdf",
+        "extension": ".pdf",
+        "declared_mime_type": "application/pdf",
+        "detected_mime_type": "application/pdf",
+        "size_bytes": 12345,
+        "checksum": {
+          "algorithm": "SHA-256",
+          "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "computed_at": "2026-08-23T08:00:30+07:00",
+          "object_role": "ORIGINAL"
+        }
+      },
+      "copy_role": "ORIGINAL",
+      "integrity": {
+        "read_status": "READABLE",
+        "extension_mime_status": "MATCH",
+        "password_protected": false,
+        "encrypted": false,
+        "active_content": {
+          "javascript": "NOT_DETECTED",
+          "macro": "NOT_DETECTED",
+          "embedded_files": "NOT_DETECTED",
+          "external_links": "NOT_DETECTED"
+        },
+        "page_count": {
+          "observed": 1,
+          "declared": 1
+        },
+        "page_completeness_status": "COMPLETE",
+        "processing_eligibility": "ELIGIBLE_WITH_LIMITATIONS",
+        "issues": []
+      },
+      "classification": {
+        "document_type": "INVOICE",
+        "profile_id": "profile.invoice-vn",
+        "profile_version": "1.0.0",
+        "status": "CLASSIFIED",
+        "method": "RULE_BASED",
+        "confidence": {
+          "score": 0.99,
+          "band": "HIGH",
+          "source": "RULE_CALCULATED",
+          "methodology": "Synthetic deterministic classification fixture"
+        },
+        "candidate_types": [
+          "INVOICE"
+        ]
+      },
+      "processing": {
+        "native_text_status": "AVAILABLE",
+        "selected_route": "NATIVE_TEXT",
+        "adapter_run_ids": [],
+        "status": "SUCCEEDED_WITH_WARNINGS"
+      },
+      "relationships": [],
+      "data_classification": [
+        "INTERNAL"
+      ],
+      "security_flags": [
+        "SYNTHETIC_FORMULA_LIKE_TEXT_PRESENT"
+      ],
+      "review_status": "PENDING",
+      "assumptions": [],
+      "limitations": [
+        "Synthetic fixture; not production evidence."
+      ]
+    }
+  ],
+  "evidence_register": [
+    {
+      "schema_version": "1.0.0",
+      "record_version": 1,
+      "evidence_id": "evidence.invoice-000123",
+      "document_id": "doc.invoice-000123",
+      "engagement_id": "engagement.synthetic-0001",
+      "case_id": "case.synthetic-0001",
+      "evidence_type": "USER_PROVIDED_COPY",
+      "title": "Synthetic invoice fixture",
+      "source": {
+        "source_type": "FILE_SYSTEM",
+        "source_reference": "fixtures/invoice-000123.pdf",
+        "provided_by": "Synthetic test harness",
+        "received_by": "Synthetic test harness",
+        "custodian": null
+      },
+      "acquisition": {
+        "received_at": "2026-08-23T08:00:00+07:00",
+        "captured_at": "NOT_APPLICABLE",
+        "method": "Synthetic fixture generation",
+        "authorization_reference": "TEST-ONLY"
+      },
+      "locations": {
+        "original_location_reference": "fixtures/invoice-000123.pdf",
+        "working_copy_location_reference": null
+      },
+      "checksum": {
+        "algorithm": "SHA-256",
+        "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "computed_at": "2026-08-23T08:00:30+07:00",
+        "object_role": "ORIGINAL"
+      },
+      "copy_role": "ORIGINAL",
+      "reliability": {
+        "classification": "USER_PROVIDED_COPY",
+        "assessment_status": "PARTIALLY_ASSESSED",
+        "basis": [
+          "Synthetic checksum and source reference recorded"
+        ],
+        "corroborating_evidence_ids": [],
+        "limitations": [
+          "No authenticity or admissibility conclusion."
+        ]
+      },
+      "custody_status": "COMPLETE_FOR_RECORDED_SCOPE",
+      "data_classification": [
+        "INTERNAL"
+      ],
+      "access_restrictions": [
+        "Synthetic test use only"
+      ],
+      "redaction_status": "NOT_REQUIRED",
+      "related_objects": [],
+      "review_status": "PENDING",
+      "claim_limits": {
+        "checksum_proves_authenticity": false,
+        "record_proves_admissibility": false,
+        "ocr_is_independent_evidence": false
+      },
+      "notes": []
+    }
+  ],
+  "runtime_adapter_results": [],
+  "extracted_fields": [
+    {
+      "schema_version": "1.0.0",
+      "record_version": 1,
+      "field_id": "field.invoice-number",
+      "document_id": "doc.invoice-000123",
+      "evidence_id": "evidence.invoice-000123",
+      "profile_id": "profile.invoice-vn",
+      "profile_version": "1.0.0",
+      "field_name": "invoice_number",
+      "field_label": "Invoice number",
+      "field_group": "header",
+      "values": {
+        "raw_value": "000123",
+        "normalized_value": "000123",
+        "display_value": "000123"
+      },
+      "data_type": "IDENTIFIER",
+      "unit": null,
+      "currency": null,
+      "field_status": "VERIFIED",
+      "status_flags": [
+        "VERIFIED"
+      ],
+      "provenance": {
+        "document_id": "doc.invoice-000123",
+        "evidence_id": "evidence.invoice-000123",
+        "source_page": 1,
+        "source_region": "header.invoice_number",
+        "bounding_box": null,
+        "source_snippet": "Invoice No. 000123"
+      },
+      "extraction": {
+        "method": "NATIVE_TEXT",
+        "adapter_name": null,
+        "adapter_version": null,
+        "run_id": "run.synthetic-0001",
+        "normalization_rules": []
+      },
+      "confidence": {
+        "ocr": {"score": null, "band": "UNKNOWN", "source": "UNKNOWN"},
+        "layout": {"score": null, "band": "UNKNOWN", "source": "UNKNOWN"},
+        "extraction": {"score": 1, "band": "HIGH", "source": "RULE_CALCULATED"},
+        "normalization": {"score": 1, "band": "HIGH", "source": "RULE_CALCULATED"},
+        "validation": {"score": 1, "band": "HIGH", "source": "RULE_CALCULATED"},
+        "overall": {"score": 1, "band": "HIGH", "source": "RULE_CALCULATED"}
+      },
+      "validation": {
+        "status": "PASS",
+        "rules_applied": [
+          "identifier.preserve-leading-zero"
+        ],
+        "results": [
+          {
+            "rule_id": "identifier.preserve-leading-zero",
+            "status": "PASS",
+            "message": "Identifier retained as text."
+          }
+        ]
+      },
+      "human_review": {
+        "required": false,
+        "status": "NOT_REQUIRED",
+        "reviewer": null,
+        "reviewed_value": null,
+        "reviewed_at": null,
+        "decision": null,
+        "note": null
+      },
+      "formula_injection_flag": false,
+      "notes": []
+    },
+    {
+      "schema_version": "1.0.0",
+      "record_version": 1,
+      "field_id": "field.source-note",
+      "document_id": "doc.invoice-000123",
+      "evidence_id": "evidence.invoice-000123",
+      "profile_id": "profile.invoice-vn",
+      "profile_version": "1.0.0",
+      "field_name": "source_note",
+      "field_label": "Untrusted source note",
+      "field_group": "notes",
+      "values": {
+        "raw_value": "=HYPERLINK(\"https://example.invalid\",\"test\")",
+        "normalized_value": "=HYPERLINK(\"https://example.invalid\",\"test\")",
+        "display_value": "=HYPERLINK(\"https://example.invalid\",\"test\")"
+      },
+      "data_type": "TEXT",
+      "unit": null,
+      "currency": null,
+      "field_status": "HUMAN_REVIEW_REQUIRED",
+      "status_flags": [
+        "HUMAN_REVIEW_REQUIRED"
+      ],
+      "provenance": {
+        "document_id": "doc.invoice-000123",
+        "evidence_id": "evidence.invoice-000123",
+        "source_page": 1,
+        "source_region": "footer.note",
+        "bounding_box": null,
+        "source_snippet": "=HYPERLINK(\"https://example.invalid\",\"test\")"
+      },
+      "extraction": {
+        "method": "NATIVE_TEXT",
+        "adapter_name": null,
+        "adapter_version": null,
+        "run_id": "run.synthetic-0001",
+        "normalization_rules": []
+      },
+      "confidence": {
+        "ocr": {"score": null, "band": "UNKNOWN", "source": "UNKNOWN"},
+        "layout": {"score": null, "band": "UNKNOWN", "source": "UNKNOWN"},
+        "extraction": {"score": null, "band": "UNKNOWN", "source": "UNKNOWN"},
+        "normalization": {"score": null, "band": "UNKNOWN", "source": "UNKNOWN"},
+        "validation": {"score": null, "band": "UNKNOWN", "source": "UNKNOWN"},
+        "overall": {"score": null, "band": "UNKNOWN", "source": "UNKNOWN"}
+      },
+      "validation": {
+        "status": "HUMAN_REVIEW_REQUIRED",
+        "rules_applied": [
+          "workbook.literal-value"
+        ],
+        "results": [
+          {
+            "rule_id": "workbook.literal-value",
+            "status": "HUMAN_REVIEW_REQUIRED",
+            "message": "Formula-like source text must remain literal."
+          }
+        ]
+      },
+      "human_review": {
+        "required": true,
+        "status": "PENDING",
+        "reviewer": null,
+        "reviewed_value": null,
+        "reviewed_at": null,
+        "decision": null,
+        "note": null
+      },
+      "formula_injection_flag": true,
+      "notes": [
+        "Reserved example.invalid URL; no network action permitted."
+      ]
+    },
+    {
+      "schema_version": "1.0.0",
+      "record_version": 1,
+      "field_id": "field.bank-account",
+      "document_id": "doc.invoice-000123",
+      "evidence_id": "evidence.invoice-000123",
+      "profile_id": "profile.invoice-vn",
+      "profile_version": "1.0.0",
+      "field_name": "bank_account",
+      "field_label": "Bank account",
+      "field_group": "payment",
+      "values": {
+        "raw_value": "000045",
+        "normalized_value": "000045",
+        "display_value": "000045"
+      },
+      "data_type": "BANK_ACCOUNT",
+      "unit": null,
+      "currency": null,
+      "field_status": "CONFLICTING",
+      "status_flags": [
+        "CONFLICTING",
+        "HUMAN_REVIEW_REQUIRED"
+      ],
+      "provenance": {
+        "document_id": "doc.invoice-000123",
+        "evidence_id": "evidence.invoice-000123",
+        "source_page": 1,
+        "source_region": "payment.bank_account",
+        "bounding_box": null,
+        "source_snippet": "Account 000045"
+      },
+      "extraction": {
+        "method": "NATIVE_TEXT",
+        "adapter_name": null,
+        "adapter_version": null,
+        "run_id": "run.synthetic-0001",
+        "normalization_rules": []
+      },
+      "confidence": {
+        "ocr": {"score": null, "band": "UNKNOWN", "source": "UNKNOWN"},
+        "layout": {"score": null, "band": "UNKNOWN", "source": "UNKNOWN"},
+        "extraction": {"score": 0.95, "band": "HIGH", "source": "RULE_CALCULATED"},
+        "normalization": {"score": 1, "band": "HIGH", "source": "RULE_CALCULATED"},
+        "validation": {"score": 0.2, "band": "LOW", "source": "RULE_CALCULATED"},
+        "overall": {"score": 0.2, "band": "LOW", "source": "RULE_CALCULATED"}
+      },
+      "validation": {
+        "status": "HUMAN_REVIEW_REQUIRED",
+        "rules_applied": [
+          "bank-account.compare-master"
+        ],
+        "results": [
+          {
+            "rule_id": "bank-account.compare-master",
+            "status": "HUMAN_REVIEW_REQUIRED",
+            "message": "Document and synthetic master values conflict."
+          }
+        ]
+      },
+      "human_review": {
+        "required": true,
+        "status": "PENDING",
+        "reviewer": null,
+        "reviewed_value": null,
+        "reviewed_at": null,
+        "decision": null,
+        "note": null
+      },
+      "formula_injection_flag": false,
+      "notes": []
+    },
+    {
+      "schema_version": "1.0.0",
+      "record_version": 1,
+      "field_id": "field.invoice-date",
+      "document_id": "doc.invoice-000123",
+      "evidence_id": "evidence.invoice-000123",
+      "profile_id": "profile.invoice-vn",
+      "profile_version": "1.0.0",
+      "field_name": "invoice_date",
+      "field_label": "Invoice date",
+      "field_group": "header",
+      "values": {
+        "raw_value": "03/04/2026",
+        "normalized_value": null,
+        "display_value": "03/04/2026"
+      },
+      "data_type": "DATE",
+      "unit": null,
+      "currency": null,
+      "field_status": "AMBIGUOUS",
+      "status_flags": [
+        "AMBIGUOUS",
+        "HUMAN_REVIEW_REQUIRED"
+      ],
+      "provenance": {
+        "document_id": "doc.invoice-000123",
+        "evidence_id": "evidence.invoice-000123",
+        "source_page": 1,
+        "source_region": "header.invoice_date",
+        "bounding_box": null,
+        "source_snippet": "Date 03/04/2026"
+      },
+      "extraction": {
+        "method": "NATIVE_TEXT",
+        "adapter_name": null,
+        "adapter_version": null,
+        "run_id": "run.synthetic-0001",
+        "normalization_rules": []
+      },
+      "confidence": {
+        "ocr": {"score": null, "band": "UNKNOWN", "source": "UNKNOWN"},
+        "layout": {"score": null, "band": "UNKNOWN", "source": "UNKNOWN"},
+        "extraction": {"score": 1, "band": "HIGH", "source": "RULE_CALCULATED"},
+        "normalization": {"score": null, "band": "UNKNOWN", "source": "UNKNOWN"},
+        "validation": {"score": null, "band": "UNKNOWN", "source": "UNKNOWN"},
+        "overall": {"score": null, "band": "UNKNOWN", "source": "UNKNOWN"}
+      },
+      "validation": {
+        "status": "HUMAN_REVIEW_REQUIRED",
+        "rules_applied": [
+          "date.require-explicit-locale"
+        ],
+        "results": [
+          {
+            "rule_id": "date.require-explicit-locale",
+            "status": "HUMAN_REVIEW_REQUIRED",
+            "message": "Ambiguous date remains unnormalized."
+          }
+        ]
+      },
+      "human_review": {
+        "required": true,
+        "status": "PENDING",
+        "reviewer": null,
+        "reviewed_value": null,
+        "reviewed_at": null,
+        "decision": null,
+        "note": null
+      },
+      "formula_injection_flag": false,
+      "notes": []
+    },
+    {
+      "schema_version": "1.0.0",
+      "record_version": 1,
+      "field_id": "field.invoice-amount",
+      "document_id": "doc.invoice-000123",
+      "evidence_id": "evidence.invoice-000123",
+      "profile_id": "profile.invoice-vn",
+      "profile_version": "1.0.0",
+      "field_name": "total_amount",
+      "field_label": "Total amount",
+      "field_group": "totals",
+      "values": {
+        "raw_value": "500.00",
+        "normalized_value": "500.00",
+        "display_value": "500.00"
+      },
+      "data_type": "CURRENCY_AMOUNT",
+      "unit": null,
+      "currency": "VND",
+      "field_status": "VERIFIED",
+      "status_flags": ["VERIFIED"],
+      "provenance": {
+        "document_id": "doc.invoice-000123",
+        "evidence_id": "evidence.invoice-000123",
+        "source_page": 1,
+        "source_region": "totals.total_amount",
+        "bounding_box": null,
+        "source_snippet": "Total 500.00 VND"
+      },
+      "extraction": {
+        "method": "NATIVE_TEXT",
+        "adapter_name": null,
+        "adapter_version": null,
+        "run_id": "run.synthetic-0001",
+        "normalization_rules": []
+      },
+      "confidence": {
+        "ocr": {"score": null, "band": "UNKNOWN", "source": "UNKNOWN"},
+        "layout": {"score": null, "band": "UNKNOWN", "source": "UNKNOWN"},
+        "extraction": {"score": 1, "band": "HIGH", "source": "RULE_CALCULATED"},
+        "normalization": {"score": 1, "band": "HIGH", "source": "RULE_CALCULATED"},
+        "validation": {"score": 1, "band": "HIGH", "source": "RULE_CALCULATED"},
+        "overall": {"score": 1, "band": "HIGH", "source": "RULE_CALCULATED"}
+      },
+      "validation": {
+        "status": "PASS",
+        "rules_applied": ["amount.canonical-decimal"],
+        "results": [
+          {
+            "rule_id": "amount.canonical-decimal",
+            "status": "PASS",
+            "message": "Canonical decimal is safe for reviewed workbook typing."
+          }
+        ]
+      },
+      "human_review": {
+        "required": false,
+        "status": "NOT_REQUIRED",
+        "reviewer": null,
+        "reviewed_value": null,
+        "reviewed_at": null,
+        "decision": null,
+        "note": null
+      },
+      "formula_injection_flag": false,
+      "notes": []
+    },
+    {
+      "schema_version": "1.0.0",
+      "record_version": 1,
+      "field_id": "field.delivery-date",
+      "document_id": "doc.invoice-000123",
+      "evidence_id": "evidence.invoice-000123",
+      "profile_id": "profile.invoice-vn",
+      "profile_version": "1.0.0",
+      "field_name": "delivery_date",
+      "field_label": "Delivery date",
+      "field_group": "header",
+      "values": {
+        "raw_value": "05/04/2026",
+        "normalized_value": "2026-04-05",
+        "display_value": "2026-04-05"
+      },
+      "data_type": "DATE",
+      "unit": null,
+      "currency": null,
+      "field_status": "VERIFIED",
+      "status_flags": ["VERIFIED"],
+      "provenance": {
+        "document_id": "doc.invoice-000123",
+        "evidence_id": "evidence.invoice-000123",
+        "source_page": 1,
+        "source_region": "header.delivery_date",
+        "bounding_box": null,
+        "source_snippet": "Delivery date 05/04/2026"
+      },
+      "extraction": {
+        "method": "NATIVE_TEXT",
+        "adapter_name": null,
+        "adapter_version": null,
+        "run_id": "run.synthetic-0001",
+        "normalization_rules": [
+          {
+            "rule_id": "date.explicit-locale",
+            "rule_version": "1.0.0",
+            "locale": "vi-VN",
+            "result": "PASS"
+          }
+        ]
+      },
+      "confidence": {
+        "ocr": {"score": null, "band": "UNKNOWN", "source": "UNKNOWN"},
+        "layout": {"score": null, "band": "UNKNOWN", "source": "UNKNOWN"},
+        "extraction": {"score": 1, "band": "HIGH", "source": "RULE_CALCULATED"},
+        "normalization": {"score": 1, "band": "HIGH", "source": "RULE_CALCULATED"},
+        "validation": {"score": 1, "band": "HIGH", "source": "RULE_CALCULATED"},
+        "overall": {"score": 1, "band": "HIGH", "source": "RULE_CALCULATED"}
+      },
+      "validation": {
+        "status": "PASS",
+        "rules_applied": ["date.explicit-locale"],
+        "results": [
+          {
+            "rule_id": "date.explicit-locale",
+            "status": "PASS",
+            "message": "Explicit locale supports the recorded ISO date."
+          }
+        ]
+      },
+      "human_review": {
+        "required": false,
+        "status": "NOT_REQUIRED",
+        "reviewer": null,
+        "reviewed_value": null,
+        "reviewed_at": null,
+        "decision": null,
+        "note": null
+      },
+      "formula_injection_flag": false,
+      "notes": []
+    }
+  ],
+  "line_items": [
+    {
+      "schema_version": "1.0.0",
+      "record_version": 1,
+      "line_item_id": "line.invoice-000123.0001",
+      "document_id": "doc.invoice-000123",
+      "evidence_id": "evidence.invoice-000123",
+      "profile_id": "profile.invoice-vn",
+      "profile_version": "1.0.0",
+      "table_id": "table.invoice-lines",
+      "logical_sequence": 1,
+      "source_pages": [1],
+      "source_rows": ["page-1-row-1"],
+      "raw_cells": {
+        "item_code": "000789",
+        "description": "+cmd",
+        "quantity": "1"
+      },
+      "field_ids": [
+        "field.invoice-number"
+      ],
+      "validation_status": "PASS_WITH_WARNING",
+      "row_confidence": {
+        "score": null,
+        "band": "UNKNOWN",
+        "source": "UNKNOWN"
+      },
+      "reconciliation_key": {
+        "key_fields": {
+          "item_code": "000789"
+        },
+        "key_status": "COMPLETE"
+      },
+      "human_review_status": "PENDING",
+      "notes": [
+        "Formula-like text retained as untrusted data."
+      ]
+    }
+  ],
+  "contract_clauses": [
+    {
+      "clause_id": "clause.synthetic-001",
+      "document_id": "doc.invoice-000123",
+      "contract_id": "contract.synthetic-001",
+      "clause_number": "1.1",
+      "clause_title": "Synthetic delivery obligation",
+      "clause_type": "DELIVERY",
+      "clause_text_raw": "Supplier delivers a monthly report within ten days.",
+      "clause_text_normalized": null,
+      "page_start": 1,
+      "page_end": 1,
+      "source_reference": "fixtures/invoice-000123.pdf#page=1",
+      "party_affected": ["Supplier"],
+      "cross_references": [],
+      "amended_by": [],
+      "supersedes": [],
+      "extraction_confidence": {
+        "score": null,
+        "band": "UNKNOWN",
+        "source": "UNKNOWN"
+      },
+      "human_review_status": "PENDING",
+      "legal_review_required": true
+    }
+  ],
+  "contract_obligations": [
+    {
+      "obligation_id": "obligation.synthetic-001",
+      "contract_id": "contract.synthetic-001",
+      "clause_id": "clause.synthetic-001",
+      "obligated_party": "Supplier",
+      "beneficiary_party": "Customer",
+      "action_required": "Deliver a monthly report",
+      "object_or_deliverable": "Monthly report",
+      "trigger": "Each month end",
+      "condition": null,
+      "start_date": null,
+      "due_date": null,
+      "recurrence": "Monthly",
+      "evidence_required": ["Submitted report"],
+      "consequence_of_nonperformance": null,
+      "status": "HUMAN_REVIEW_REQUIRED",
+      "source_reference": "fixtures/invoice-000123.pdf#page=1",
+      "extraction_confidence": {
+        "score": null,
+        "band": "UNKNOWN",
+        "source": "UNKNOWN"
+      },
+      "human_review_status": "PENDING"
+    }
+  ],
+  "document_links": [
+    {
+      "link_id": "link.synthetic-self-review",
+      "left_document_id": "doc.invoice-000123",
+      "right_document_id": "doc.invoice-000123",
+      "match_status": "HUMAN_REVIEW_REQUIRED",
+      "match_keys": ["invoice_number"],
+      "method": "Synthetic workbook projection fixture",
+      "confidence": {
+        "score": null,
+        "band": "UNKNOWN",
+        "source": "UNKNOWN"
+      },
+      "source_references": ["fixtures/invoice-000123.pdf"],
+      "human_review_status": "PENDING"
+    }
+  ],
+  "reconciliation_results": [
+    {
+      "schema_version": "1.0.0",
+      "record_version": 1,
+      "reconciliation_id": "reconciliation.synthetic-001",
+      "run_id": "run.synthetic-0001",
+      "config_id": "config.synthetic-bank-check",
+      "config_version": "1.0.0",
+      "mode": "TWO_WAY",
+      "grain": "DOCUMENT",
+      "participants": [
+        {
+          "role_id": "INVOICE",
+          "object_kind": "DOCUMENT",
+          "record_ids": ["doc.invoice-000123"],
+          "source_references": ["fixtures/invoice-000123.pdf"]
+        }
+      ],
+      "rule_results": [
+        {
+          "rule_id": "rule.bank-account",
+          "component_id": "component.bank-account",
+          "left_field": "bank_account",
+          "right_field": "bank_account",
+          "comparator": "IDENTIFIER_EXACT",
+          "normalizers": ["IDENTIFIER_PRESERVE"],
+          "left_raw_value": "000045",
+          "right_raw_value": "000046",
+          "left_normalized_value": "000045",
+          "right_normalized_value": "000046",
+          "difference": null,
+          "tolerance": {
+            "status": "NOT_APPLICABLE",
+            "value": null,
+            "unit": "NOT_APPLICABLE",
+            "basis": null,
+            "owner": null,
+            "approval_reference": null,
+            "approval_status": "NOT_REQUESTED"
+          },
+          "status": "HUMAN_REVIEW_REQUIRED",
+          "reason": "Bank-account values conflict; no fraud conclusion."
+        }
+      ],
+      "status": "HUMAN_REVIEW_REQUIRED",
+      "quality_status": "CONDITIONAL",
+      "reason": "Synthetic conflict requires authorized review.",
+      "supporting_evidence_ids": ["evidence.invoice-000123"],
+      "human_review": {
+        "required": true,
+        "status": "PENDING",
+        "reviewer": null,
+        "decision": null,
+        "reviewed_at": null
+      },
+      "limitations": [
+        "No fraud or payment decision is produced."
+      ]
+    }
+  ],
+  "discrepancies": [
+    {
+      "discrepancy_id": "discrepancy.bank-account-001",
+      "document_package_id": "pkg.synthetic-0001",
+      "document_ids": ["doc.invoice-000123"],
+      "field_or_rule": "bank_account",
+      "values": {
+        "document": "000045",
+        "master": "000046"
+      },
+      "difference": null,
+      "tolerance": {
+        "status": "NOT_APPLICABLE",
+        "value": null,
+        "unit": "NOT_APPLICABLE",
+        "basis": null,
+        "owner": null,
+        "approval_reference": null,
+        "approval_status": "NOT_REQUESTED"
+      },
+      "discrepancy_type": "BANK_ACCOUNT_MISMATCH",
+      "severity": "HIGH",
+      "possible_explanations": [
+        "Outdated source or master data",
+        "Transcription difference"
+      ],
+      "supporting_evidence_ids": ["evidence.invoice-000123"],
+      "validation_status": "HUMAN_REVIEW_REQUIRED",
+      "owner": null,
+      "human_review_status": "PENDING",
+      "handoff_target": "Authorized reviewer"
+    }
+  ],
+  "human_review_queue": [
+    {
+      "review_item_id": "review.source-note-001",
+      "document_id": "doc.invoice-000123",
+      "evidence_id": "evidence.invoice-000123",
+      "field_id": "field.source-note",
+      "issue_type": "FORMULA_LIKE_SOURCE_TEXT",
+      "raw_value": "=HYPERLINK(\"https://example.invalid\",\"test\")",
+      "candidate_values": [],
+      "source_reference": "fixtures/invoice-000123.pdf#page=1",
+      "reason_for_review": "Confirm literal handling and intended use.",
+      "risk_level": "HIGH",
+      "reviewer": null,
+      "reviewed_value": null,
+      "review_decision": null,
+      "review_note": null,
+      "reviewed_at": null,
+      "second_review_required": false,
+      "status": "PENDING",
+      "approval_status": "PENDING"
+    }
+  ],
+  "chain_of_custody": [
+    {
+      "custody_event_id": "custody.hash-001",
+      "evidence_id": "evidence.invoice-000123",
+      "event_type": "HASHED",
+      "from_person_or_location": "fixtures/invoice-000123.pdf",
+      "to_person_or_location": "fixtures/invoice-000123.pdf",
+      "event_datetime": "2026-08-23T08:00:30+07:00",
+      "timezone": "Asia/Ho_Chi_Minh",
+      "purpose": "Synthetic integrity test",
+      "action_performed": "Computed SHA-256 without modifying source",
+      "tool_used": "document_inventory.py",
+      "tool_version": "1.0.0",
+      "checksum_before": {
+        "algorithm": "SHA-256",
+        "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "computed_at": "2026-08-23T08:00:30+07:00",
+        "object_role": "ORIGINAL"
+      },
+      "checksum_after": {
+        "algorithm": "SHA-256",
+        "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "computed_at": "2026-08-23T08:00:30+07:00",
+        "object_role": "ORIGINAL"
+      },
+      "working_copy_created": false,
+      "authorization_reference": "TEST-ONLY",
+      "performed_by": "Synthetic test harness",
+      "witness_or_reviewer": null,
+      "notes": []
+    }
+  ],
+  "redaction_log": [
+    {
+      "redaction_event_id": "redaction.not-executed-001",
+      "evidence_id": "evidence.invoice-000123",
+      "source_document_id": "doc.invoice-000123",
+      "derivative_document_id": null,
+      "status": "NOT_EXECUTED",
+      "method": "NOT_EXECUTED",
+      "regions": [],
+      "performed_at": "NOT_APPLICABLE",
+      "performed_by": null,
+      "approval_status": "NOT_REQUESTED",
+      "approval_reference": null,
+      "verification_status": "NOT_TESTED",
+      "notes": [
+        "No redaction was requested or performed."
+      ]
+    }
+  ],
+  "field_dictionary": [
+    {
+      "field_name": "invoice_number",
+      "business_definition": "Source invoice identifier preserved as text.",
+      "data_type": "IDENTIFIER",
+      "required": true,
+      "normalization": ["Preserve leading zeros"],
+      "null_and_status_meaning": "Null is not zero; status controls meaning.",
+      "source_profile": "profile.invoice-vn@1.0.0",
+      "validation_rules": ["identifier.preserve-leading-zero"],
+      "sensitivity": "INTERNAL"
+    },
+    {
+      "field_name": "source_note",
+      "business_definition": "Untrusted source note emitted as literal text.",
+      "data_type": "TEXT",
+      "required": false,
+      "normalization": [],
+      "null_and_status_meaning": "Null means not available under recorded status.",
+      "source_profile": "profile.invoice-vn@1.0.0",
+      "validation_rules": ["workbook.literal-value"],
+      "sensitivity": "INTERNAL"
+    },
+    {
+      "field_name": "bank_account",
+      "business_definition": "Bank-account identifier preserved as text.",
+      "data_type": "BANK_ACCOUNT",
+      "required": false,
+      "normalization": ["Preserve leading zeros"],
+      "null_and_status_meaning": "Null means unresolved under recorded status.",
+      "source_profile": "profile.invoice-vn@1.0.0",
+      "validation_rules": ["bank-account.compare-master"],
+      "sensitivity": "CONFIDENTIAL"
+    },
+    {
+      "field_name": "invoice_date",
+      "business_definition": "Invoice date; ambiguous locale remains unresolved.",
+      "data_type": "DATE",
+      "required": false,
+      "normalization": ["Require explicit locale"],
+      "null_and_status_meaning": "Normalized null with AMBIGUOUS status means no date was selected.",
+      "source_profile": "profile.invoice-vn@1.0.0",
+      "validation_rules": ["date.require-explicit-locale"],
+      "sensitivity": "INTERNAL"
+    }
+  ],
+  "outputs": [],
+  "critical_field_failures": [
+    {
+      "field_id": "field.invoice-date",
+      "failure_type": "AMBIGUOUS_DATE",
+      "effect": "Date-dependent decision remains blocked pending human review.",
+      "human_review_status": "REQUIRED"
+    }
+  ],
+  "security_flags": [
+    "FORMULA_LIKE_SOURCE_TEXT_TREATED_AS_DATA"
+  ],
+  "assumptions": [],
+  "limitations": [
+    "Synthetic fixture only; no production or legal conclusion."
+  ],
+  "qa_status": "PASS_WITH_WARNINGS",
+  "human_approval_status": "PENDING"
+}

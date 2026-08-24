@@ -1,0 +1,120 @@
+schema_version: "1.0"
+skill_id: "thien-skill-document-evidence"
+skill_name: "Thien-Skill-Document-Evidence"
+display_name: "Thien Skill — Document Intelligence, Evidence & Reconciliation"
+version: "1.0.0"
+release_date: "2026-08-23"
+status: "Testing"
+readiness_ceiling: "READY_FOR_HUMAN_REVIEW"
+owner: "Tran Ngoc Thien"
+primary_language: "vi"
+conflict_language: "vi"
+domain: "Document Intelligence, Evidence and Reconciliation"
+subdomains:
+  - "Document Intake and Integrity"
+  - "Classification, OCR and Structured Extraction"
+  - "Table, Clause and Obligation Extraction"
+  - "Document Package Linking"
+  - "Two-, Three- and Four-Way Reconciliation"
+  - "Evidence Register and Chain of Custody"
+  - "Redaction and Controlled Disclosure"
+  - "Extraction Review and Reperformance"
+purpose: >-
+  Chuyển tài liệu được phép xử lý thành dữ liệu, kết quả đối soát và gói bằng
+  chứng có thể truy nguyên, kiểm tra lại và bàn giao với human-review gate rõ ràng.
+capabilities:
+  - "Inventory, integrity screening and working-copy controls"
+  - "Schema-first field, table, line-item, clause and obligation extraction"
+  - "Page- and region-level provenance plus evidence register"
+  - "Document linking and deterministic reconciliation"
+  - "Discrepancy, human-review and controlled-handoff packages"
+  - "Formula-safe JSON, CSV and XLSX outputs"
+trigger_conditions:
+  - "Cần đọc, phân loại hoặc trích xuất dữ liệu từ PDF, ảnh hay chứng từ"
+  - "Cần chuyển tài liệu thành dữ liệu có cấu trúc và provenance"
+  - "Cần liên kết invoice, PO, GRN, payment hoặc ERP record"
+  - "Cần evidence register, chain of custody hoặc redacted review set"
+  - "Cần review hoặc tái thực hiện pipeline document extraction"
+non_trigger_conditions:
+  - "ETL/ELT hoặc data-quality remediation cho dữ liệu đã có cấu trúc"
+  - "Population analytics, predictive modeling hoặc fraud-pattern detection"
+  - "Formal audit finding, investigation conclusion hoặc legal opinion"
+  - "Authentication chữ ký, con dấu, danh tính hoặc tài liệu thật/giả"
+  - "Document formatting thuần túy không cần extraction/evidence"
+supported_engagement_types:
+  - "Advisory"
+  - "Operations Support"
+  - "Assurance Support"
+  - "Investigation Support"
+  - "Legal Support"
+  - "Risk Management"
+  - "Research"
+supported_jurisdictions:
+  - "Methodology is jurisdiction-neutral"
+  - "Vietnamese-law license and dispute framework"
+requires_current_source_verification: true
+current_source_verification_scope:
+  - "Platform skill/plugin format and runtime behavior"
+  - "Applicable law, professional standard and external methodology relied upon"
+required_inputs:
+  - "Objective, intended use, scope, source and authorized recipients"
+  - "Document types, period/entities and data classification"
+  - "Output format, destination and human approval owner"
+  - "Match keys, business rules and approved tolerances when reconciling"
+optional_inputs:
+  - "Existing taxonomy or versioned extraction schema"
+  - "OCR/vision adapter and local/cloud processing constraints"
+  - "ERP or system-of-record extract"
+  - "Case ID, evidence mandate and redaction policy"
+output_contract:
+  - "Inventory, coverage, exclusions and integrity flags"
+  - "Raw/normalized/display values with page-region provenance"
+  - "Reconciliation results, discrepancies and unresolved ambiguity"
+  - "Human-review queue, run manifest and controlled handoff"
+dependencies:
+  required:
+    - "A runtime capable of reading SKILL.md and referenced UTF-8 files"
+    - "Authorized access to user-supplied documents or synthetic fixtures"
+  optional_adapters:
+    - "OCR, layout/table parsing or vision runtime"
+    - "Authorized redaction runtime"
+    - "@oai/artifact-tool host runtime for bundled XLSX builder"
+  named_companions_are_not_required: true
+conflicting_roles:
+  - "Legal opinion or contract-enforceability decision-maker"
+  - "Fraud, misconduct or disciplinary conclusion owner"
+  - "Formal audit opinion or control-effectiveness approver"
+  - "Signature, identity or document-authentication examiner"
+tools_required: []
+tools_optional:
+  - "Python 3 standard library for deterministic CLIs"
+  - "Host-provided @oai/artifact-tool for XLSX generation"
+  - "User-authorized OCR, vision, PDF or redaction adapter"
+connectors_required: []
+data_sensitivity_supported:
+  - "Internal or confidential data only with authorized access and minimization"
+  - "Investigation-restricted evidence only after mandate and access gates"
+human_approval_requirements:
+  - "Cloud or external upload and use of credentials"
+  - "Restricted/personal data access or scope expansion"
+  - "Release of redacted/evidence package or any outbound communication"
+  - "Material ambiguity, conflict, inference, critical-field failure or unmatched amount"
+  - "Any legal, fraud, audit, disciplinary or authentication conclusion"
+quality_checks:
+  - "Original/working-copy separation, inventory, hash and page coverage"
+  - "Schema version, raw/normalized separation and field-level provenance"
+  - "Line-item count, total, currency, identifier and ambiguous-date controls"
+  - "Deterministic match keys, approved tolerance and contradiction retention"
+  - "Formula-safe workbook, no macro/external link and no silent row loss"
+  - "Run metadata, limitations, unresolved items and approval status"
+failure_modes:
+  - "Missing authorization, unsafe path or active content"
+  - "Encrypted/unreadable/incomplete document without approved resolution"
+  - "Unknown critical schema, grain, locale, match key or tolerance"
+  - "Unavailable external adapter or partial extraction failure"
+  - "Unsupported professional conclusion or unapproved disclosure"
+fallback_skill: >-
+  Bàn giao theo capability cần thiết bằng gói tự chứa; không phụ thuộc cứng vào
+  tên skill và không vượt quyền truy cập, kết luận hoặc phê duyệt.
+repository_status: "PRIVATE"
+last_reviewed: "2026-08-23"

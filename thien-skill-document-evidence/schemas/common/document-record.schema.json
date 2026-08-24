@@ -1,0 +1,441 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "document-record.schema.json",
+  "title": "Document record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_version",
+    "document_id",
+    "content_id",
+    "evidence_ids",
+    "file",
+    "copy_role",
+    "integrity",
+    "classification",
+    "processing",
+    "relationships",
+    "data_classification",
+    "security_flags",
+    "review_status",
+    "assumptions",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "record_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "document_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "content_id": {
+      "type": "string",
+      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+    },
+    "evidence_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "shared-definitions.schema.json#/$defs/identifier"
+      }
+    },
+    "package_id": {
+      "oneOf": [
+        {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "original_filename",
+        "source_reference",
+        "extension",
+        "declared_mime_type",
+        "detected_mime_type",
+        "size_bytes",
+        "checksum"
+      ],
+      "properties": {
+        "original_filename": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_reference": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Portable or protected reference; absolute paths require explicit authorization."
+        },
+        "extension": {
+          "type": "string",
+          "pattern": "^\\.[A-Za-z0-9]{1,16}$"
+        },
+        "declared_mime_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "detected_mime_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "checksum": {
+          "$ref": "shared-definitions.schema.json#/$defs/checksum"
+        }
+      }
+    },
+    "copy_role": {
+      "enum": [
+        "ORIGINAL",
+        "WORKING_COPY",
+        "DERIVATIVE"
+      ]
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "read_status",
+        "extension_mime_status",
+        "password_protected",
+        "encrypted",
+        "active_content",
+        "page_count",
+        "page_completeness_status",
+        "processing_eligibility",
+        "issues"
+      ],
+      "properties": {
+        "read_status": {
+          "enum": [
+            "READABLE",
+            "UNREADABLE",
+            "LOCKED",
+            "UNSUPPORTED",
+            "UNKNOWN"
+          ]
+        },
+        "extension_mime_status": {
+          "enum": [
+            "MATCH",
+            "MISMATCH",
+            "UNKNOWN"
+          ]
+        },
+        "password_protected": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "encrypted": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "active_content": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "javascript",
+            "macro",
+            "embedded_files",
+            "external_links"
+          ],
+          "properties": {
+            "javascript": {
+              "$ref": "#/$defs/detectionState"
+            },
+            "macro": {
+              "$ref": "#/$defs/detectionState"
+            },
+            "embedded_files": {
+              "$ref": "#/$defs/detectionState"
+            },
+            "external_links": {
+              "$ref": "#/$defs/detectionState"
+            }
+          }
+        },
+        "page_count": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "observed",
+            "declared"
+          ],
+          "properties": {
+            "observed": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "declared": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            }
+          }
+        },
+        "page_completeness_status": {
+          "enum": [
+            "COMPLETE",
+            "INCOMPLETE",
+            "POSSIBLY_INCOMPLETE",
+            "NOT_TESTED",
+            "NOT_APPLICABLE",
+            "HUMAN_REVIEW_REQUIRED"
+          ]
+        },
+        "processing_eligibility": {
+          "enum": [
+            "ELIGIBLE",
+            "ELIGIBLE_WITH_LIMITATIONS",
+            "AUTHORIZATION_REQUIRED",
+            "BLOCKED",
+            "ERROR"
+          ]
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "issue_code",
+              "severity",
+              "description"
+            ],
+            "properties": {
+              "issue_code": {
+                "$ref": "shared-definitions.schema.json#/$defs/identifier"
+              },
+              "severity": {
+                "enum": [
+                  "INFO",
+                  "LOW",
+                  "MEDIUM",
+                  "HIGH",
+                  "CRITICAL"
+                ]
+              },
+              "description": {
+                "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+              }
+            }
+          }
+        }
+      }
+    },
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "document_type",
+        "profile_id",
+        "profile_version",
+        "status",
+        "method",
+        "confidence",
+        "candidate_types"
+      ],
+      "properties": {
+        "document_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profile_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "profile_version": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "status": {
+          "enum": [
+            "CLASSIFIED",
+            "UNCLASSIFIED",
+            "AMBIGUOUS",
+            "HUMAN_REVIEW_REQUIRED"
+          ]
+        },
+        "method": {
+          "enum": [
+            "RULE_BASED",
+            "RUNTIME_ADAPTER",
+            "HUMAN",
+            "UNKNOWN"
+          ]
+        },
+        "confidence": {
+          "$ref": "shared-definitions.schema.json#/$defs/confidence"
+        },
+        "candidate_types": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "processing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "native_text_status",
+        "selected_route",
+        "adapter_run_ids",
+        "status"
+      ],
+      "properties": {
+        "native_text_status": {
+          "enum": [
+            "AVAILABLE",
+            "UNAVAILABLE",
+            "PARTIAL",
+            "UNKNOWN",
+            "NOT_TESTED"
+          ]
+        },
+        "selected_route": {
+          "enum": [
+            "NATIVE_TEXT",
+            "LAYOUT_TABLE",
+            "OCR_ADAPTER",
+            "VISION_ADAPTER",
+            "HUMAN_REVIEW",
+            "NOT_EXECUTED"
+          ]
+        },
+        "adapter_run_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "shared-definitions.schema.json#/$defs/identifier"
+          }
+        },
+        "status": {
+          "enum": [
+            "SUCCEEDED",
+            "SUCCEEDED_WITH_WARNINGS",
+            "PARTIAL",
+            "FAILED",
+            "BLOCKED",
+            "NOT_EXECUTED"
+          ]
+        }
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "relationship_type",
+          "related_document_id",
+          "method",
+          "confidence",
+          "review_status"
+        ],
+        "properties": {
+          "relationship_type": {
+            "enum": [
+              "EXACT_DUPLICATE",
+              "NEAR_DUPLICATE_CANDIDATE",
+              "DRAFT_FINAL",
+              "SIGNED_UNSIGNED",
+              "BASE_ADDENDUM",
+              "REPLACED",
+              "ADJUSTED",
+              "CANCELLED",
+              "SUPERSEDED",
+              "PACKAGE_MEMBER",
+              "UNKNOWN"
+            ]
+          },
+          "related_document_id": {
+            "$ref": "shared-definitions.schema.json#/$defs/identifier"
+          },
+          "method": {
+            "type": "string",
+            "minLength": 1
+          },
+          "confidence": {
+            "$ref": "shared-definitions.schema.json#/$defs/confidence"
+          },
+          "review_status": {
+            "$ref": "shared-definitions.schema.json#/$defs/humanReviewStatus"
+          }
+        }
+      }
+    },
+    "data_classification": {
+      "$ref": "shared-definitions.schema.json#/$defs/dataClassification"
+    },
+    "security_flags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "review_status": {
+      "$ref": "shared-definitions.schema.json#/$defs/humanReviewStatus"
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "$defs": {
+    "detectionState": {
+      "enum": [
+        "DETECTED",
+        "NOT_DETECTED",
+        "UNKNOWN",
+        "NOT_TESTED"
+      ]
+    }
+  }
+}

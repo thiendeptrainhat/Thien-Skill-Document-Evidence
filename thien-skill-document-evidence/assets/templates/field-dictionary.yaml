@@ -1,0 +1,30 @@
+schema_version: "1.0.0"
+template_id: field-dictionary
+dictionary_status: DRAFT
+purpose: Define output columns, field semantics, normalization, null/status meaning, source profile, validation, and sensitivity.
+entries: []
+required_record_fields:
+  - field_name
+  - business_definition
+  - data_type
+  - required
+  - normalization
+  - null_and_status_meaning
+  - source_profile
+  - validation_rules
+  - sensitivity
+status_semantics:
+  NOT_PRESENT: The field was searched within scope and was not observed.
+  NOT_APPLICABLE: The selected profile or business rule establishes that the field does not apply.
+  ILLEGIBLE: The source region exists but cannot be transcribed reliably.
+  AMBIGUOUS: More than one source-supported interpretation remains.
+  CONFLICTING: Material sources provide incompatible values.
+  INFERRED: The value is an explicitly labelled inference rather than source text.
+  DERIVED: The value is deterministically calculated from recorded source values.
+  HUMAN_REVIEW_REQUIRED: The value cannot be treated as settled for the intended decision.
+invariants:
+  identifier_fields_are_text: true
+  raw_and_normalized_meanings_are_distinct: true
+  blank_means_unknown: false
+  missing_means_zero: false
+qa_status: NOT_TESTED

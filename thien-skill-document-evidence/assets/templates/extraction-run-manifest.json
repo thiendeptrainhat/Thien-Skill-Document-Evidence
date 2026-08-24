@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "template_id": "extraction-run-manifest",
+  "manifest_status": "NOT_EXECUTED",
+  "required_identifiers": [
+    "run_id",
+    "task_id",
+    "skill_version"
+  ],
+  "parent_run_id": null,
+  "source_content_ids": [],
+  "schema_versions": {},
+  "adapter_versions": {},
+  "script_versions": {},
+  "config_checksums": {},
+  "processing_parameters": {},
+  "started_at": null,
+  "completed_at": null,
+  "record_counts": {},
+  "processed_file_hashes": [],
+  "retry_count": 0,
+  "execution_history": [],
+  "warnings": [],
+  "errors": [],
+  "security_flags": [],
+  "output_references": [],
+  "output_checksums": {},
+  "qa_status": "NOT_TESTED",
+  "human_approval_status": "NOT_REQUESTED",
+  "invariants": {
+    "source_modified": false,
+    "network_called_by_core_scripts": false,
+    "embedded_content_executed": false,
+    "same_tuple_retried_without_method_change": false,
+    "partial_failure_reported_as_completed": false
+  },
+  "limitations": []
+}

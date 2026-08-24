@@ -1,0 +1,135 @@
+{
+  "schema_version": "1.0.0",
+  "config_id": "approved-partial-flow",
+  "config_version": "1.0.0",
+  "mode": "TWO_WAY",
+  "grain": "LINE_ITEM",
+  "roles": [
+    {
+      "role_id": "PO",
+      "source_kind": "DOCUMENT",
+      "document_types": ["PURCHASE_ORDER"],
+      "required": true,
+      "field_mappings": {
+        "po_number": "po_number",
+        "quantity": "quantity",
+        "currency": "currency"
+      }
+    },
+    {
+      "role_id": "INVOICE",
+      "source_kind": "DOCUMENT",
+      "document_types": ["INVOICE"],
+      "required": true,
+      "field_mappings": {
+        "po_number": "po_number",
+        "quantity": "quantity",
+        "currency": "currency"
+      }
+    }
+  ],
+  "link_rules": [
+    {
+      "rule_id": "po-to-invoice",
+      "left_role": "PO",
+      "right_role": "INVOICE",
+      "cardinality": "ONE_TO_MANY",
+      "components": [
+        {
+          "component_id": "po-number",
+          "left_field": "po_number",
+          "right_field": "po_number",
+          "comparator": "IDENTIFIER_EXACT",
+          "normalizers": ["IDENTIFIER_PRESERVE"],
+          "required": true,
+          "candidate_only": false,
+          "tolerance": {
+            "status": "NOT_APPLICABLE",
+            "value": null,
+            "unit": "NOT_APPLICABLE",
+            "basis": null,
+            "owner": null,
+            "approval_reference": null,
+            "approval_status": "NOT_REQUESTED"
+          }
+        },
+        {
+          "component_id": "quantity",
+          "left_field": "quantity",
+          "right_field": "quantity",
+          "comparator": "DECIMAL_ABSOLUTE",
+          "normalizers": ["DECIMAL_CANONICAL_STRING"],
+          "required": true,
+          "candidate_only": false,
+          "tolerance": {
+            "status": "PROVIDED",
+            "value": "0",
+            "unit": "QUANTITY",
+            "basis": "Exact quantity unless the documented partial-flow policy applies.",
+            "owner": "Process Owner",
+            "approval_reference": "APPROVAL-PARTIAL-001",
+            "approval_status": "APPROVED"
+          }
+        },
+        {
+          "component_id": "currency",
+          "left_field": "currency",
+          "right_field": "currency",
+          "comparator": "EXACT_TEXT",
+          "normalizers": ["NONE"],
+          "required": true,
+          "candidate_only": false,
+          "tolerance": {
+            "status": "NOT_APPLICABLE",
+            "value": null,
+            "unit": "NOT_APPLICABLE",
+            "basis": null,
+            "owner": null,
+            "approval_reference": null,
+            "approval_status": "NOT_REQUESTED"
+          }
+        }
+      ],
+      "partial_policy": {
+        "mode": "ALLOW_WHEN_DOCUMENTED",
+        "allowed_relation": "RIGHT_LESS_THAN_OR_EQUAL_LEFT",
+        "aggregation_id": null,
+        "basis": "Invoices may cover a subset of an approved order quantity.",
+        "owner": "Process Owner",
+        "approval_reference": "APPROVAL-PARTIAL-001",
+        "approval_status": "APPROVED"
+      },
+      "missing_field_policy": "HUMAN_REVIEW_REQUIRED",
+      "multiple_candidate_policy": "AMBIGUOUS_MATCH"
+    }
+  ],
+  "aggregation_rules": [],
+  "currency_policy": {
+    "mode": "EXACT_CURRENCY_ONLY",
+    "approved_rate_source": null,
+    "approval_reference": null,
+    "approval_status": "NOT_REQUESTED"
+  },
+  "date_policy": {
+    "input_representation": "ISO_8601",
+    "locale": null,
+    "timezone": null,
+    "ambiguous_date_policy": "HUMAN_REVIEW_REQUIRED"
+  },
+  "output_statuses": [
+    "EXACT_MATCH",
+    "WITHIN_TOLERANCE",
+    "STRONG_CANDIDATE",
+    "PARTIAL_MATCH",
+    "AMBIGUOUS_MATCH",
+    "CONFLICTING_MATCH",
+    "UNMATCHED",
+    "NOT_APPLICABLE",
+    "HUMAN_REVIEW_REQUIRED"
+  ],
+  "human_approval": {
+    "status": "APPROVED",
+    "owner": "Process Owner",
+    "approval_reference": "APPROVAL-PARTIAL-001"
+  }
+}

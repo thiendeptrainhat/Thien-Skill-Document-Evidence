@@ -1,0 +1,614 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "extraction-package.schema.json",
+  "title": "Canonical document extraction and evidence package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "package_id",
+    "package_version",
+    "skill_id",
+    "skill_version",
+    "run_id",
+    "engagement_id",
+    "case_id",
+    "route",
+    "status",
+    "run_manifest",
+    "document_inventory",
+    "evidence_register",
+    "runtime_adapter_results",
+    "extracted_fields",
+    "line_items",
+    "contract_clauses",
+    "contract_obligations",
+    "document_links",
+    "reconciliation_results",
+    "discrepancies",
+    "human_review_queue",
+    "chain_of_custody",
+    "redaction_log",
+    "field_dictionary",
+    "outputs",
+    "critical_field_failures",
+    "security_flags",
+    "assumptions",
+    "limitations",
+    "qa_status",
+    "human_approval_status"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "package_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "package_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "skill_id": {
+      "const": "thien-skill-document-evidence"
+    },
+    "skill_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "run_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "engagement_id": {
+      "oneOf": [
+        {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "case_id": {
+      "oneOf": [
+        {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "route": {
+      "enum": [
+        "INTAKE_INTEGRITY",
+        "CLASSIFY_EXTRACT",
+        "STRUCTURE_VALIDATE",
+        "LINK_RECONCILE",
+        "EVIDENCE_DISCLOSURE",
+        "REVIEW_REPERFORM"
+      ]
+    },
+    "status": {
+      "$ref": "shared-definitions.schema.json#/$defs/readinessStatus"
+    },
+    "run_manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "started_at",
+        "completed_at",
+        "execution_status",
+        "parent_run_id",
+        "schema_versions",
+        "tool_versions",
+        "source_content_ids",
+        "config_checksums",
+        "record_counts",
+        "retry_count",
+        "execution_history"
+      ],
+      "properties": {
+        "started_at": {
+          "$ref": "shared-definitions.schema.json#/$defs/timestampOrState"
+        },
+        "completed_at": {
+          "$ref": "shared-definitions.schema.json#/$defs/timestampOrState"
+        },
+        "execution_status": {
+          "enum": [
+            "SUCCEEDED",
+            "SUCCEEDED_WITH_WARNINGS",
+            "PARTIAL",
+            "FAILED",
+            "BLOCKED",
+            "NOT_EXECUTED"
+          ]
+        },
+        "parent_run_id": {
+          "oneOf": [
+            {
+              "$ref": "shared-definitions.schema.json#/$defs/identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "schema_versions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+          }
+        },
+        "tool_versions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "source_content_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+          }
+        },
+        "config_checksums": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^[A-Fa-f0-9]{64}$"
+          }
+        },
+        "record_counts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "retry_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "execution_history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "step_id",
+              "status",
+              "method_change",
+              "timestamp"
+            ],
+            "properties": {
+              "step_id": {
+                "$ref": "shared-definitions.schema.json#/$defs/identifier"
+              },
+              "status": {
+                "enum": [
+                  "SUCCEEDED",
+                  "PARTIAL",
+                  "FAILED",
+                  "BLOCKED",
+                  "SKIPPED"
+                ]
+              },
+              "method_change": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timestamp": {
+                "$ref": "shared-definitions.schema.json#/$defs/timestampOrState"
+              }
+            }
+          }
+        }
+      }
+    },
+    "document_inventory": {
+      "type": "array",
+      "items": {
+        "$ref": "document-record.schema.json"
+      }
+    },
+    "evidence_register": {
+      "type": "array",
+      "items": {
+        "$ref": "evidence-record.schema.json"
+      }
+    },
+    "runtime_adapter_results": {
+      "type": "array",
+      "items": {
+        "$ref": "runtime-adapter-output.schema.json"
+      }
+    },
+    "extracted_fields": {
+      "type": "array",
+      "items": {
+        "$ref": "extracted-field.schema.json"
+      }
+    },
+    "line_items": {
+      "type": "array",
+      "items": {
+        "$ref": "line-item.schema.json"
+      }
+    },
+    "contract_clauses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contractClause"
+      }
+    },
+    "contract_obligations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contractObligation"
+      }
+    },
+    "document_links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/documentLink"
+      }
+    },
+    "reconciliation_results": {
+      "type": "array",
+      "items": {
+        "$ref": "reconciliation-result.schema.json"
+      }
+    },
+    "discrepancies": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/discrepancy"
+      }
+    },
+    "human_review_queue": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/humanReviewItem"
+      }
+    },
+    "chain_of_custody": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/custodyEvent"
+      }
+    },
+    "redaction_log": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/redactionEvent"
+      }
+    },
+    "field_dictionary": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/dictionaryEntry"
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "output_id",
+          "format",
+          "location_reference",
+          "checksum",
+          "record_count",
+          "data_classification"
+        ],
+        "properties": {
+          "output_id": {
+            "$ref": "shared-definitions.schema.json#/$defs/identifier"
+          },
+          "format": {
+            "enum": [
+              "JSON",
+              "JSONL",
+              "CSV",
+              "XLSX",
+              "PARQUET"
+            ]
+          },
+          "location_reference": {
+            "type": "string",
+            "minLength": 1
+          },
+          "checksum": {
+            "$ref": "shared-definitions.schema.json#/$defs/checksum"
+          },
+          "record_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "data_classification": {
+            "$ref": "shared-definitions.schema.json#/$defs/dataClassification"
+          }
+        }
+      }
+    },
+    "critical_field_failures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "field_id",
+          "failure_type",
+          "effect",
+          "human_review_status"
+        ],
+        "properties": {
+          "field_id": {
+            "$ref": "shared-definitions.schema.json#/$defs/identifier"
+          },
+          "failure_type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "effect": {
+            "type": "string",
+            "minLength": 1
+          },
+          "human_review_status": {
+            "$ref": "shared-definitions.schema.json#/$defs/humanReviewStatus"
+          }
+        }
+      }
+    },
+    "security_flags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "qa_status": {
+      "$ref": "shared-definitions.schema.json#/$defs/qualityStatus"
+    },
+    "human_approval_status": {
+      "$ref": "shared-definitions.schema.json#/$defs/humanApprovalStatus"
+    }
+  },
+  "$defs": {
+    "contractClause": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "clause_id",
+        "document_id",
+        "contract_id",
+        "clause_number",
+        "clause_title",
+        "clause_type",
+        "clause_text_raw",
+        "clause_text_normalized",
+        "page_start",
+        "page_end",
+        "source_reference",
+        "party_affected",
+        "cross_references",
+        "amended_by",
+        "supersedes",
+        "extraction_confidence",
+        "human_review_status",
+        "legal_review_required"
+      ],
+      "properties": {
+        "clause_id": {"$ref": "shared-definitions.schema.json#/$defs/identifier"},
+        "document_id": {"$ref": "shared-definitions.schema.json#/$defs/identifier"},
+        "contract_id": {"$ref": "shared-definitions.schema.json#/$defs/identifier"},
+        "clause_number": {"type": ["string", "null"]},
+        "clause_title": {"type": ["string", "null"]},
+        "clause_type": {"type": "string", "minLength": 1},
+        "clause_text_raw": {"type": "string"},
+        "clause_text_normalized": {"type": ["string", "null"]},
+        "page_start": {"type": "integer", "minimum": 1},
+        "page_end": {"type": "integer", "minimum": 1},
+        "source_reference": {"type": "string", "minLength": 1},
+        "party_affected": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "cross_references": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "amended_by": {"type": "array", "items": {"$ref": "shared-definitions.schema.json#/$defs/identifier"}},
+        "supersedes": {"type": "array", "items": {"$ref": "shared-definitions.schema.json#/$defs/identifier"}},
+        "extraction_confidence": {"$ref": "shared-definitions.schema.json#/$defs/confidence"},
+        "human_review_status": {"$ref": "shared-definitions.schema.json#/$defs/humanReviewStatus"},
+        "legal_review_required": {"type": "boolean"}
+      }
+    },
+    "contractObligation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "obligation_id",
+        "contract_id",
+        "clause_id",
+        "obligated_party",
+        "beneficiary_party",
+        "action_required",
+        "object_or_deliverable",
+        "trigger",
+        "condition",
+        "start_date",
+        "due_date",
+        "recurrence",
+        "evidence_required",
+        "consequence_of_nonperformance",
+        "status",
+        "source_reference",
+        "extraction_confidence",
+        "human_review_status"
+      ],
+      "properties": {
+        "obligation_id": {"$ref": "shared-definitions.schema.json#/$defs/identifier"},
+        "contract_id": {"$ref": "shared-definitions.schema.json#/$defs/identifier"},
+        "clause_id": {"$ref": "shared-definitions.schema.json#/$defs/identifier"},
+        "obligated_party": {"type": "string", "minLength": 1},
+        "beneficiary_party": {"type": ["string", "null"]},
+        "action_required": {"type": "string", "minLength": 1},
+        "object_or_deliverable": {"type": ["string", "null"]},
+        "trigger": {"type": ["string", "null"]},
+        "condition": {"type": ["string", "null"]},
+        "start_date": {"type": ["string", "null"]},
+        "due_date": {"type": ["string", "null"]},
+        "recurrence": {"type": ["string", "null"]},
+        "evidence_required": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "consequence_of_nonperformance": {"type": ["string", "null"]},
+        "status": {"enum": ["EXTRACTED_SOURCE_TEXT", "INFERRED_STRUCTURE", "HUMAN_VERIFIED", "HUMAN_REVIEW_REQUIRED"]},
+        "source_reference": {"type": "string", "minLength": 1},
+        "extraction_confidence": {"$ref": "shared-definitions.schema.json#/$defs/confidence"},
+        "human_review_status": {"$ref": "shared-definitions.schema.json#/$defs/humanReviewStatus"}
+      }
+    },
+    "documentLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["link_id", "left_document_id", "right_document_id", "match_status", "match_keys", "method", "confidence", "source_references", "human_review_status"],
+      "properties": {
+        "link_id": {"$ref": "shared-definitions.schema.json#/$defs/identifier"},
+        "left_document_id": {"$ref": "shared-definitions.schema.json#/$defs/identifier"},
+        "right_document_id": {"$ref": "shared-definitions.schema.json#/$defs/identifier"},
+        "match_status": {"$ref": "shared-definitions.schema.json#/$defs/matchStatus"},
+        "match_keys": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "method": {"type": "string", "minLength": 1},
+        "confidence": {"$ref": "shared-definitions.schema.json#/$defs/confidence"},
+        "source_references": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "human_review_status": {"$ref": "shared-definitions.schema.json#/$defs/humanReviewStatus"}
+      }
+    },
+    "discrepancy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["discrepancy_id", "document_package_id", "document_ids", "field_or_rule", "values", "difference", "tolerance", "discrepancy_type", "severity", "possible_explanations", "supporting_evidence_ids", "validation_status", "owner", "human_review_status", "handoff_target"],
+      "properties": {
+        "discrepancy_id": {"$ref": "shared-definitions.schema.json#/$defs/identifier"},
+        "document_package_id": {"$ref": "shared-definitions.schema.json#/$defs/identifier"},
+        "document_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "shared-definitions.schema.json#/$defs/identifier"}},
+        "field_or_rule": {"type": "string", "minLength": 1},
+        "values": {"type": "object"},
+        "difference": {"oneOf": [{"$ref": "shared-definitions.schema.json#/$defs/decimalString"}, {"type": "null"}]},
+        "tolerance": {"$ref": "reconciliation-config.schema.json#/$defs/tolerance"},
+        "discrepancy_type": {"enum": ["MISSING_DOCUMENT", "MISSING_PAGE", "MISSING_FIELD", "AMOUNT_MISMATCH", "QUANTITY_MISMATCH", "PRICE_MISMATCH", "TAX_MISMATCH", "DATE_MISMATCH", "PARTY_MISMATCH", "BANK_ACCOUNT_MISMATCH", "REFERENCE_MISMATCH", "SIGNATURE_MISSING", "APPROVAL_MISSING", "DUPLICATE_DOCUMENT", "VERSION_CONFLICT", "SYSTEM_DOCUMENT_MISMATCH", "UNRESOLVED_OCR", "AMBIGUOUS_MATCH", "CURRENCY_MISMATCH"]},
+        "severity": {"enum": ["INFO", "LOW", "MEDIUM", "HIGH", "CRITICAL"]},
+        "possible_explanations": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "supporting_evidence_ids": {"type": "array", "items": {"$ref": "shared-definitions.schema.json#/$defs/identifier"}},
+        "validation_status": {"$ref": "shared-definitions.schema.json#/$defs/validationStatus"},
+        "owner": {"type": ["string", "null"]},
+        "human_review_status": {"$ref": "shared-definitions.schema.json#/$defs/humanReviewStatus"},
+        "handoff_target": {"type": ["string", "null"]}
+      }
+    },
+    "humanReviewItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["review_item_id", "document_id", "evidence_id", "field_id", "issue_type", "raw_value", "candidate_values", "source_reference", "reason_for_review", "risk_level", "reviewer", "reviewed_value", "review_decision", "review_note", "reviewed_at", "second_review_required", "status", "approval_status"],
+      "properties": {
+        "review_item_id": {"$ref": "shared-definitions.schema.json#/$defs/identifier"},
+        "document_id": {"$ref": "shared-definitions.schema.json#/$defs/identifier"},
+        "evidence_id": {"oneOf": [{"$ref": "shared-definitions.schema.json#/$defs/identifier"}, {"type": "null"}]},
+        "field_id": {"oneOf": [{"$ref": "shared-definitions.schema.json#/$defs/identifier"}, {"type": "null"}]},
+        "issue_type": {"type": "string", "minLength": 1},
+        "raw_value": {},
+        "candidate_values": {"type": "array"},
+        "source_reference": {"type": "string", "minLength": 1},
+        "reason_for_review": {"type": "string", "minLength": 1},
+        "risk_level": {"enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]},
+        "reviewer": {"type": ["string", "null"]},
+        "reviewed_value": {},
+        "review_decision": {"type": ["string", "null"]},
+        "review_note": {"type": ["string", "null"]},
+        "reviewed_at": {"oneOf": [{"$ref": "shared-definitions.schema.json#/$defs/timestampOrState"}, {"type": "null"}]},
+        "second_review_required": {"type": "boolean"},
+        "status": {"$ref": "shared-definitions.schema.json#/$defs/humanReviewStatus"},
+        "approval_status": {"$ref": "shared-definitions.schema.json#/$defs/humanApprovalStatus"}
+      }
+    },
+    "custodyEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["custody_event_id", "evidence_id", "event_type", "from_person_or_location", "to_person_or_location", "event_datetime", "timezone", "purpose", "action_performed", "tool_used", "tool_version", "checksum_before", "checksum_after", "working_copy_created", "authorization_reference", "performed_by", "witness_or_reviewer", "notes"],
+      "properties": {
+        "custody_event_id": {"$ref": "shared-definitions.schema.json#/$defs/identifier"},
+        "evidence_id": {"$ref": "shared-definitions.schema.json#/$defs/identifier"},
+        "event_type": {"enum": ["RECEIVED", "REGISTERED", "HASHED", "COPIED", "TRANSFERRED", "ACCESSED", "EXTRACTED", "REDACTED", "REVIEWED", "RETURNED", "ARCHIVED", "EXPORTED"]},
+        "from_person_or_location": {"type": ["string", "null"]},
+        "to_person_or_location": {"type": ["string", "null"]},
+        "event_datetime": {"$ref": "shared-definitions.schema.json#/$defs/timestampOrState"},
+        "timezone": {"type": "string", "minLength": 1},
+        "purpose": {"type": "string", "minLength": 1},
+        "action_performed": {"type": "string", "minLength": 1},
+        "tool_used": {"type": ["string", "null"]},
+        "tool_version": {"type": ["string", "null"]},
+        "checksum_before": {"oneOf": [{"$ref": "shared-definitions.schema.json#/$defs/checksum"}, {"type": "null"}]},
+        "checksum_after": {"oneOf": [{"$ref": "shared-definitions.schema.json#/$defs/checksum"}, {"type": "null"}]},
+        "working_copy_created": {"type": "boolean"},
+        "authorization_reference": {"type": ["string", "null"]},
+        "performed_by": {"type": "string", "minLength": 1},
+        "witness_or_reviewer": {"type": ["string", "null"]},
+        "notes": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "redactionEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["redaction_event_id", "evidence_id", "source_document_id", "derivative_document_id", "status", "method", "regions", "performed_at", "performed_by", "approval_status", "approval_reference", "verification_status", "notes"],
+      "properties": {
+        "redaction_event_id": {"$ref": "shared-definitions.schema.json#/$defs/identifier"},
+        "evidence_id": {"$ref": "shared-definitions.schema.json#/$defs/identifier"},
+        "source_document_id": {"$ref": "shared-definitions.schema.json#/$defs/identifier"},
+        "derivative_document_id": {"oneOf": [{"$ref": "shared-definitions.schema.json#/$defs/identifier"}, {"type": "null"}]},
+        "status": {"enum": ["PROPOSED", "EXECUTED_PENDING_VERIFICATION", "VERIFIED_PENDING_APPROVAL", "APPROVED_FOR_STATED_AUDIENCE", "REJECTED", "NOT_EXECUTED"]},
+        "method": {"enum": ["FULL_REDACTION", "PARTIAL_MASKING", "PSEUDONYMIZATION", "ROLE_BASED", "PAGE_LEVEL", "FIELD_LEVEL", "NOT_EXECUTED"]},
+        "regions": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "performed_at": {"$ref": "shared-definitions.schema.json#/$defs/timestampOrState"},
+        "performed_by": {"type": ["string", "null"]},
+        "approval_status": {"$ref": "shared-definitions.schema.json#/$defs/humanApprovalStatus"},
+        "approval_reference": {"type": ["string", "null"]},
+        "verification_status": {"$ref": "shared-definitions.schema.json#/$defs/validationStatus"},
+        "notes": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "dictionaryEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field_name", "business_definition", "data_type", "required", "normalization", "null_and_status_meaning", "source_profile", "validation_rules", "sensitivity"],
+      "properties": {
+        "field_name": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "business_definition": {"type": "string", "minLength": 1},
+        "data_type": {"type": "string", "minLength": 1},
+        "required": {"type": "boolean"},
+        "normalization": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "null_and_status_meaning": {"type": "string", "minLength": 1},
+        "source_profile": {"type": "string", "minLength": 1},
+        "validation_rules": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "sensitivity": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

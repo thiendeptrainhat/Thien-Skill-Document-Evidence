@@ -1,0 +1,44 @@
+schema_version: "1.0.0"
+template_id: chain-of-custody-log
+log_status: DRAFT
+purpose: Record only custody events that actually occurred within the authorized workflow.
+custody_events: []
+required_record_fields:
+  - custody_event_id
+  - evidence_id
+  - event_type
+  - from_person_or_location
+  - to_person_or_location
+  - event_datetime
+  - timezone
+  - purpose
+  - action_performed
+  - tool_used
+  - tool_version
+  - checksum_before
+  - checksum_after
+  - working_copy_created
+  - authorization_reference
+  - performed_by
+  - witness_or_reviewer
+  - notes
+event_types:
+  - RECEIVED
+  - REGISTERED
+  - HASHED
+  - COPIED
+  - TRANSFERRED
+  - ACCESSED
+  - EXTRACTED
+  - REDACTED
+  - REVIEWED
+  - RETURNED
+  - ARCHIVED
+  - EXPORTED
+invariants:
+  inferred_events_allowed: false
+  checksum_called_digital_signature: false
+  original_modified_by_logging: false
+  missing_event_filled_for_completeness: false
+qa_status: NOT_TESTED
+limitations: []

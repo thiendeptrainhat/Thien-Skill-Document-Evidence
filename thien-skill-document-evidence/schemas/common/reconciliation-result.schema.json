@@ -1,0 +1,263 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "reconciliation-result.schema.json",
+  "title": "Document reconciliation result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_version",
+    "reconciliation_id",
+    "run_id",
+    "config_id",
+    "config_version",
+    "mode",
+    "grain",
+    "participants",
+    "rule_results",
+    "status",
+    "quality_status",
+    "reason",
+    "supporting_evidence_ids",
+    "human_review",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "record_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "reconciliation_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "run_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "config_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "config_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "mode": {
+      "enum": [
+        "TWO_WAY",
+        "THREE_WAY",
+        "FOUR_WAY",
+        "ERP_DOCUMENT",
+        "CUSTOM_DETERMINISTIC"
+      ]
+    },
+    "grain": {
+      "enum": [
+        "DOCUMENT",
+        "LINE_ITEM",
+        "PAYMENT_ALLOCATION",
+        "MIXED_WITH_EXPLICIT_ROLLUP"
+      ]
+    },
+    "participants": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "role_id",
+          "object_kind",
+          "record_ids",
+          "source_references"
+        ],
+        "properties": {
+          "role_id": {
+            "$ref": "shared-definitions.schema.json#/$defs/identifier"
+          },
+          "object_kind": {
+            "enum": [
+              "DOCUMENT",
+              "LINE_ITEM",
+              "SYSTEM_RECORD",
+              "PAYMENT_ALLOCATION"
+            ]
+          },
+          "record_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "$ref": "shared-definitions.schema.json#/$defs/identifier"
+            }
+          },
+          "source_references": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "rule_results": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rule_id",
+          "component_id",
+          "left_field",
+          "right_field",
+          "comparator",
+          "normalizers",
+          "left_raw_value",
+          "right_raw_value",
+          "left_normalized_value",
+          "right_normalized_value",
+          "difference",
+          "tolerance",
+          "status",
+          "reason"
+        ],
+        "properties": {
+          "rule_id": {
+            "$ref": "shared-definitions.schema.json#/$defs/identifier"
+          },
+          "component_id": {
+            "$ref": "shared-definitions.schema.json#/$defs/identifier"
+          },
+          "left_field": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "right_field": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "comparator": {
+            "$ref": "reconciliation-config.schema.json#/$defs/comparator"
+          },
+          "normalizers": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "$ref": "reconciliation-config.schema.json#/$defs/normalizer"
+            }
+          },
+          "left_raw_value": {
+            "$ref": "#/$defs/value"
+          },
+          "right_raw_value": {
+            "$ref": "#/$defs/value"
+          },
+          "left_normalized_value": {
+            "$ref": "#/$defs/value"
+          },
+          "right_normalized_value": {
+            "$ref": "#/$defs/value"
+          },
+          "difference": {
+            "oneOf": [
+              {
+                "$ref": "shared-definitions.schema.json#/$defs/decimalString"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tolerance": {
+            "$ref": "reconciliation-config.schema.json#/$defs/tolerance"
+          },
+          "status": {
+            "$ref": "shared-definitions.schema.json#/$defs/matchStatus"
+          },
+          "reason": {
+            "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "status": {
+      "$ref": "shared-definitions.schema.json#/$defs/matchStatus"
+    },
+    "quality_status": {
+      "$ref": "shared-definitions.schema.json#/$defs/qualityStatus"
+    },
+    "reason": {
+      "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+    },
+    "supporting_evidence_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "shared-definitions.schema.json#/$defs/identifier"
+      }
+    },
+    "human_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required",
+        "status",
+        "reviewer",
+        "decision",
+        "reviewed_at"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "status": {
+          "$ref": "shared-definitions.schema.json#/$defs/humanReviewStatus"
+        },
+        "reviewer": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "decision": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reviewed_at": {
+          "oneOf": [
+            {
+              "$ref": "shared-definitions.schema.json#/$defs/timestampOrState"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "$defs": {
+    "value": {
+      "type": [
+        "string",
+        "number",
+        "integer",
+        "boolean",
+        "array",
+        "object",
+        "null"
+      ]
+    }
+  }
+}

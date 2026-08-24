@@ -1,0 +1,59 @@
+{
+  "$schema": "../common/document-profile.schema.json",
+  "schema_id": "profile.receipt-expense",
+  "schema_name": "Receipt and expense-document extraction profile",
+  "document_type": "RECEIPT_EXPENSE",
+  "version": "1.0.0",
+  "jurisdictions": ["JURISDICTION_NEUTRAL"],
+  "effective_date": null,
+  "extends": "profile.generic-document",
+  "required_fields": ["merchant_name", "transaction_date", "total_amount", "currency"],
+  "optional_fields": ["receipt_number", "merchant_tax_id", "merchant_address", "transaction_time", "expense_claim_number", "expense_category", "employee_reference", "tax_amount", "tip_amount", "payment_method", "card_last_four", "travel_reference", "project", "cost_center", "approver", "duplicate_receipt_fingerprint", "image_quality_status"],
+  "field_definitions": [
+    {"field_name": "merchant_name", "field_label": "Merchant name", "field_group": "merchant", "data_type": "TEXT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC", "TRIM_OUTER_WHITESPACE"], "sensitivity": "STANDARD"},
+    {"field_name": "transaction_date", "field_label": "Transaction date", "field_group": "date", "data_type": "DATE", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "ISO_DATE_WHEN_UNAMBIGUOUS"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "total_amount", "field_label": "Receipt total", "field_group": "amount", "data_type": "CURRENCY_AMOUNT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "currency", "field_label": "Receipt currency", "field_group": "amount", "data_type": "TEXT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "ISO_CURRENCY_CODE_WHEN_EXPLICIT"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "receipt_number", "field_label": "Receipt number", "field_group": "header", "data_type": "IDENTIFIER", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "merchant_tax_id", "field_label": "Merchant tax identifier", "field_group": "merchant", "data_type": "TAX_IDENTIFIER", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "merchant_address", "field_label": "Merchant address", "field_group": "merchant", "data_type": "ADDRESS", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC", "COLLAPSE_WHITESPACE"], "sensitivity": "STANDARD"},
+    {"field_name": "transaction_time", "field_label": "Transaction time", "field_group": "date", "data_type": "TEXT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "expense_claim_number", "field_label": "Expense claim number", "field_group": "reference", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "expense_category", "field_label": "Expense category", "field_group": "expense", "data_type": "TEXT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "STANDARD"},
+    {"field_name": "employee_reference", "field_label": "Employee reference", "field_group": "expense", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "PERSONAL_DATA"},
+    {"field_name": "tax_amount", "field_label": "Tax amount", "field_group": "amount", "data_type": "CURRENCY_AMOUNT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "tip_amount", "field_label": "Tip amount", "field_group": "amount", "data_type": "CURRENCY_AMOUNT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "payment_method", "field_label": "Payment method", "field_group": "payment", "data_type": "TEXT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "card_last_four", "field_label": "Card last four digits", "field_group": "payment", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "travel_reference", "field_label": "Travel reference", "field_group": "reference", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "PERSONAL_DATA"},
+    {"field_name": "project", "field_label": "Project", "field_group": "accounting", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "cost_center", "field_label": "Cost center", "field_group": "accounting", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "approver", "field_label": "Expense approver", "field_group": "approval", "data_type": "TEXT", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "PERSONAL_DATA"},
+    {"field_name": "duplicate_receipt_fingerprint", "field_label": "Duplicate-candidate fingerprint", "field_group": "integrity", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "image_quality_status", "field_label": "Image quality status", "field_group": "integrity", "data_type": "TEXT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW"], "sensitivity": "STANDARD"}
+  ],
+  "line_item_definitions": [
+    {"field_name": "line_number", "field_label": "Line number", "field_group": "line", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "description", "field_label": "Item description", "field_group": "line", "data_type": "TEXT", "required": true, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "STANDARD"},
+    {"field_name": "quantity", "field_label": "Quantity", "field_group": "line", "data_type": "QUANTITY", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "STANDARD"},
+    {"field_name": "unit_price", "field_label": "Unit price", "field_group": "line", "data_type": "CURRENCY_AMOUNT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "line_total", "field_label": "Line total", "field_group": "line", "data_type": "CURRENCY_AMOUNT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"}
+  ],
+  "validation_rules": [
+    {"rule_id": "receipt.required-status", "rule_type": "REQUIRED_STATUS", "fields": ["merchant_name", "transaction_date", "total_amount", "currency"], "severity": "CRITICAL", "description": "Critical receipt fields require explicit records and statuses."},
+    {"rule_id": "receipt.identifier-text", "rule_type": "IDENTIFIER_AS_TEXT", "fields": ["receipt_number", "merchant_tax_id", "expense_claim_number", "employee_reference", "card_last_four"], "severity": "HIGH", "description": "Receipt identifiers remain text; card data is limited to the source-provided last four digits."},
+    {"rule_id": "receipt.line-total", "rule_type": "ARITHMETIC_SUM", "fields": ["line_total", "tax_amount", "tip_amount", "total_amount"], "severity": "HIGH", "description": "Line, tax and tip amounts are compared with the stated receipt total."},
+    {"rule_id": "receipt.date-ambiguity", "rule_type": "DATE_AMBIGUITY", "fields": ["transaction_date"], "severity": "HIGH", "description": "Ambiguous dates remain unnormalized."}
+  ],
+  "reconciliation_keys": [
+    {"key_id": "receipt.number-merchant", "fields": ["receipt_number", "merchant_tax_id"], "strength": "PRIMARY", "candidate_only": false},
+    {"key_id": "receipt.fingerprint", "fields": ["duplicate_receipt_fingerprint"], "strength": "SECONDARY", "candidate_only": true},
+    {"key_id": "receipt.amount-date", "fields": ["merchant_name", "transaction_date", "total_amount", "currency"], "strength": "SUPPORTING", "candidate_only": true}
+  ],
+  "human_review_rules": [
+    {"condition": "CRITICAL_FIELD_LOW_OR_UNKNOWN_CONFIDENCE", "field_scope": ["receipt_number", "merchant_name", "transaction_date", "total_amount", "currency"], "action": "HUMAN_REVIEW_REQUIRED"},
+    {"condition": "AMBIGUOUS_DATE_OR_LOCALE", "field_scope": ["transaction_date"], "action": "HUMAN_REVIEW_REQUIRED"},
+    {"condition": "INCOMPLETE_TABLE", "field_scope": ["total_amount"], "action": "HUMAN_REVIEW_REQUIRED"}
+  ],
+  "claim_boundaries": ["NO_AUTHENTICITY_CONCLUSION", "NO_SIGNATURE_AUTHENTICATION", "NO_LEGAL_OPINION", "NO_FRAUD_CONCLUSION", "NO_CONTROL_EFFECTIVENESS_CONCLUSION"]
+}
