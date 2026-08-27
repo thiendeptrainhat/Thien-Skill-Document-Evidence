@@ -6,33 +6,31 @@
 
 Biến bộ tài liệu rời rạc thành dữ liệu có cấu trúc, tệp có thể sử dụng tiếp và kết quả đối soát có đường dẫn về nguồn. Khi được kích hoạt, skill hướng dẫn agent xử lý theo một quy trình nhất quán: kiểm kê → trích xuất → chuẩn hóa có kiểm soát → kiểm tra → xuất kết quả → bàn giao các điểm cần con người xem xét.
 
-Bản **1.1.0** tập trung vào ba nhu cầu: **chuyển đổi tài liệu**, **chuẩn bị nguồn RAG** và **đối soát nhiều loại chứng từ**. Skill kết hợp hướng dẫn nghiệp vụ, schema dữ liệu, templates và script offline; không phải một OCR engine hay hệ thống phê duyệt tự động.
-
-> GitHub là nơi lưu trữ source và các gói phát hành. Việc clone repository **không tự kích hoạt skill**. Skill chỉ hoạt động sau khi được cài vào đúng vị trí discovery hoặc được nạp như plugin trên ChatGPT/Codex/Claude.
-
-## Trạng thái
-
-| Thuộc tính | Giá trị |
-|---|---|
-| Skill ID | `thien-skill-document-evidence` |
-| Version | `1.1.0` |
-| Product status / QA | `Testing` — độc lập với số phiên bản phát hành |
-| Readiness ceiling | `READY_FOR_HUMAN_REVIEW` |
-| Repository | Private |
-| Owner | Tran Ngoc Thien |
-| License | Tran Ngoc Thien's Skills Commercial Source-Available License 2.0 |
-
-Bản phát hành `1.1.0` không còn hậu tố RC, kế thừa Phase 2 Implementation và Phase 3 nghiệm thu gói: có CLI offline cho RAG package, conversion artifact và reconciliation package/profile, đồng thời giữ các contract v1.0 tương thích. Chưa live-install trên nền tảng và không được hiểu là production-ready, forensic-certified, legal approval, platform certification hoặc fraud/audit conclusion.
+**Phiên bản 1.1.0 — Final.** Đây là bản phát hành chính thức, không còn hậu tố RC, tập trung vào ba nhu cầu: **chuyển đổi tài liệu**, **chuẩn bị nguồn RAG** và **đối soát nhiều loại chứng từ**. Skill kết hợp hướng dẫn nghiệp vụ, schema dữ liệu, templates và script offline; không phải một OCR engine hay hệ thống phê duyệt tự động.
 
 ## Đọc nhanh
 
+- [Vai trò của skill](#vai-tro)
 - [Lợi ích khi kích hoạt](#loi-ich)
+- [Hướng dẫn sử dụng skill](#quy-trinh)
+- [Ví dụ yêu cầu có thể dùng ngay](#vi-du)
 - [Ba nhóm tính năng chính](#tinh-nang)
 - [Chín matching profiles và khả năng mở rộng](#matching)
-- [Quy trình xử lý và đầu vào cần chuẩn bị](#quy-trinh)
-- [Ví dụ yêu cầu có thể dùng ngay](#vi-du)
-- [Phạm vi đã kiểm thử của 1.1.0](#kiem-thu)
-- [Cài đặt và kích hoạt](#cai-dat)
+- [Thông tin bản phát hành Final và phạm vi kiểm thử](#kiem-thu)
+- [Hướng dẫn cài đặt](#cai-dat)
+
+<a id="vai-tro"></a>
+
+## Vai trò của skill
+
+Skill đóng vai trò **hướng dẫn agent xử lý tài liệu theo quy trình có kiểm soát**, nối tài liệu nguồn với dữ liệu, đầu ra và bước review:
+
+- **Tổ chức nguồn:** xác định tài liệu nào đã nhận, đọc được, chưa xử lý hoặc cần bổ sung.
+- **Giữ nghĩa và bằng chứng:** trích nội dung theo schema, bảo toàn giá trị gốc và liên kết về tài liệu/trang khi nguồn cho phép.
+- **Tạo đầu ra theo mục đích:** nội dung chỉnh sửa được, bảng dữ liệu, gói nguồn RAG hoặc workbook đối soát.
+- **Hỗ trợ người ra quyết định:** trình bày chênh lệch, mâu thuẫn, phần chưa chắc chắn và căn cứ để con người kiểm tra.
+
+Agent thực hiện công việc bằng những công cụ được phép trên nền tảng đang dùng; skill cung cấp quy trình, schema, cấu hình và helper. Việc kích hoạt không tự tạo thêm quyền truy cập hay khả năng OCR, và không thay người chịu trách nhiệm phê duyệt nghiệp vụ.
 
 <a id="loi-ich"></a>
 
@@ -59,6 +57,128 @@ Kích hoạt nghĩa là agent nạp hướng dẫn và tài nguyên của skill 
 - Có **9 matching profiles** đi kèm và cơ chế custom profile cho quy trình khác; không khóa đối soát vào hóa đơn đầu vào–PO–GRN.
 - Tách rõ **tệp đã tạo**, **kiểm tra cấu trúc**, **kiểm tra hiển thị/nhập vào hệ thống đích** và **phê duyệt của con người**.
 - Phân phối cùng một portable core trong ba gói OpenAI, Claude và Universal; kiểm tra parity và checksum giúp xác định gói đang dùng.
+
+<a id="quy-trinh"></a>
+
+## Hướng dẫn sử dụng skill
+
+### Bắt đầu với một yêu cầu rõ ràng
+
+1. Kích hoạt hoặc chọn skill đã cài trên nền tảng đang sử dụng.
+2. Cung cấp tài liệu hoặc chỉ rõ thư mục được phép đọc, mục tiêu xử lý và nơi nhận kết quả.
+3. Nêu đầu ra mong muốn; với đối soát, đính kèm quy tắc/policy đã duyệt hoặc yêu cầu agent hỏi các điểm còn thiếu.
+4. Kiểm tra kết quả cùng nguồn liên kết, coverage, chênh lệch và danh sách cần human review trước khi sử dụng tiếp.
+
+Có thể bắt đầu bằng yêu cầu bằng ngôn ngữ tự nhiên:
+
+```text
+Dùng thien-skill-document-evidence để xử lý bộ tài liệu tôi cung cấp.
+Mục tiêu: [chuyển đổi / chuẩn bị nguồn RAG / đối soát chứng từ].
+Đầu ra: [định dạng và nơi lưu được phép].
+Trước khi chạy, xác nhận khả năng đọc, công cụ cần dùng và các quyết định còn thiếu.
+Giữ liên kết nguồn; ghi rõ phần đã xử lý, chưa xử lý và cần tôi xem xét.
+```
+
+Nếu chưa cài skill, xem [hướng dẫn cài đặt ở phía dưới](#cai-dat). Clone repository không tự kích hoạt skill.
+
+### Quy trình xử lý sau khi kích hoạt
+
+`Nguồn được phép đọc → Inventory → Extraction/canonical data → Validation → Output theo task profile → Human review/handoff`
+
+1. **Chốt mục tiêu và phạm vi:** tài liệu nào, kỳ/đơn vị nào, ai nhận kết quả, được dùng công cụ nào.
+2. **Kiểm kê và bảo toàn nguồn:** ghi file lỗi/không đọc được, coverage và working copy; không sửa original.
+3. **Chọn schema và phương pháp trích xuất:** dùng native text khi đủ; chỉ gọi adapter khi có capability và quyền phù hợp.
+4. **Kiểm tra dữ liệu và các quy tắc:** giữ provenance, uncertainty và source contradictions; hỏi khi lựa chọn làm thay đổi kết quả đáng kể.
+5. **Tạo đầu ra đúng mục đích:** conversion, RAG source hoặc reconciliation; có thể chỉ hoàn thành phần độc lập nếu bước khác bị chặn.
+6. **Bàn giao cùng giới hạn:** nêu đã tạo gì, đã kiểm tra gì, phần nào chưa chạy và ai cần review. Không tự nâng thành phê duyệt nghiệp vụ.
+
+Các lifecycle route kỹ thuật tương ứng là `INTAKE_INTEGRITY`, `CLASSIFY_EXTRACT`, `STRUCTURE_VALIDATE`, `LINK_RECONCILE`, `EVIDENCE_DISCLOSURE` và `REVIEW_REPERFORM`; không phải mọi task đều phải chạy đủ sáu route.
+
+### Nên cung cấp gì trong yêu cầu đầu tiên?
+
+- Nguồn/tệp hoặc thư mục được phép đọc; thông tin mật cần bảo vệ và nơi được phép ghi output.
+- Mục tiêu và định dạng đầu ra, ví dụ Word chỉnh sửa được, workbook đối soát hoặc RAG package chưa chunk.
+- Với conversion: ưu tiên chỉnh sửa hay giữ bố cục; yêu cầu riêng cho hình, bảng hoặc từng trang.
+- Với RAG: xử lý một tài liệu hay collection; target/config chỉ khi muốn tạo chunks.
+- Với matching: các role, grain/keys, kỳ/cut-off, đơn vị tính/tiền tệ, partial policy và tolerance đã duyệt.
+
+Không cần biết tên schema để bắt đầu. Agent có thể giúp xác định phần thiếu, nhưng không tự đặt các quyết định nghiệp vụ quan trọng.
+
+<a id="vi-du"></a>
+
+## Ví dụ yêu cầu có thể dùng ngay
+
+Các prompt dưới đây dùng tên skill; cú pháp gọi cụ thể phụ thuộc nền tảng và cách cài. Đây là ví dụ sử dụng, không phải bằng chứng đã chạy với tài liệu thật của người dùng.
+
+### Hóa đơn thành workbook
+
+```text
+Dùng thien-skill-document-evidence để xử lý các hóa đơn tôi cung cấp.
+Lập inventory và kiểm tra khả năng đọc trước; trích dữ liệu đầu hóa đơn và dòng hàng.
+Tạo workbook phục vụ review, giữ mã hóa đơn/số tài khoản dưới dạng text,
+tách raw/normalized values, ghi nguồn trang và các trường còn mơ hồ.
+Không tự đoán dữ liệu thiếu hoặc dùng dịch vụ ngoài khi chưa được phép.
+```
+
+### Chuyển tài liệu sang Word hoặc PowerPoint
+
+```text
+Chuyển tài liệu này thành DOCX có thể chỉnh sửa theo SEMANTIC_EDITABLE.
+Giữ heading, bảng, hình và caption khi nguồn/công cụ cho phép.
+Kèm nguồn liên kết, manifest và danh sách cấu trúc chưa giữ được.
+Không cần giống từng pixel; ghi riêng trạng thái tạo file và kiểm tra hiển thị.
+```
+
+Nếu cần PowerPoint, nêu rõ “slide để chỉnh sửa/trình bày” hay “mỗi trang nguồn thành một slide để xem”.
+
+### Chuẩn bị nguồn RAG từ một thư mục
+
+```text
+Chuẩn bị RAG source package cho các tài liệu trong thư mục được phép này.
+Giữ riêng từng document, stable block IDs, page provenance, metadata và manifests.
+Tạo collection manifest; ghi file lỗi, phần thiếu và asset được phép xuất.
+Tôi chưa chỉ định target/chunking config: chưa tạo chunks, không upload hoặc tạo embeddings.
+```
+
+### Mua hàng và nhận hàng từng phần
+
+```text
+Đối soát PO–GRN–hóa đơn bằng profile PO_GRN_INVOICE.
+Đề xuất grain và keys từ dữ liệu rồi xác nhận các điểm chưa rõ.
+Dùng partial/tolerance policy tôi đính kèm; nếu thiếu phê duyệt thì hỏi.
+Xuất workbook chênh lệch, source record IDs và human-review queue.
+Không coi tổng tiền khớp là đủ nếu dòng hàng hoặc số lượng còn lệch.
+```
+
+### Hóa đơn đầu ra, xuất kho và khách nhận hàng
+
+```text
+Dùng profile OUTBOUND_INVOICE_GOODS_ISSUE_CUSTOMER_RECEIPT để đối soát
+hóa đơn bán hàng, phiếu xuất kho và xác nhận khách nhận hàng.
+Kiểm tra mapping số đơn/số giao hàng, mã hàng, số lượng và ngày theo policy được cấp.
+Customer receipt ở đây là nhận hàng, không phải thu tiền.
+Ghi thiếu xác nhận nhận hàng, partial delivery và các liên kết nhiều ứng viên để review.
+```
+
+### Kiểm kê và tồn sổ
+
+```text
+Đối soát biên bản kiểm kê với tồn sổ bằng profile INVENTORY_COUNT_BOOK_STOCK.
+Xác nhận cut-off, kho, mã hàng, lô và đơn vị tính trước khi so sánh.
+Chỉ dùng tolerance hoặc quy đổi đơn vị đã được phê duyệt.
+Tạo danh sách chênh lệch có nguồn; không tự kết luận thất thoát hoặc ghi điều chỉnh sổ.
+```
+
+### Trích nghĩa vụ và review lại kết quả
+
+```text
+Trích clause và obligation từ hợp đồng cùng phụ lục tôi cung cấp.
+Giữ nguyên đoạn nguồn, liên kết phiên bản, party/action/trigger/due rule khi xác định được.
+Đưa mâu thuẫn và nội dung cần diễn giải vào human-review queue.
+Không kết luận hiệu lực pháp lý. Khi bàn giao, kèm source coverage và giới hạn trích xuất.
+```
+
+Để kiểm tra một kết quả đã có, có thể yêu cầu: “Review extraction package và workbook này; kiểm tra provenance, leading zeros, ngày mơ hồ, formula-like text, matching rules và các trạng thái QA chưa có bằng chứng.”
 
 <a id="tinh-nang"></a>
 
@@ -204,108 +324,22 @@ Nội dung trong tài liệu, QR, hyperlink, macro marker và OCR text được 
 
 Các script đi kèm không tự gọi mạng, không tự cài dependency và mặc định không ghi đè output. Hash, config và manifests giúp kiểm tra lại input/output và kết quả deterministic. **Điều này không có nghĩa toàn bộ phiên agent luôn offline:** việc đọc/OCR/vision bằng dịch vụ của host còn phụ thuộc công cụ được chọn và quyền xử lý dữ liệu.
 
-<a id="quy-trinh"></a>
-
-## Quy trình khi kích hoạt
-
-`Nguồn được phép đọc → Inventory → Extraction/canonical data → Validation → Output theo task profile → Human review/handoff`
-
-1. **Chốt mục tiêu và phạm vi:** tài liệu nào, kỳ/đơn vị nào, ai nhận kết quả, được dùng công cụ nào.
-2. **Kiểm kê và bảo toàn nguồn:** ghi file lỗi/không đọc được, coverage và working copy; không sửa original.
-3. **Chọn schema và phương pháp trích xuất:** dùng native text khi đủ; chỉ gọi adapter khi có capability và quyền phù hợp.
-4. **Kiểm tra dữ liệu và các quy tắc:** giữ provenance, uncertainty và source contradictions; hỏi khi lựa chọn làm thay đổi kết quả đáng kể.
-5. **Tạo đầu ra đúng mục đích:** conversion, RAG source hoặc reconciliation; có thể chỉ hoàn thành phần độc lập nếu bước khác bị chặn.
-6. **Bàn giao cùng giới hạn:** nêu đã tạo gì, đã kiểm tra gì, phần nào chưa chạy và ai cần review. Không tự nâng thành phê duyệt nghiệp vụ.
-
-Các lifecycle route kỹ thuật tương ứng là `INTAKE_INTEGRITY`, `CLASSIFY_EXTRACT`, `STRUCTURE_VALIDATE`, `LINK_RECONCILE`, `EVIDENCE_DISCLOSURE` và `REVIEW_REPERFORM`; không phải mọi task đều phải chạy đủ sáu route.
-
-### Nên cung cấp gì trong yêu cầu đầu tiên?
-
-- Nguồn/tệp hoặc thư mục được phép đọc; thông tin mật cần bảo vệ và nơi được phép ghi output.
-- Mục tiêu và định dạng đầu ra, ví dụ Word chỉnh sửa được, workbook đối soát hoặc RAG package chưa chunk.
-- Với conversion: ưu tiên chỉnh sửa hay giữ bố cục; yêu cầu riêng cho hình, bảng hoặc từng trang.
-- Với RAG: xử lý một tài liệu hay collection; target/config chỉ khi muốn tạo chunks.
-- Với matching: các role, grain/keys, kỳ/cut-off, đơn vị tính/tiền tệ, partial policy và tolerance đã duyệt.
-
-Không cần biết tên schema để bắt đầu. Agent có thể giúp xác định phần thiếu, nhưng không tự đặt các quyết định nghiệp vụ quan trọng.
-
-<a id="vi-du"></a>
-
-## Ví dụ yêu cầu có thể dùng ngay
-
-Các prompt dưới đây dùng tên skill; cú pháp gọi cụ thể phụ thuộc nền tảng và cách cài. Đây là ví dụ sử dụng, không phải bằng chứng đã chạy với tài liệu thật của người dùng.
-
-### Hóa đơn thành workbook
-
-```text
-Dùng thien-skill-document-evidence để xử lý các hóa đơn tôi cung cấp.
-Lập inventory và kiểm tra khả năng đọc trước; trích dữ liệu đầu hóa đơn và dòng hàng.
-Tạo workbook phục vụ review, giữ mã hóa đơn/số tài khoản dưới dạng text,
-tách raw/normalized values, ghi nguồn trang và các trường còn mơ hồ.
-Không tự đoán dữ liệu thiếu hoặc dùng dịch vụ ngoài khi chưa được phép.
-```
-
-### Chuyển tài liệu sang Word hoặc PowerPoint
-
-```text
-Chuyển tài liệu này thành DOCX có thể chỉnh sửa theo SEMANTIC_EDITABLE.
-Giữ heading, bảng, hình và caption khi nguồn/công cụ cho phép.
-Kèm nguồn liên kết, manifest và danh sách cấu trúc chưa giữ được.
-Không cần giống từng pixel; ghi riêng trạng thái tạo file và kiểm tra hiển thị.
-```
-
-Nếu cần PowerPoint, nêu rõ “slide để chỉnh sửa/trình bày” hay “mỗi trang nguồn thành một slide để xem”.
-
-### Chuẩn bị nguồn RAG từ một thư mục
-
-```text
-Chuẩn bị RAG source package cho các tài liệu trong thư mục được phép này.
-Giữ riêng từng document, stable block IDs, page provenance, metadata và manifests.
-Tạo collection manifest; ghi file lỗi, phần thiếu và asset được phép xuất.
-Tôi chưa chỉ định target/chunking config: chưa tạo chunks, không upload hoặc tạo embeddings.
-```
-
-### Mua hàng và nhận hàng từng phần
-
-```text
-Đối soát PO–GRN–hóa đơn bằng profile PO_GRN_INVOICE.
-Đề xuất grain và keys từ dữ liệu rồi xác nhận các điểm chưa rõ.
-Dùng partial/tolerance policy tôi đính kèm; nếu thiếu phê duyệt thì hỏi.
-Xuất workbook chênh lệch, source record IDs và human-review queue.
-Không coi tổng tiền khớp là đủ nếu dòng hàng hoặc số lượng còn lệch.
-```
-
-### Hóa đơn đầu ra, xuất kho và khách nhận hàng
-
-```text
-Dùng profile OUTBOUND_INVOICE_GOODS_ISSUE_CUSTOMER_RECEIPT để đối soát
-hóa đơn bán hàng, phiếu xuất kho và xác nhận khách nhận hàng.
-Kiểm tra mapping số đơn/số giao hàng, mã hàng, số lượng và ngày theo policy được cấp.
-Customer receipt ở đây là nhận hàng, không phải thu tiền.
-Ghi thiếu xác nhận nhận hàng, partial delivery và các liên kết nhiều ứng viên để review.
-```
-
-### Kiểm kê và tồn sổ
-
-```text
-Đối soát biên bản kiểm kê với tồn sổ bằng profile INVENTORY_COUNT_BOOK_STOCK.
-Xác nhận cut-off, kho, mã hàng, lô và đơn vị tính trước khi so sánh.
-Chỉ dùng tolerance hoặc quy đổi đơn vị đã được phê duyệt.
-Tạo danh sách chênh lệch có nguồn; không tự kết luận thất thoát hoặc ghi điều chỉnh sổ.
-```
-
-### Trích nghĩa vụ và review lại kết quả
-
-```text
-Trích clause và obligation từ hợp đồng cùng phụ lục tôi cung cấp.
-Giữ nguyên đoạn nguồn, liên kết phiên bản, party/action/trigger/due rule khi xác định được.
-Đưa mâu thuẫn và nội dung cần diễn giải vào human-review queue.
-Không kết luận hiệu lực pháp lý. Khi bàn giao, kèm source coverage và giới hạn trích xuất.
-```
-
-Để kiểm tra một kết quả đã có, có thể yêu cầu: “Review extraction package và workbook này; kiểm tra provenance, leading zeros, ngày mơ hồ, formula-like text, matching rules và các trạng thái QA chưa có bằng chứng.”
-
 <a id="kiem-thu"></a>
+
+## Thông tin bản phát hành 1.1.0 — Final
+
+| Thuộc tính | Giá trị |
+|---|---|
+| Skill ID | `thien-skill-document-evidence` |
+| Version | `1.1.0` |
+| Trạng thái phát hành | **Final — bản phát hành chính thức, không phải release candidate** |
+| Repository | Private |
+| Owner | Tran Ngoc Thien |
+| License | Tran Ngoc Thien's Skills Commercial Source-Available License 2.0 |
+
+Bản Final 1.1.0 bao gồm các helper offline cho conversion, RAG source package và reconciliation cùng các contract v1.0 tương thích. Các bản `1.1.0-rc.1` và `1.1.0-rc.2` chỉ được giữ làm lịch sử; gói cài đặt hiện tại mang phiên bản `1.1.0`.
+
+**Phân biệt phát hành với kiểm thử:** Final là trạng thái của bản phát hành. Hồ sơ nghiệm thu kỹ thuật hiện có vẫn ghi nhãn QA `Testing`; kết quả tự động được bàn giao tối đa ở mức `READY_FOR_HUMAN_REVIEW`. Đây không phải nhãn RC và cũng không phải bằng chứng đã kiểm thử live hoặc được phê duyệt nghiệp vụ.
 
 ## Phạm vi đã kiểm thử của bản 1.1.0
 
@@ -324,7 +358,7 @@ Các kết quả dưới đây là bằng chứng kỹ thuật tại thời đi�
 
 Các tests dùng fixture/synthetic inputs và kiểm tra kỹ thuật. Behavioral catalog vẫn tách khỏi kết quả thực thi; không gọi toàn bộ kịch bản mô tả là đã được chạy.
 
-Xem [báo cáo nghiệm thu 1.1.0](./ACCEPTANCE-REPORT-v1.1.0.md), [verification record](./qa/release-1.1.0/verification.json) và [packaged release tests](./tests/test_release_110.py). Số phiên bản chính thức `1.1.0` không thay đổi product status `Testing` hoặc trần readiness `READY_FOR_HUMAN_REVIEW`.
+Xem [báo cáo nghiệm thu 1.1.0](./ACCEPTANCE-REPORT-v1.1.0.md), [verification record](./qa/release-1.1.0/verification.json) và [packaged release tests](./tests/test_release_110.py). Trạng thái phát hành Final không tự chuyển những hạng mục chưa kiểm thử thành PASS hoặc thay thế human approval.
 
 ## Skill không làm gì?
 
@@ -340,9 +374,13 @@ Skill không:
 
 <a id="cai-dat"></a>
 
-## Cài đặt nhanh từ GitHub
+## Hướng dẫn cài đặt
 
-### 1. Clone repository
+GitHub là nơi lưu trữ source và các gói phát hành. Việc clone repository **không tự kích hoạt skill**. Skill hoạt động sau khi được cài vào đúng vị trí discovery hoặc được nạp như plugin trên nền tảng tương ứng.
+
+### Cài đặt nhanh từ GitHub
+
+#### 1. Clone repository
 
 Repository riêng tư yêu cầu tài khoản GitHub có quyền truy cập và Git/SSH hoặc GitHub CLI đã xác thực.
 
@@ -351,7 +389,7 @@ git clone https://github.com/thiendeptrainhat/Thien-Skill-Document-Evidence.git
 cd Thien-Skill-Document-Evidence
 ```
 
-### 2. Xác minh gói phát hành
+#### 2. Xác minh gói phát hành
 
 Trên macOS:
 
@@ -372,7 +410,7 @@ Tất cả artifact phải trả về `OK`. Kiểm tra thêm:
 - [ACCEPTANCE-REPORT-v1.1.0.md](./ACCEPTANCE-REPORT-v1.1.0.md);
 - [LICENSE-APPLICATION.md](./LICENSE-APPLICATION.md) và [LICENSE](./LICENSE).
 
-### 3. Chọn đúng phương án cài đặt
+#### 3. Chọn đúng phương án cài đặt
 
 | Bề mặt sử dụng | Gói/phương án nên dùng |
 |---|---|
@@ -597,4 +635,4 @@ Việc xem, clone hoặc nhận package không tự tạo quyền sử dụng th
 
 ---
 
-**English summary:** This private repository provides one canonical document-intelligence skill and deterministic OpenAI, Claude, and Universal packages. Version `1.1.0` implements offline RAG-package, artifact-conversion, and extensible role-configured reconciliation helpers while retaining v1.0 data contracts. The packages are structurally validated but are not live-installed. The skill does not claim legal validity, fraud, audit opinion, document authenticity, or platform certification.
+**English summary:** This private repository provides one canonical document-intelligence skill and deterministic OpenAI, Claude, and Universal packages. Version `1.1.0` is the final release, with no RC suffix. It implements offline RAG-package, artifact-conversion, and extensible role-configured reconciliation helpers while retaining v1.0 data contracts. The packages are structurally validated but are not live-installed. The skill does not claim legal validity, fraud, audit opinion, document authenticity, or platform certification.
