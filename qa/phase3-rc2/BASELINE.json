@@ -1,0 +1,921 @@
+{
+  "captured_at": "2026-08-27T04:34:04.227935+00:00",
+  "head": "42489dc35ae7bb249504c283a37d52348d200b0d",
+  "branch": "main",
+  "python": "3.14.5",
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "bc3d362ad7e7c487457dcf125751187cc9b3f7733e0c5e7e6e05c6d08fb72569",
+      "size_bytes": 52,
+      "modified_at": "2026-08-24T16:49:57.815709+00:00"
+    },
+    {
+      "path": "ACCEPTANCE-REPORT-v1.1.0-rc.1.md",
+      "sha256": "37498a3fe8e5648f95cdea1091c998ea251097412c34dc85b66950745a6bdf2c",
+      "size_bytes": 5052,
+      "modified_at": "2026-08-26T20:40:45.287216+00:00"
+    },
+    {
+      "path": "ACCEPTANCE-REPORT-v1.1.0-rc.2.md",
+      "sha256": "31540df04a955794cc0ef83fb6e9d2b682e0f54b21c066e7b2ea65b201ad698e",
+      "size_bytes": 9224,
+      "modified_at": "2026-08-26T22:02:56.031841+00:00"
+    },
+    {
+      "path": "ACCEPTANCE-REPORT.md",
+      "sha256": "a6878d0ba0ae3825e1b0390dbed277f8c52fa74275be57a14d79926a012edeaa",
+      "size_bytes": 15595,
+      "modified_at": "2026-08-22T20:15:20.376263+00:00"
+    },
+    {
+      "path": "HANDOFF.md",
+      "sha256": "3d1c4c360d1f69d3fc23c3b830a28c6f79286f6460dbaa15ddb05fe19b14dd55",
+      "size_bytes": 20741,
+      "modified_at": "2026-08-26T19:33:26.142489+00:00"
+    },
+    {
+      "path": "INSTALLATION.md",
+      "sha256": "5623e5bdeda302f2267001b219ffd0857940f7b30013dcfde4488403ed878b85",
+      "size_bytes": 11218,
+      "modified_at": "2026-08-26T21:46:43.207042+00:00"
+    },
+    {
+      "path": "LEGAL-REVIEW-v1.1.0-rc.1.md",
+      "sha256": "561eb4b16277f1eed7d0e03dfeba5098c2ef75ffe321bc0585a3de5952997310",
+      "size_bytes": 1950,
+      "modified_at": "2026-08-26T20:03:52.881041+00:00"
+    },
+    {
+      "path": "LEGAL-REVIEW-v1.1.0-rc.2.md",
+      "sha256": "e5df9b877b505256b41f7a581dd945ff82bca7237357fd843636578adaa13aa2",
+      "size_bytes": 2424,
+      "modified_at": "2026-08-26T20:55:32.407209+00:00"
+    },
+    {
+      "path": "LEGAL-REVIEW.md",
+      "sha256": "59e1bfc4420133ac1dc29bc23bdcb0271402d04cc47e79e462ed8570c955f593",
+      "size_bytes": 20549,
+      "modified_at": "2026-08-22T18:42:23.262628+00:00"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "ced33214d371fabe382d3ca303042af7219ad96fb98acdd1b858d0d89478d4b5",
+      "size_bytes": 51373,
+      "modified_at": "2026-08-22T18:19:55.459459+00:00"
+    },
+    {
+      "path": "LICENSE-APPLICATION.md",
+      "sha256": "3d298415f88b2063bf8dcc3ec5156cdfd9496c41481c51ff8f46f4e140987d75",
+      "size_bytes": 17954,
+      "modified_at": "2026-08-26T20:53:33.600889+00:00"
+    },
+    {
+      "path": "LICENSE-VERSION",
+      "sha256": "d526eb4e878a23ef26ae190031b4efd2d58ed66789ac049ea3dbaf74c9df7402",
+      "size_bytes": 4,
+      "modified_at": "2026-08-22T18:19:55.464365+00:00"
+    },
+    {
+      "path": "NOTICE",
+      "sha256": "29a9d5e429519d843bcd2952be3e4f3f7a0c1fc348e73052c1a4013e6c26d921",
+      "size_bytes": 5255,
+      "modified_at": "2026-08-26T20:53:34.244739+00:00"
+    },
+    {
+      "path": "README.md",
+      "sha256": "07db64185fe84b8f56ccbc57a978afe97a49d57075161ab7faa557485f6d9e0d",
+      "size_bytes": 23526,
+      "modified_at": "2026-08-26T21:46:17.785759+00:00"
+    },
+    {
+      "path": "THIRD-PARTY-NOTICES.md",
+      "sha256": "26dcc135b771be082696e163da1703ea2fa1b077dd2a03519eec62136cfd5e57",
+      "size_bytes": 10864,
+      "modified_at": "2026-08-26T20:53:35.024827+00:00"
+    },
+    {
+      "path": "VERSION",
+      "sha256": "84c8c500f270ff52432619bc52b24d21aa5fa8a8bdaadd722971411060498749",
+      "size_bytes": 11,
+      "modified_at": "2026-08-26T20:52:40.391484+00:00"
+    },
+    {
+      "path": "build/build_skill_packages.py",
+      "sha256": "a14d8ec0f60a85baa9b87419fea6ee9cf64d95febe795725b10b17eb1831ebae",
+      "size_bytes": 45879,
+      "modified_at": "2026-08-26T20:17:23.830185+00:00"
+    },
+    {
+      "path": "build/config.json",
+      "sha256": "df59dcc3f7302357c2d8c4cd8a70196e2b19214101ab0d88eecd1ca0394b61b7",
+      "size_bytes": 1376,
+      "modified_at": "2026-08-26T20:52:40.878387+00:00"
+    },
+    {
+      "path": "dist/PARITY-v1.0.0.json",
+      "sha256": "8804602e7b6c3e7678749e4bd2f06f7eb50450c5d7eaf5595a367aacca14d627",
+      "size_bytes": 575,
+      "modified_at": "2026-08-22T20:15:25.884162+00:00"
+    },
+    {
+      "path": "dist/PARITY-v1.1.0-rc.1.json",
+      "sha256": "eb9c65450860c2ba23666f660e3d78dec20c77afb5eb5d070c3886a05f8eccda",
+      "size_bytes": 604,
+      "modified_at": "2026-08-26T20:40:51.783147+00:00"
+    },
+    {
+      "path": "dist/PARITY-v1.1.0-rc.2.json",
+      "sha256": "d0d5c68f7e010b19259d1132ddaddaffd182310ee84a5b46da66c03cebada127",
+      "size_bytes": 604,
+      "modified_at": "2026-08-26T22:04:02.183313+00:00"
+    },
+    {
+      "path": "dist/SHA256SUMS-v1.0.0.txt",
+      "sha256": "e5618beb2d9d362e8f7d976da36a40effedbf1f0de437a609eebe242f4ff000b",
+      "size_bytes": 549,
+      "modified_at": "2026-08-22T20:15:25.885362+00:00"
+    },
+    {
+      "path": "dist/SHA256SUMS-v1.1.0-rc.1.txt",
+      "sha256": "b8f9a52ce671877ae81e82eff5a1928ea01f525753240e998e0e4ee5db3b4f86",
+      "size_bytes": 574,
+      "modified_at": "2026-08-26T20:40:51.784043+00:00"
+    },
+    {
+      "path": "dist/SHA256SUMS-v1.1.0-rc.2.txt",
+      "sha256": "9f5c2622e1be05c856e74271cd0a8138773125c156e21a19321a2a20d49d07d4",
+      "size_bytes": 574,
+      "modified_at": "2026-08-26T22:04:02.184263+00:00"
+    },
+    {
+      "path": "dist/claude/Thien-Skill-Document-Evidence-Claude-v1.0.0.zip",
+      "sha256": "38243aa58c953a3092ac4ce611f6d7315bceaa4dc686131b4e5704de7a83db5c",
+      "size_bytes": 2589344,
+      "modified_at": "2026-08-22T20:15:25.886193+00:00"
+    },
+    {
+      "path": "dist/claude/Thien-Skill-Document-Evidence-Claude-v1.1.0-rc.1.zip",
+      "sha256": "7ec508652ba6191c13760f18e725be1d2c16cb2cb0e35dc362759a05a4e6891f",
+      "size_bytes": 2619059,
+      "modified_at": "2026-08-26T20:40:51.784899+00:00"
+    },
+    {
+      "path": "dist/claude/Thien-Skill-Document-Evidence-Claude-v1.1.0-rc.2.zip",
+      "sha256": "ff2e3d17ebb24ca193d35fa49c10b655dd26335eabcf7f1c9414f914d0bfb748",
+      "size_bytes": 2719185,
+      "modified_at": "2026-08-26T22:04:02.185042+00:00"
+    },
+    {
+      "path": "dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.0.0.zip",
+      "sha256": "cb8aa92c2e47d81ef1e75f8cbe0c530e343b6746829dd18a441751de675e2f40",
+      "size_bytes": 3691590,
+      "modified_at": "2026-08-22T20:15:25.887386+00:00"
+    },
+    {
+      "path": "dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0-rc.1.zip",
+      "sha256": "efff8f3ffbb055031bcc59de6428e3369c8bf31354d904a8ce28c2d8af958d7d",
+      "size_bytes": 3721329,
+      "modified_at": "2026-08-26T20:40:51.786209+00:00"
+    },
+    {
+      "path": "dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0-rc.2.zip",
+      "sha256": "bc4e26afeace3633fd8f8ab7def510d532cc700dd63ed3dbbf4f8bdcb7a1a514",
+      "size_bytes": 3821458,
+      "modified_at": "2026-08-26T22:04:02.186093+00:00"
+    },
+    {
+      "path": "dist/release-manifest-v1.0.0.json",
+      "sha256": "a7e66d827e06d0e875390bbd5d97df0b4e309632edaa4e3164a947626c9373ad",
+      "size_bytes": 1750,
+      "modified_at": "2026-08-22T20:15:25.888547+00:00"
+    },
+    {
+      "path": "dist/release-manifest-v1.1.0-rc.1.json",
+      "sha256": "07d7886ddff8f7931924754398f392d4261a7e5598064e93b582f668d436adb5",
+      "size_bytes": 1775,
+      "modified_at": "2026-08-26T20:40:51.787299+00:00"
+    },
+    {
+      "path": "dist/release-manifest-v1.1.0-rc.2.json",
+      "sha256": "ffe007866c49b1445f487208aa9da65c0acf23c81d370e2f9a7e92f71e39296e",
+      "size_bytes": 1776,
+      "modified_at": "2026-08-26T22:04:02.187143+00:00"
+    },
+    {
+      "path": "dist/universal/Thien-Skill-Document-Evidence-Universal-v1.0.0.zip",
+      "sha256": "79ca2f44e11577852363d2ab3f83fe42c0e5f0b641aa4c8a9596ab7525c58624",
+      "size_bytes": 2554162,
+      "modified_at": "2026-08-22T20:15:25.889306+00:00"
+    },
+    {
+      "path": "dist/universal/Thien-Skill-Document-Evidence-Universal-v1.1.0-rc.1.zip",
+      "sha256": "491add9a09a316b8968c2248c6368c4bfdc9a39af5b09b10bd5f11abff6e2018",
+      "size_bytes": 2582937,
+      "modified_at": "2026-08-26T20:40:51.787918+00:00"
+    },
+    {
+      "path": "dist/universal/Thien-Skill-Document-Evidence-Universal-v1.1.0-rc.2.zip",
+      "sha256": "6d13e21fe7fd177da0da96a06cfb9afedbf2fb848eebf546015c3da0e9b3bc7d",
+      "size_bytes": 2681864,
+      "modified_at": "2026-08-26T22:04:02.187831+00:00"
+    },
+    {
+      "path": "platform/claude/plugin.json",
+      "sha256": "4a40f10177be7d19dd3bd6fc28a1b9429c2b7bea5114ad0b5c24d76ca00ba1ea",
+      "size_bytes": 719,
+      "modified_at": "2026-08-26T20:52:41.395910+00:00"
+    },
+    {
+      "path": "platform/openai/plugin.json",
+      "sha256": "416b009d8dbfe055385e72c5093bfb573b99d401d84e8df4ea5644db332f0819",
+      "size_bytes": 1481,
+      "modified_at": "2026-08-26T20:52:41.163171+00:00"
+    },
+    {
+      "path": "tests/behavioral_cases.json",
+      "sha256": "b950fc437aa68f96315fa1d75f54d02e3f0ec88edd4a6065c035a59d18850bfa",
+      "size_bytes": 41000,
+      "modified_at": "2026-08-26T21:06:18.352636+00:00"
+    },
+    {
+      "path": "tests/fixtures/conversion/canonical-content.json",
+      "sha256": "9e528088a5e2c06a26cb877bf5926aadca9dfc4f73cb8e117e14f6a50ef5f436",
+      "size_bytes": 3261,
+      "modified_at": "2026-08-26T21:16:05.324971+00:00"
+    },
+    {
+      "path": "tests/fixtures/conversion/page-1.png.b64",
+      "sha256": "7d3363a1a467b98174155c190e6d4b4c3e37226ec51f910b818b8e3bb8267e61",
+      "size_bytes": 93,
+      "modified_at": "2026-08-26T21:16:05.087292+00:00"
+    },
+    {
+      "path": "tests/fixtures/phase2-reconciliation/approved-partial-policy.json",
+      "sha256": "093e14b7a73ef832f2727c66250f21fe6f24afb01744102b0401165a96319ae2",
+      "size_bytes": 923,
+      "modified_at": "2026-08-26T21:38:02.402901+00:00"
+    },
+    {
+      "path": "tests/fixtures/phase2-reconciliation/grn.json",
+      "sha256": "41bdc15fb52ca0f971e6617732815fdd09d4262ff60565954d3792241d1f5b45",
+      "size_bytes": 304,
+      "modified_at": "2026-08-26T21:38:01.887708+00:00"
+    },
+    {
+      "path": "tests/fixtures/phase2-reconciliation/invalid.json",
+      "sha256": "9b1b7c5adc3ca7ca5c164a7385b6f05d31e53cf9618465aeb98024c69f3c8042",
+      "size_bytes": 26,
+      "modified_at": "2026-08-26T21:38:02.633629+00:00"
+    },
+    {
+      "path": "tests/fixtures/phase2-reconciliation/invoice.json",
+      "sha256": "d18887ff04191cde9d60cf1de1c5059398f6bcfcef0a1f0f302c2ad08c396d9b",
+      "size_bytes": 424,
+      "modified_at": "2026-08-26T21:38:02.167171+00:00"
+    },
+    {
+      "path": "tests/fixtures/phase2-reconciliation/po.json",
+      "sha256": "7e69d7a7132197bd7339ab4b03399520cfe5254c7d0e9b9d4ac910d9b094c44a",
+      "size_bytes": 766,
+      "modified_at": "2026-08-26T21:38:01.654465+00:00"
+    },
+    {
+      "path": "tests/fixtures/phase2-reconciliation/pr.json",
+      "sha256": "61a0aa161de9fb5f36deb07810a0bf0fd7662e4d1ffdf337210aaece64d3fdb1",
+      "size_bytes": 654,
+      "modified_at": "2026-08-26T21:38:01.419813+00:00"
+    },
+    {
+      "path": "tests/fixtures/rag/assets/figure-001.svg",
+      "sha256": "3466d2ac6072948c0fd16063cb0b1155234f3135eabd37145d43dfe1f727d633",
+      "size_bytes": 222,
+      "modified_at": "2026-08-26T20:54:54.099496+00:00"
+    },
+    {
+      "path": "tests/fixtures/rag/canonical-alpha.json",
+      "sha256": "02ac7e3438a070b1f49fc461b3a5f8f1ce99185fd8909d5c656b88d4935bbb95",
+      "size_bytes": 3150,
+      "modified_at": "2026-08-26T20:55:34.412246+00:00"
+    },
+    {
+      "path": "tests/fixtures/rag/canonical-beta.json",
+      "sha256": "a441ebe20888450da74e2c1668bb13431e8f0e89bedf5c542d47f0a002a576f4",
+      "size_bytes": 1352,
+      "modified_at": "2026-08-26T20:55:34.653155+00:00"
+    },
+    {
+      "path": "tests/fixtures/rag/chunk-config.json",
+      "sha256": "9e174f65b220c34857fd84e97bd6e02bc3e54f450a2bca0022560a6bc9fc3310",
+      "size_bytes": 414,
+      "modified_at": "2026-08-26T20:54:54.331550+00:00"
+    },
+    {
+      "path": "tests/fixtures/reconciliation-config-approved.json",
+      "sha256": "2a8e65c5ed9263a99c8d2e357c801688598161fe7d791268c03490bf5c8794e5",
+      "size_bytes": 3864,
+      "modified_at": "2026-08-22T18:57:56.543931+00:00"
+    },
+    {
+      "path": "tests/fixtures/reconciliation-records.json",
+      "sha256": "24fe1db39bb2f7e8ada87afb04295d0692a60179ea795dda5e361140f182cad8",
+      "size_bytes": 532,
+      "modified_at": "2026-08-22T18:44:14.097614+00:00"
+    },
+    {
+      "path": "tests/fixtures/workbook-package.json",
+      "sha256": "78eda7ebe666b660a6da16c97770cd8540a5ac5f4238480105b636d0b0131fa5",
+      "size_bytes": 31359,
+      "modified_at": "2026-08-22T19:10:22.583263+00:00"
+    },
+    {
+      "path": "tests/fixtures/workbook-package.validation.json",
+      "sha256": "d939a06ddf759147568ed4b0d861e61e3ec22d816578c73ecdd7271b68af1b05",
+      "size_bytes": 843,
+      "modified_at": "2026-08-22T19:16:25.010664+00:00"
+    },
+    {
+      "path": "tests/test_artifact_integrity.py",
+      "sha256": "e92ce7809b5dc835fdce3c5d6f9daa7696dfe5bf2b5ebac1e9671caaf8e66190",
+      "size_bytes": 8266,
+      "modified_at": "2026-08-22T19:34:32.524168+00:00"
+    },
+    {
+      "path": "tests/test_conversion_artifacts.py",
+      "sha256": "a737038507a7ff029a12cccef418b8d5477d6f2a39a9b415e0e5e8ea050ca996",
+      "size_bytes": 36997,
+      "modified_at": "2026-08-26T22:00:35.462173+00:00"
+    },
+    {
+      "path": "tests/test_domain_scripts.py",
+      "sha256": "f93f747bbad67296e8f869c21affb50b44d63b0a929ec54c5702d5c214d8320b",
+      "size_bytes": 29982,
+      "modified_at": "2026-08-22T19:45:08.341068+00:00"
+    },
+    {
+      "path": "tests/test_packaging.py",
+      "sha256": "f131750f0df41e110bb6d8a4432a09a587616fd51e3911ccbddfc68a82577285",
+      "size_bytes": 21297,
+      "modified_at": "2026-08-26T20:55:52.334911+00:00"
+    },
+    {
+      "path": "tests/test_phase1_contracts.py",
+      "sha256": "aa6901bb022e79fd86966aed61d3298cd27cd8dc36834b83ac461d1a1acd919f",
+      "size_bytes": 30175,
+      "modified_at": "2026-08-26T21:00:53.645132+00:00"
+    },
+    {
+      "path": "tests/test_phase2_reconciliation.py",
+      "sha256": "b4a6c48b86900b07c045b65979f52f8590ec01d0b388c2e8cfd6b16e855ca735",
+      "size_bytes": 36908,
+      "modified_at": "2026-08-26T21:51:29.887343+00:00"
+    },
+    {
+      "path": "tests/test_rag_builder.py",
+      "sha256": "24546b15670232a80cc120db6691b04b333e74314faa030eeefb4ad7c95743d9",
+      "size_bytes": 36319,
+      "modified_at": "2026-08-26T21:44:51.113385+00:00"
+    },
+    {
+      "path": "tests/test_workbook_builder_safety.py",
+      "sha256": "10743bd21cdedc6f1764d92672e84a91a6a793034c1744a50475bbc99fd6cf89",
+      "size_bytes": 10080,
+      "modified_at": "2026-08-22T19:46:46.587470+00:00"
+    },
+    {
+      "path": "tests/test_workbook_finalizer.py",
+      "sha256": "3a36c6e21a6fe4970cb4d36dd60379fc1ca9b6f87931b19b0a367526e8a6cdc9",
+      "size_bytes": 20628,
+      "modified_at": "2026-08-22T19:40:28.482055+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/LICENSE-APPLICATION.md",
+      "sha256": "3d298415f88b2063bf8dcc3ec5156cdfd9496c41481c51ff8f46f4e140987d75",
+      "size_bytes": 17954,
+      "modified_at": "2026-08-26T20:53:33.861739+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/LICENSE-VERSION",
+      "sha256": "d526eb4e878a23ef26ae190031b4efd2d58ed66789ac049ea3dbaf74c9df7402",
+      "size_bytes": 4,
+      "modified_at": "2026-08-22T18:19:55.467049+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/LICENSE.md",
+      "sha256": "ced33214d371fabe382d3ca303042af7219ad96fb98acdd1b858d0d89478d4b5",
+      "size_bytes": 51373,
+      "modified_at": "2026-08-22T18:19:55.462167+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/NOTICE",
+      "sha256": "29a9d5e429519d843bcd2952be3e4f3f7a0c1fc348e73052c1a4013e6c26d921",
+      "size_bytes": 5255,
+      "modified_at": "2026-08-26T20:53:34.657434+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/SKILL.md",
+      "sha256": "55b34f798e3c08bff72c448c1d9d0fa90ba70bfee6bc08b059764e5420aace05",
+      "size_bytes": 24462,
+      "modified_at": "2026-08-26T21:52:40.328877+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/THIRD-PARTY-NOTICES.md",
+      "sha256": "26dcc135b771be082696e163da1703ea2fa1b077dd2a03519eec62136cfd5e57",
+      "size_bytes": 10864,
+      "modified_at": "2026-08-26T20:53:35.402003+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/VERSION",
+      "sha256": "84c8c500f270ff52432619bc52b24d21aa5fa8a8bdaadd722971411060498749",
+      "size_bytes": 11,
+      "modified_at": "2026-08-26T20:52:40.630534+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/agents/openai.yaml",
+      "sha256": "84bc465983faada075fdcb9a84254ae2f20bb79f67225340e8200c11edff59bb",
+      "size_bytes": 525,
+      "modified_at": "2026-08-26T19:58:42.749551+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/brand/PROVENANCE.md",
+      "sha256": "f8621c7c0faf779b4429b3c37fbbed4778333e79fe774615728e1d6af785c60d",
+      "size_bytes": 6034,
+      "modified_at": "2026-08-26T20:54:51.486139+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/brand/icon-128.png",
+      "sha256": "58695db66aa845d5b58631fc97ee0303d100cd1d0b1b81fd0bbf89b933d4ee12",
+      "size_bytes": 24463,
+      "modified_at": "2026-08-22T18:19:55.781538+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/brand/icon-512.png",
+      "sha256": "be8ef61706db7ea9d0d8a6911d41a09b8f368e9d27d5ab02fbf44b000799c220",
+      "size_bytes": 240546,
+      "modified_at": "2026-08-22T18:19:55.589632+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/brand/icon-64.png",
+      "sha256": "1b3acfa3a717f8286bba000a027e133e9a28275b8abee5936a9c947b3a500322",
+      "size_bytes": 8418,
+      "modified_at": "2026-08-22T18:19:55.870496+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/brand/icon-small.png",
+      "sha256": "25f406f44dcf349a70305529e7c23e388b55a88e79d4de98d0fa5e4ce6d581ac",
+      "size_bytes": 157028,
+      "modified_at": "2026-08-22T18:19:55.690216+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/brand/logo-large.png",
+      "sha256": "020a47a3c831664c700c9e4491c7ae00cf5a8f330e6c3c57422ee246df56d69e",
+      "size_bytes": 948765,
+      "modified_at": "2026-08-22T18:19:55.472463+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/brand/logo-original.png",
+      "sha256": "020a47a3c831664c700c9e4491c7ae00cf5a8f330e6c3c57422ee246df56d69e",
+      "size_bytes": 948765,
+      "modified_at": "2026-08-22T18:19:55.469520+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/reconciliation-profiles/contract-acceptance-invoice-payment-request.json",
+      "sha256": "84b53f1323927fbcef4801eae8a65d4fb652467fbdf256353e68a72c507056e1",
+      "size_bytes": 9898,
+      "modified_at": "2026-08-26T21:35:01.274825+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/reconciliation-profiles/contract-po-grn-invoice-bank-payment.json",
+      "sha256": "11b34c989d15d423635efc0b77445335dad97bb2e8eda3127bf78bf4a5a13d85",
+      "size_bytes": 9511,
+      "modified_at": "2026-08-26T21:35:01.507664+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/reconciliation-profiles/custom-n-way.json",
+      "sha256": "543a79883a4ba6264126ab144044026811fa391f56a38614ff75ae33c7095330",
+      "size_bytes": 4348,
+      "modified_at": "2026-08-26T21:21:51.153734+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/reconciliation-profiles/inventory-count-book-stock.json",
+      "sha256": "50cd46827814f872a676adefc3f89d95b2e89ff2f83dc1617fddb571c02d0cb3",
+      "size_bytes": 5613,
+      "modified_at": "2026-08-26T21:32:38.323630+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/reconciliation-profiles/invoice-payment-bank-settlement.json",
+      "sha256": "2ea575b5c3822204c8ba1e764e8ea0cf8a433ed0321056083556fbef430f9981",
+      "size_bytes": 7367,
+      "modified_at": "2026-08-26T21:32:38.099876+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/reconciliation-profiles/outbound-invoice-goods-issue-customer-receipt.json",
+      "sha256": "e19a6dff06f022681ad00a22181ab58ee60ce5a930bc49a424e150ced5ee065f",
+      "size_bytes": 6720,
+      "modified_at": "2026-08-26T21:34:14.151597+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/reconciliation-profiles/po-grn-invoice.json",
+      "sha256": "1739e062196233fef91cd255467e165fcc1dc70f2e57d3b3a2d6362bebc3d5c5",
+      "size_bytes": 8508,
+      "modified_at": "2026-08-26T21:32:37.870891+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/reconciliation-profiles/pr-po-grn-invoice.json",
+      "sha256": "e2d27a4544a759bdfeb5c225f079d257fdefe563be1060cdf0b7991da0fa257e",
+      "size_bytes": 10224,
+      "modified_at": "2026-08-26T21:32:37.640519+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/reconciliation-profiles/pr-po.json",
+      "sha256": "b9bdfb4ca202530925367612c59278f4fd0774248dacd007c4b5c8eba392a81d",
+      "size_bytes": 5655,
+      "modified_at": "2026-08-26T21:34:13.923135+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/templates/chain-of-custody-log.yaml",
+      "sha256": "5fc86ea7e2277f2707a34bc75c68db8f9a1df86cb48f9e39c8d271592772a929",
+      "size_bytes": 937,
+      "modified_at": "2026-08-22T18:50:21.366020+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/templates/contract-clause-register.yaml",
+      "sha256": "14742d4a9d72e94e9d5c4c63a2c0355c416c59338e8131aac9f1c0c20fd8037a",
+      "size_bytes": 872,
+      "modified_at": "2026-08-22T18:50:20.524744+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/templates/contract-obligation-register.yaml",
+      "sha256": "03d1bb9a8e0381cb0954c8f7496819eb9bde7a9ae8da9f287eb7a98fa7372ea6",
+      "size_bytes": 864,
+      "modified_at": "2026-08-22T18:50:20.728367+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/templates/document-discrepancy-log.yaml",
+      "sha256": "d627da0a30cadd81a2f39a604a08867c3b2e926c8102c49885edc991e3cbd92c",
+      "size_bytes": 1131,
+      "modified_at": "2026-08-22T18:50:20.936461+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/templates/document-evidence-workbook.xlsx",
+      "sha256": "7cf128490781b4434e39b26b8bea459b6f2b28f7a8d0e06c484e1216af9ce480",
+      "size_bytes": 30151,
+      "modified_at": "2026-08-22T19:42:09.982557+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/templates/document-intake.yaml",
+      "sha256": "cf5baf595dd264d805f4d95308e9ce3d6f4978f5239c188bd5174b208188e053",
+      "size_bytes": 1198,
+      "modified_at": "2026-08-22T18:50:20.114003+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/templates/evidence-register.yaml",
+      "sha256": "2a9566717197497e2c01516aae1843834b36c0028d171ce79264567b67cecf68",
+      "size_bytes": 1236,
+      "modified_at": "2026-08-22T19:03:13.381951+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/templates/extraction-run-manifest.json",
+      "sha256": "747cdc880643cce5a7e0464de0443179f792b0bd8783fe01f9da980c409e4c67",
+      "size_bytes": 977,
+      "modified_at": "2026-08-22T18:51:56.369376+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/templates/field-dictionary.yaml",
+      "sha256": "d6604b860711e617bf04d9726b53e80e696c4c2b07b16a3563c44f9d7e9f86ec",
+      "size_bytes": 1237,
+      "modified_at": "2026-08-22T18:51:55.964830+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/templates/handoff-package.yaml",
+      "sha256": "b6cef0f570be23c25c5bc9b24a4186c9c55e9e526fdd19ee3bc58b9c491df63c",
+      "size_bytes": 1031,
+      "modified_at": "2026-08-22T18:51:56.168261+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/templates/human-review-queue.yaml",
+      "sha256": "31bd5a0d11a8e67ebdcedd6007b04006e5dd61c6dd86717f7b50b6613d8ff50c",
+      "size_bytes": 1047,
+      "modified_at": "2026-08-22T18:50:21.139792+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/templates/rag-manifest.json",
+      "sha256": "86a9c80c03bbf709e95d4c5259c141f98e938de4964b1c8183814465ef3c1844",
+      "size_bytes": 233,
+      "modified_at": "2026-08-26T21:06:19.304057+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/templates/rag-metadata.json",
+      "sha256": "92a61f6843611770c2a2b656538321c975cc77daec7945ebd015a0a6996e39ce",
+      "size_bytes": 279,
+      "modified_at": "2026-08-26T20:54:53.450099+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/templates/reconciliation-config.json",
+      "sha256": "4a3538774e9f7ca9ccfe64ab432ba51eeac2c49870d6a734c047cac2f36d6c11",
+      "size_bytes": 8269,
+      "modified_at": "2026-08-22T18:59:49.426410+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/templates/redaction-log.yaml",
+      "sha256": "84a494417e58fa58780b9eeadf7c408374df03121f78b0f0a676ca6bc13c6803",
+      "size_bytes": 944,
+      "modified_at": "2026-08-22T18:50:21.575291+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/templates/workbook-layout.json",
+      "sha256": "4d3d343028330a8fde6b54e7a1546d6d3f9da21da8fe8173f75640400eaf5a31",
+      "size_bytes": 3067,
+      "modified_at": "2026-08-22T18:51:56.776499+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/references/acceptance-scenarios.md",
+      "sha256": "959e723cc8a2634a387a0b93d946ec16cc747e0f5ccd3e84daa88df80dc1fda9",
+      "size_bytes": 10080,
+      "modified_at": "2026-08-26T21:06:18.056606+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/references/architecture-boundaries-and-workflow.md",
+      "sha256": "7fc32498597c0cad547eb63e548e12c07a7444c178b29f9f3deb217f522d6e77",
+      "size_bytes": 13705,
+      "modified_at": "2026-08-26T20:30:15.851154+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/references/classification-and-schema-routing.md",
+      "sha256": "717ef0d40837b82b23f363aafbb215e04b5a455435f14b8cbac24236c77ccd31",
+      "size_bytes": 10240,
+      "modified_at": "2026-08-26T20:28:12.047189+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/references/conversion-output-profiles.md",
+      "sha256": "f68004fab825f6dfea0b0778cc26f4f2f840be6a947d2013334326a36546a3e8",
+      "size_bytes": 11026,
+      "modified_at": "2026-08-26T21:47:18.885085+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/references/evidence-provenance-confidence-and-review.md",
+      "sha256": "92c642cd4db5b12463345a1b0c9ad3ffdeae5d1770bac231df1b53700f868835",
+      "size_bytes": 6650,
+      "modified_at": "2026-08-22T18:29:33.843477+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/references/extraction-routing-and-preprocessing.md",
+      "sha256": "b3b124f3ec8f04be1606ed6e84bba6bd5210a63558275926f7f6156a606dedd2",
+      "size_bytes": 9383,
+      "modified_at": "2026-08-26T20:30:31.618373+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/references/field-table-contract-extraction.md",
+      "sha256": "f7272f876fa753a2902845d603a23b82adfde4919a8f715bcbe4fb01133fdfc4",
+      "size_bytes": 9155,
+      "modified_at": "2026-08-22T18:29:33.422021+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/references/intake-security-and-integrity.md",
+      "sha256": "f62057d59ef53d31538761ba6cc972819268b1b190b2ef11cdb92c0931c275b5",
+      "size_bytes": 7157,
+      "modified_at": "2026-08-22T18:26:07.393557+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/references/output-redaction-and-handoff.md",
+      "sha256": "25f77dafd200b3f35ca79e845c768b99482ae4bdc5f13df1e1e55013f8007caf",
+      "size_bytes": 11399,
+      "modified_at": "2026-08-26T21:47:19.123912+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/references/platform-capability-routing.md",
+      "sha256": "294f56d1bf0497df47439ba8462d7c87c57d77f6cff2d7edd43b2b8bf5426755",
+      "size_bytes": 7422,
+      "modified_at": "2026-08-26T21:06:08.159380+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/references/rag-source-package.md",
+      "sha256": "ba7f5692a2c0badbd41d4bcdeec485d62f7a70914f7f10f7501745fe942bb982",
+      "size_bytes": 9244,
+      "modified_at": "2026-08-26T21:52:40.564063+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/references/reconciliation-and-package-linking.md",
+      "sha256": "6106c2826ba1d20042ea29c69435bfde181be3d3f9c4217f3884e10445d1b796",
+      "size_bytes": 12489,
+      "modified_at": "2026-08-26T21:47:44.659543+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/references/source-and-design-provenance.md",
+      "sha256": "308e2e0383abe86ddb09ef2d1d33e32452dd7f0be4fb9b0fb2ff155eda027015",
+      "size_bytes": 9697,
+      "modified_at": "2026-08-26T21:47:44.899193+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/registry/skill-registry-entry.yaml",
+      "sha256": "01949f7c4cd2cf5e9fdc9c5aa47f516199765f3003ec0e2a0a252ccb32555cc2",
+      "size_bytes": 7244,
+      "modified_at": "2026-08-26T20:52:41.628218+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/common/artifact-manifest.schema.json",
+      "sha256": "8bd4ba646ba86141085dce8bfa67d450c5171156fe5ffc5b534071fbe401ddb8",
+      "size_bytes": 9808,
+      "modified_at": "2026-08-26T20:38:34.137690+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/common/canonical-content.schema.json",
+      "sha256": "0297514b39b555cd7eca6870bae0f64bd0461afce3c028dbf9c639118f020b81",
+      "size_bytes": 12845,
+      "modified_at": "2026-08-26T20:38:34.650901+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/common/conversion-run.schema.json",
+      "sha256": "2023f6085127ff0bc148ab146672e56afb75f22589c86e0c02bc5392ffc8eb4b",
+      "size_bytes": 15160,
+      "modified_at": "2026-08-26T21:43:34.356605+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/common/document-profile.schema.json",
+      "sha256": "ccc4cfd9b0713b5c18f73ea49990857e4777d0ea099c3f1898ab5f3d50d2d10e",
+      "size_bytes": 7604,
+      "modified_at": "2026-08-22T19:09:02.091052+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/common/document-record.schema.json",
+      "sha256": "fa5b7f5529890a413275196cb076b7082a35fe72a3981f0aec33b01693cf1d42",
+      "size_bytes": 10253,
+      "modified_at": "2026-08-22T18:29:56.613086+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/common/evidence-record.schema.json",
+      "sha256": "0a6975f88ea2ee29a60f0db3b5a3b0c7868fc33faa32a0b390fc90a2858d9e1d",
+      "size_bytes": 7593,
+      "modified_at": "2026-08-22T18:32:16.832019+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/common/extracted-field.schema.json",
+      "sha256": "f4ae483ba31d44b499c2d4094785b528535a064add0d83310047f7782ba205e8",
+      "size_bytes": 10266,
+      "modified_at": "2026-08-22T18:32:16.346293+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/common/extraction-package.schema.json",
+      "sha256": "8ab0cb449c18a7e2f7431b5b4e7e275ad1281c42d27459d0866b28ce70d6ed2f",
+      "size_bytes": 22623,
+      "modified_at": "2026-08-22T18:47:32.190191+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/common/line-item.schema.json",
+      "sha256": "fb357f893881ab515aa0cff3780ce0ed9c16d6cfda0b8fabb1e42fb4bb02a048",
+      "size_bytes": 3061,
+      "modified_at": "2026-08-22T18:32:16.570004+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/common/matching-profile.schema.json",
+      "sha256": "6ce3eb37ee2df71ca5f25910ad27e5534dc19dfd8f30fa042140d1867b0a8347",
+      "size_bytes": 17079,
+      "modified_at": "2026-08-26T21:25:11.141275+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/common/rag-package.schema.json",
+      "sha256": "54ee533bec71b7301e82acbeb7f28df41c92af3fc00d0bd64ca4185bd6e7eb11",
+      "size_bytes": 12355,
+      "modified_at": "2026-08-26T20:38:51.395557+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/common/reconciliation-config.schema.json",
+      "sha256": "92e41527c61db96e261451c17473826baed1d11f17c7135570f18e7376c1b875",
+      "size_bytes": 15050,
+      "modified_at": "2026-08-22T19:11:07.649529+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/common/reconciliation-result.schema.json",
+      "sha256": "963fb590b07ad0f79a07b7e07b95a36a4ad6969721d9ff6af92108191e2a36f1",
+      "size_bytes": 6300,
+      "modified_at": "2026-08-22T18:43:53.296393+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/common/runtime-adapter-output.schema.json",
+      "sha256": "b0f6b309daac6a7dc06345922b7a4bb8fd8b156deb0ec1aab6381450fb2a6e9a",
+      "size_bytes": 10792,
+      "modified_at": "2026-08-22T18:45:07.831275+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/common/shared-definitions.schema.json",
+      "sha256": "d49f8aad755891b5e629db655a2999c47396fc75ca57a7d8e0c824af82c0b06b",
+      "size_bytes": 7456,
+      "modified_at": "2026-08-22T19:07:35.900333+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/common/task-request.schema.json",
+      "sha256": "74dd9e97679ccf4b052985b1850e891c88e3540fd9546498e0b5c5147656a2e2",
+      "size_bytes": 13432,
+      "modified_at": "2026-08-26T20:32:06.057504+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/document-types/bank-statement.json",
+      "sha256": "841169691c39c97ad8cf05ad32c4023b763f68dff86e995823c76ec8abf6546e",
+      "size_bytes": 14209,
+      "modified_at": "2026-08-26T20:05:09.862148+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/document-types/contract.json",
+      "sha256": "636294e728cbe0c6524130031eb428c73948d482f067de2c593027500e3db733",
+      "size_bytes": 16828,
+      "modified_at": "2026-08-22T18:41:47.737926+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/document-types/generic-document.json",
+      "sha256": "64b03569bc983684a76fecb32f6d6ca2e8605ced92f513b69b51f8c2768b259d",
+      "size_bytes": 6563,
+      "modified_at": "2026-08-22T18:35:48.551164+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/document-types/goods-receipt.json",
+      "sha256": "a6da83e6a45f8599926703d3f0971e555ee30eb666556a61cceb62d3ecf2623e",
+      "size_bytes": 10808,
+      "modified_at": "2026-08-22T18:37:57.763486+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/document-types/invoice.json",
+      "sha256": "d38e3ff2d9660d9357fb4e8ac5354f6571a4382b71235334812488e0dfb78fd2",
+      "size_bytes": 17541,
+      "modified_at": "2026-08-22T18:35:48.771809+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/document-types/payment-bank.json",
+      "sha256": "afb3ac14addb590fbf915519b3b516db7f937a1959380e8d84a1453044debce9",
+      "size_bytes": 13272,
+      "modified_at": "2026-08-22T18:40:07.333584+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/document-types/payment-request.json",
+      "sha256": "23c45e235ff2691d5103791ed296ecb811e3a6c457440eae3b35367ae77597e6",
+      "size_bytes": 13875,
+      "modified_at": "2026-08-26T20:03:46.679781+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/document-types/purchase-order.json",
+      "sha256": "6e48f484cf30d8e5bdee3d9d7a75eb38d79a94a71d1cc360e990fdcb211c8728",
+      "size_bytes": 11799,
+      "modified_at": "2026-08-22T18:37:57.536524+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/document-types/purchase-requisition.json",
+      "sha256": "da4e26ac9db4f2d9df3bcabe60fd0a8680a65d443cae45b24f74c13bcefe72c3",
+      "size_bytes": 10882,
+      "modified_at": "2026-08-26T20:02:26.892592+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/schemas/document-types/receipt-expense.json",
+      "sha256": "be4d78ea8f56cde67d23b0b0f610ee79b692a3b124e045cc36580ecb73358178",
+      "size_bytes": 9997,
+      "modified_at": "2026-08-22T18:40:07.579917+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/scripts/build_rag_package.py",
+      "sha256": "b101156b3cd31a9ffdfdc1f9774f312e0ef2a96e39551f58a2493a99283c3a05",
+      "size_bytes": 85938,
+      "modified_at": "2026-08-26T21:44:19.092323+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/scripts/build_workbook.mjs",
+      "sha256": "b4b4e24c0db00d4e243eb94d757afc5ed763a83dfeaad2275e9a941417ae4ac8",
+      "size_bytes": 45014,
+      "modified_at": "2026-08-22T19:46:56.269356+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/scripts/document_inventory.py",
+      "sha256": "afc37eb49fbfe36cb864b1eb47251a977544d3ab2d76bc127ffe21ae64a2107d",
+      "size_bytes": 30738,
+      "modified_at": "2026-08-22T19:45:18.891375+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/scripts/finalize_workbook.py",
+      "sha256": "ac3fbff4f4d85b63c94e74de85aa244b044e5a372b4eb3306d94ba9bb7dbe44b",
+      "size_bytes": 57999,
+      "modified_at": "2026-08-22T19:41:44.079413+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/scripts/prepare_reconciliation_workbook.py",
+      "sha256": "cb08c83fa3e5202b061f081ad65580e5bbaf493626f2d13a6970dcd4322b9d25",
+      "size_bytes": 99770,
+      "modified_at": "2026-08-26T21:50:06.992080+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/scripts/reconcile_records.py",
+      "sha256": "26e4be561a5bf929335b58ce327e999d5244064e1c18b59dac560386e0d6e256",
+      "size_bytes": 92590,
+      "modified_at": "2026-08-22T19:45:19.414637+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/scripts/render_canonical_artifacts.py",
+      "sha256": "50b25cc5d006a4f55bf8867615e033062dc0207b889487c951fe75c8b101c33b",
+      "size_bytes": 100578,
+      "modified_at": "2026-08-26T22:00:35.229020+00:00"
+    },
+    {
+      "path": "thien-skill-document-evidence/scripts/validate_records.py",
+      "sha256": "a684088efc180597886b4aed0bbf83dbdde2f57b7fdee29295f8c118a114f890",
+      "size_bytes": 32479,
+      "modified_at": "2026-08-22T19:45:19.150479+00:00"
+    }
+  ]
+}

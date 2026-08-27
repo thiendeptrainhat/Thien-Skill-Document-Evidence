@@ -1,0 +1,290 @@
+{
+  "engagement_id": "DE-PHASE3-RC2-20260827",
+  "scope": "PACKAGE_ONLY",
+  "updated_at": "2026-08-27T04:49:49.464Z",
+  "evidence_layers": {
+    "frozen_release_integrity": "PASS",
+    "original_source_regression": "PASS_WITH_OPTIONAL_SKIP",
+    "new_packaged_workflows": "PASS",
+    "live_host_installation_invocation": "NOT_TESTED",
+    "raw_ocr_source_fidelity": "NOT_TESTED",
+    "rag_ingestion_embeddings_retrieval": "NOT_TESTED",
+    "office_visual_render_in_phase3": "NOT_TESTED",
+    "office_render_phase2": "HISTORICAL_REPORT_ONLY",
+    "human_independent_approval": "NOT_OBTAINED"
+  },
+  "matching_profiles": [
+    {
+      "profile_id": "PR_PO",
+      "registry_schema_validation": "PASS",
+      "registry_evidence": "tests/test_phase2_reconciliation.py#test_all_bundled_profiles_validate_without_embedded_tolerance_values",
+      "existing_source_e2e": "PASS",
+      "existing_source_evidence": "tests/test_phase2_reconciliation.py#test_pr_po_canonical_mapping_reconciles_end_to_end",
+      "packaged_e2e": "PASS",
+      "packaged_evidence": "tests/test_phase3_packaged_workflows.py#test_packaged_pr_po_exact",
+      "package_layouts": [
+        "OpenAI",
+        "Claude",
+        "Universal"
+      ],
+      "notes": "Exact PR → PO"
+    },
+    {
+      "profile_id": "PO_GRN_INVOICE",
+      "registry_schema_validation": "PASS",
+      "registry_evidence": "tests/test_phase2_reconciliation.py#test_all_bundled_profiles_validate_without_embedded_tolerance_values",
+      "existing_source_e2e": "PASS",
+      "existing_source_evidence": "tests/test_phase2_reconciliation.py#test_workflow_package_is_byte_stable_role_conditional_and_formula_safe",
+      "packaged_e2e": "PASS",
+      "packaged_evidence": "tests/test_phase3_packaged_workflows.py#test_packaged_two_receipts_two_invoices_approved_partial",
+      "package_layouts": [
+        "OpenAI",
+        "Claude",
+        "Universal"
+      ],
+      "notes": "1 PO + 2 GRN + 2 invoices; 40/60 approved partial and 60/50 over-allocation"
+    },
+    {
+      "profile_id": "PR_PO_GRN_INVOICE",
+      "registry_schema_validation": "PASS",
+      "registry_evidence": "tests/test_phase2_reconciliation.py#test_all_bundled_profiles_validate_without_embedded_tolerance_values",
+      "existing_source_e2e": "NOT_COVERED_BEFORE_PHASE3",
+      "existing_source_evidence": null,
+      "packaged_e2e": "PASS",
+      "packaged_evidence": "tests/test_phase3_packaged_workflows.py#test_packaged_pr_po_grn_invoice_exact",
+      "package_layouts": [
+        "OpenAI",
+        "Claude",
+        "Universal"
+      ],
+      "notes": "Exact PR → PO → GRN → invoice"
+    },
+    {
+      "profile_id": "CONTRACT_ACCEPTANCE_INVOICE_PAYMENT_REQUEST",
+      "registry_schema_validation": "PASS",
+      "registry_evidence": "tests/test_phase2_reconciliation.py#test_all_bundled_profiles_validate_without_embedded_tolerance_values",
+      "existing_source_e2e": "PASS",
+      "existing_source_evidence": "tests/test_phase2_reconciliation.py#test_contract_order_and_receipt_alternative_branches_reconcile",
+      "packaged_e2e": "PASS",
+      "packaged_evidence": "tests/test_phase3_packaged_workflows.py#test_packaged_contract_acceptance_invoice_request_default_branch",
+      "package_layouts": [
+        "OpenAI",
+        "Claude",
+        "Universal"
+      ],
+      "notes": "Default CONTRACT + dedicated ACCEPTANCE; old suite covers PO + GRN alternative"
+    },
+    {
+      "profile_id": "INVOICE_PAYMENT_BANK_SETTLEMENT",
+      "registry_schema_validation": "PASS",
+      "registry_evidence": "tests/test_phase2_reconciliation.py#test_all_bundled_profiles_validate_without_embedded_tolerance_values",
+      "existing_source_e2e": "PASS",
+      "existing_source_evidence": "tests/test_phase2_reconciliation.py#test_invoice_payment_request_bank_settlement_exact_and_approved_partial",
+      "packaged_e2e": "PASS",
+      "packaged_evidence": "tests/test_phase3_packaged_workflows.py#test_packaged_invoice_payment_request_bank_exact",
+      "package_layouts": [
+        "OpenAI",
+        "Claude",
+        "Universal"
+      ],
+      "notes": "Invoice → payment request → bank transaction; bank transaction rows are not full statement extraction"
+    },
+    {
+      "profile_id": "CONTRACT_PO_GRN_INVOICE_BANK_PAYMENT",
+      "registry_schema_validation": "PASS",
+      "registry_evidence": "tests/test_phase2_reconciliation.py#test_all_bundled_profiles_validate_without_embedded_tolerance_values",
+      "existing_source_e2e": "PASS",
+      "existing_source_evidence": "tests/test_phase2_reconciliation.py#test_contract_order_and_receipt_alternative_branches_reconcile",
+      "packaged_e2e": "NOT_TESTED",
+      "packaged_evidence": null,
+      "package_layouts": [],
+      "notes": "Existing source suite only: contract + GRN + invoice + bank; no new packaged E2E"
+    },
+    {
+      "profile_id": "CUSTOM_N_WAY",
+      "registry_schema_validation": "PASS",
+      "registry_evidence": "tests/test_phase2_reconciliation.py#test_all_bundled_profiles_validate_without_embedded_tolerance_values",
+      "existing_source_e2e": "PASS",
+      "existing_source_evidence": "tests/test_phase2_reconciliation.py#test_custom_dotted_source_mapping_is_resolved_deterministically",
+      "packaged_e2e": "NOT_TESTED",
+      "packaged_evidence": null,
+      "package_layouts": [],
+      "notes": "Existing derived custom dotted-field profile only; not arbitrary N-way correctness"
+    },
+    {
+      "profile_id": "OUTBOUND_INVOICE_GOODS_ISSUE_CUSTOMER_RECEIPT",
+      "registry_schema_validation": "PASS",
+      "registry_evidence": "tests/test_phase2_reconciliation.py#test_all_bundled_profiles_validate_without_embedded_tolerance_values",
+      "existing_source_e2e": "NOT_COVERED_BEFORE_PHASE3",
+      "existing_source_evidence": null,
+      "packaged_e2e": "PASS",
+      "packaged_evidence": "tests/test_phase3_packaged_workflows.py#test_packaged_outbound_issue_customer_receipt_exact",
+      "package_layouts": [
+        "OpenAI",
+        "Claude",
+        "Universal"
+      ],
+      "notes": "Sales invoice → warehouse issue → customer proof of delivery"
+    },
+    {
+      "profile_id": "INVENTORY_COUNT_BOOK_STOCK",
+      "registry_schema_validation": "PASS",
+      "registry_evidence": "tests/test_phase2_reconciliation.py#test_all_bundled_profiles_validate_without_embedded_tolerance_values",
+      "existing_source_e2e": "NOT_COVERED_BEFORE_PHASE3",
+      "existing_source_evidence": null,
+      "packaged_e2e": "PASS",
+      "packaged_evidence": "tests/test_phase3_packaged_workflows.py#test_packaged_inventory_count_book_stock_exact",
+      "package_layouts": [
+        "OpenAI",
+        "Claude",
+        "Universal"
+      ],
+      "notes": "Physical count → inventory ledger balance"
+    }
+  ],
+  "live_platform_matrix": [
+    {
+      "scenario_id": "receipt-json-xlsx",
+      "label": "Ảnh receipt → JSON/XLSX",
+      "platform_results": {
+        "Codex": "NOT_TESTED",
+        "ChatGPT": "NOT_TESTED",
+        "Claude": "NOT_TESTED"
+      },
+      "reason": "Excluded by package-only/no-install scope; not replaced with offline PASS.",
+      "offline_scope_note": "Canonical conversion only; no raw receipt extraction"
+    },
+    {
+      "scenario_id": "scan-docx",
+      "label": "PDF scan nhiều trang → DOCX",
+      "platform_results": {
+        "Codex": "NOT_TESTED",
+        "ChatGPT": "NOT_TESTED",
+        "Claude": "NOT_TESTED"
+      },
+      "reason": "Excluded by package-only/no-install scope; not replaced with offline PASS.",
+      "offline_scope_note": "Canonical DOCX structure only; no scanned PDF/OCR"
+    },
+    {
+      "scenario_id": "pdf-pptx",
+      "label": "PDF → PPTX editable",
+      "platform_results": {
+        "Codex": "NOT_TESTED",
+        "ChatGPT": "NOT_TESTED",
+        "Claude": "NOT_TESTED"
+      },
+      "reason": "Excluded by package-only/no-install scope; not replaced with offline PASS.",
+      "offline_scope_note": "Canonical editable PPTX structure only; no PDF extraction/live import"
+    },
+    {
+      "scenario_id": "pdf-rag",
+      "label": "PDF → RAG Markdown",
+      "platform_results": {
+        "Codex": "NOT_TESTED",
+        "ChatGPT": "NOT_TESTED",
+        "Claude": "NOT_TESTED"
+      },
+      "reason": "Excluded by package-only/no-install scope; not replaced with offline PASS.",
+      "offline_scope_note": "Canonical source package only; no raw PDF extraction/live ingestion"
+    },
+    {
+      "scenario_id": "folder-documents",
+      "label": "Folder nhiều chứng từ / attachment equivalents",
+      "platform_results": {
+        "Codex": "NOT_TESTED",
+        "ChatGPT": "NOT_TESTED",
+        "Claude": "NOT_TESTED"
+      },
+      "reason": "Excluded by package-only/no-install scope; not replaced with offline PASS.",
+      "offline_scope_note": "Structured input CLI checks; no live host attachment UX"
+    },
+    {
+      "scenario_id": "po-grn-invoice",
+      "label": "PO-GRN-Invoice matching",
+      "platform_results": {
+        "Codex": "NOT_TESTED",
+        "ChatGPT": "NOT_TESTED",
+        "Claude": "NOT_TESTED"
+      },
+      "reason": "Excluded by package-only/no-install scope; not replaced with offline PASS.",
+      "offline_scope_note": "Offline synthetic structured matching only"
+    },
+    {
+      "scenario_id": "four-way-payment-bank",
+      "label": "Four-way có payment/bank",
+      "platform_results": {
+        "Codex": "NOT_TESTED",
+        "ChatGPT": "NOT_TESTED",
+        "Claude": "NOT_TESTED"
+      },
+      "reason": "Excluded by package-only/no-install scope; not replaced with offline PASS.",
+      "offline_scope_note": "Offline structured payment/bank branches only"
+    },
+    {
+      "scenario_id": "partial-delivery-payment",
+      "label": "Partial delivery/payment",
+      "platform_results": {
+        "Codex": "NOT_TESTED",
+        "ChatGPT": "NOT_TESTED",
+        "Claude": "NOT_TESTED"
+      },
+      "reason": "Excluded by package-only/no-install scope; not replaced with offline PASS.",
+      "offline_scope_note": "Offline configured synthetic partial checks only"
+    },
+    {
+      "scenario_id": "blurred-missing",
+      "label": "Trang mờ/thiếu → review queue",
+      "platform_results": {
+        "Codex": "NOT_TESTED",
+        "ChatGPT": "NOT_TESTED",
+        "Claude": "NOT_TESTED"
+      },
+      "reason": "Excluded by package-only/no-install scope; not replaced with offline PASS.",
+      "offline_scope_note": "Structured missing/invalid data negative tests; no visual blur recognition"
+    }
+  ],
+  "original_synthetic_fixture_requirement": {
+    "status": "PARTIAL_COVERAGE",
+    "criterion": "HANDOFF.md §6.13",
+    "covered_structured_examples": [
+      "PR",
+      "PO",
+      "GRN",
+      "invoice",
+      "payment request",
+      "bank transaction",
+      "contract",
+      "deliberate mismatch",
+      "duplicate candidate",
+      "missing/invalid fields"
+    ],
+    "phase3_additions_status": "PASS — structured 1 PO + 2 GRN + 2 invoices, 40/60 partial and 60/50 over-allocation; not raw scans.",
+    "remaining_raw_source_gaps": [
+      "Raw receipt image extraction",
+      "Multipage scanned PDF/OCR and blurred page fidelity",
+      "Complete bank statement with opening/closing balances"
+    ],
+    "restrictions": [
+      "Canonical source blocks and synthetic transaction rows do not prove accuracy of extraction from raw documents.",
+      "No claim that all alternative branches or many-to-many allocations were executed."
+    ]
+  },
+  "behavioral_catalog": {
+    "file": "tests/behavioral_cases.json",
+    "case_count": 64,
+    "id_range": "DE-001..DE-064",
+    "catalog_status": "SPECIFICATION_ONLY",
+    "execution_status": "NOT_TESTED",
+    "note": "Unit/integration test results are recorded separately; original behavioral catalog is preserved unchanged."
+  },
+  "execution_evidence": "qa/phase3-rc2/executions.json#P3-EXEC-FULL-REGRESSION",
+  "test_counts": {
+    "full_methods_run": 119,
+    "full_passed": 118,
+    "full_optional_skipped": 1,
+    "new_packaged_methods_run": 22,
+    "new_packaged_methods_passed": 22,
+    "packaged_profile_count": 7,
+    "package_layout_count": 3
+  }
+}

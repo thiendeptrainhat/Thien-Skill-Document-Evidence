@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0.0",
+  "document_id": "PO-000123",
+  "document_type": "PURCHASE_ORDER",
+  "fields": {
+    "requisition_number": "000001",
+    "po_number": {
+      "raw_value": "000123",
+      "normalized_value": "000123",
+      "display_value": "000123",
+      "data_type": "IDENTIFIER",
+      "provenance": {
+        "source_page": 1,
+        "source_region": "header.po_number",
+        "source_snippet": "PO 000123"
+      },
+      "human_review_required": false,
+      "notes": []
+    },
+    "po_date": "2026-08-02",
+    "item_code": "000045",
+    "ordered_quantity": "100",
+    "total_po_amount": "1000",
+    "currency": "VND",
+    "description": "=HYPERLINK(\"https://untrusted.invalid\",\"source text\")"
+  },
+  "data_classification": ["INTERNAL"]
+}

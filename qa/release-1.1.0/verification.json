@@ -1,0 +1,426 @@
+{
+  "release": "1.1.0",
+  "recorded_at": "2026-08-27T10:09:00.685Z",
+  "scope": "PRIVATE_LOCAL_PACKAGE_RELEASE_NO_INSTALL",
+  "authorization": "Người dùng xác nhận gói và yêu cầu phiên bản hoàn chỉnh1.1.0, không có rc.1/rc.2.",
+  "status": "COMPLETE",
+  "product_qa_status": "Testing",
+  "readiness_ceiling": "READY_FOR_HUMAN_REVIEW",
+  "review_relationship": "self_check; no new independent peer/human approval",
+  "skill_used": "skill-creator — synchronize version identity and validate rebuilt packages without changing workflow behavior",
+  "changes": [
+    {
+      "path": "tests/test_phase1_contracts.py",
+      "before_sha256": "aa6901bb022e79fd86966aed61d3298cd27cd8dc36834b83ac461d1a1acd919f",
+      "after_sha256": "c823e2e34f51882f582a130cd628d90bb7dbc18f232e78bc500be8f6911f2cd7"
+    },
+    {
+      "path": "INSTALLATION.md",
+      "before_sha256": "5623e5bdeda302f2267001b219ffd0857940f7b30013dcfde4488403ed878b85",
+      "after_sha256": "263079cecfb02240864a32a3a73f2afec2d39bdab744712daf145f2469305f4a"
+    },
+    {
+      "path": "LICENSE-APPLICATION.md",
+      "before_sha256": "3d298415f88b2063bf8dcc3ec5156cdfd9496c41481c51ff8f46f4e140987d75",
+      "after_sha256": "0c592d34b1babf5d5104dded4760ae17aa801fc747cd9b2ed54a356985deb924"
+    },
+    {
+      "path": "NOTICE",
+      "before_sha256": "29a9d5e429519d843bcd2952be3e4f3f7a0c1fc348e73052c1a4013e6c26d921",
+      "after_sha256": "dacc52a54596b0154856c83b4c0c6d36046f6acb70d57980ba5e0e4746fb648a"
+    },
+    {
+      "path": "README.md",
+      "before_sha256": "07db64185fe84b8f56ccbc57a978afe97a49d57075161ab7faa557485f6d9e0d",
+      "after_sha256": "890a82674869662e5d3e3d3172e90e66272614eadc9e8dd17c1773923d9a2b59"
+    },
+    {
+      "path": "THIRD-PARTY-NOTICES.md",
+      "before_sha256": "26dcc135b771be082696e163da1703ea2fa1b077dd2a03519eec62136cfd5e57",
+      "after_sha256": "f290ea562f65ed39192d4c45e1bd555474363868bb4e3de39ac64cf5906b6ca3"
+    },
+    {
+      "path": "VERSION",
+      "before_sha256": "84c8c500f270ff52432619bc52b24d21aa5fa8a8bdaadd722971411060498749",
+      "after_sha256": "1575e1af4a95f12f70b4ee6a6adce8160953d93ea17dc2611b90883ccc3ad3b8"
+    },
+    {
+      "path": "build/build_skill_packages.py",
+      "before_sha256": "a14d8ec0f60a85baa9b87419fea6ee9cf64d95febe795725b10b17eb1831ebae",
+      "after_sha256": "7afc2eff2e3ee9db775a38085e3bcba983bdaa7342293f9a237aa5ddbca1c518"
+    },
+    {
+      "path": "build/config.json",
+      "before_sha256": "df59dcc3f7302357c2d8c4cd8a70196e2b19214101ab0d88eecd1ca0394b61b7",
+      "after_sha256": "6d5a8ec86f3fac501b162a06fae2d31041b009bd540581c272c1d34bc712d0d0"
+    },
+    {
+      "path": "platform/claude/plugin.json",
+      "before_sha256": "4a40f10177be7d19dd3bd6fc28a1b9429c2b7bea5114ad0b5c24d76ca00ba1ea",
+      "after_sha256": "6aa62dd82b60f02494129789dbc5119912436d0ed84f7cbd0d24dd2e7f6fe167"
+    },
+    {
+      "path": "platform/openai/plugin.json",
+      "before_sha256": "416b009d8dbfe055385e72c5093bfb573b99d401d84e8df4ea5644db332f0819",
+      "after_sha256": "b6eb9ffb20c1206eb2c6d8f7d8680316fe48a329c81587ae12d101f34bc469c9"
+    },
+    {
+      "path": "tests/behavioral_cases.json",
+      "before_sha256": "b950fc437aa68f96315fa1d75f54d02e3f0ec88edd4a6065c035a59d18850bfa",
+      "after_sha256": "a9744430cefe2dec7c4f7533dcbb3a4d8b80af9273213d4359d53ddafaaf4175"
+    },
+    {
+      "path": "tests/test_packaging.py",
+      "before_sha256": "f131750f0df41e110bb6d8a4432a09a587616fd51e3911ccbddfc68a82577285",
+      "after_sha256": "5e20af9647236e5aae125d77463bbe919ed461b2ca4342284a7a407cef6d4a56"
+    },
+    {
+      "path": "thien-skill-document-evidence/LICENSE-APPLICATION.md",
+      "before_sha256": "3d298415f88b2063bf8dcc3ec5156cdfd9496c41481c51ff8f46f4e140987d75",
+      "after_sha256": "0c592d34b1babf5d5104dded4760ae17aa801fc747cd9b2ed54a356985deb924"
+    },
+    {
+      "path": "thien-skill-document-evidence/NOTICE",
+      "before_sha256": "29a9d5e429519d843bcd2952be3e4f3f7a0c1fc348e73052c1a4013e6c26d921",
+      "after_sha256": "dacc52a54596b0154856c83b4c0c6d36046f6acb70d57980ba5e0e4746fb648a"
+    },
+    {
+      "path": "thien-skill-document-evidence/THIRD-PARTY-NOTICES.md",
+      "before_sha256": "26dcc135b771be082696e163da1703ea2fa1b077dd2a03519eec62136cfd5e57",
+      "after_sha256": "f290ea562f65ed39192d4c45e1bd555474363868bb4e3de39ac64cf5906b6ca3"
+    },
+    {
+      "path": "thien-skill-document-evidence/VERSION",
+      "before_sha256": "84c8c500f270ff52432619bc52b24d21aa5fa8a8bdaadd722971411060498749",
+      "after_sha256": "1575e1af4a95f12f70b4ee6a6adce8160953d93ea17dc2611b90883ccc3ad3b8"
+    },
+    {
+      "path": "thien-skill-document-evidence/assets/brand/PROVENANCE.md",
+      "before_sha256": "f8621c7c0faf779b4429b3c37fbbed4778333e79fe774615728e1d6af785c60d",
+      "after_sha256": "27966a4e22a39d7b55f3cbdc8f4be7e36eaf9009157265c87eb5801f4cc1654d"
+    },
+    {
+      "path": "thien-skill-document-evidence/registry/skill-registry-entry.yaml",
+      "before_sha256": "01949f7c4cd2cf5e9fdc9c5aa47f516199765f3003ec0e2a0a252ccb32555cc2",
+      "after_sha256": "458657386ade839315d5423a4d621754757c1ac1bd5a60ba18925002266592e7"
+    }
+  ],
+  "preservation": {
+    "baseline_files": 170,
+    "intentionally_changed_files": 19,
+    "unchanged_files": 151,
+    "unexpected_changes": [],
+    "historical_files": [
+      {
+        "path": "ACCEPTANCE-REPORT-v1.1.0-rc.1.md",
+        "sha256": "37498a3fe8e5648f95cdea1091c998ea251097412c34dc85b66950745a6bdf2c",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "ACCEPTANCE-REPORT-v1.1.0-rc.2.md",
+        "sha256": "31540df04a955794cc0ef83fb6e9d2b682e0f54b21c066e7b2ea65b201ad698e",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "HANDOFF.md",
+        "sha256": "3d1c4c360d1f69d3fc23c3b830a28c6f79286f6460dbaa15ddb05fe19b14dd55",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "LEGAL-REVIEW-v1.1.0-rc.1.md",
+        "sha256": "561eb4b16277f1eed7d0e03dfeba5098c2ef75ffe321bc0585a3de5952997310",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "LEGAL-REVIEW-v1.1.0-rc.2.md",
+        "sha256": "e5df9b877b505256b41f7a581dd945ff82bca7237357fd843636578adaa13aa2",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "PHASE3-ACCEPTANCE-v1.1.0-rc.2.md",
+        "sha256": "77eb18c920d5ee5167a594d89a59f379dd071f1e6c0762b14efb9458379676ef",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "dist/PARITY-v1.1.0-rc.1.json",
+        "sha256": "eb9c65450860c2ba23666f660e3d78dec20c77afb5eb5d070c3886a05f8eccda",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "dist/PARITY-v1.1.0-rc.2.json",
+        "sha256": "d0d5c68f7e010b19259d1132ddaddaffd182310ee84a5b46da66c03cebada127",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "dist/SHA256SUMS-v1.1.0-rc.1.txt",
+        "sha256": "b8f9a52ce671877ae81e82eff5a1928ea01f525753240e998e0e4ee5db3b4f86",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "dist/SHA256SUMS-v1.1.0-rc.2.txt",
+        "sha256": "9f5c2622e1be05c856e74271cd0a8138773125c156e21a19321a2a20d49d07d4",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "dist/claude/Thien-Skill-Document-Evidence-Claude-v1.1.0-rc.1.zip",
+        "sha256": "7ec508652ba6191c13760f18e725be1d2c16cb2cb0e35dc362759a05a4e6891f",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "dist/claude/Thien-Skill-Document-Evidence-Claude-v1.1.0-rc.2.zip",
+        "sha256": "ff2e3d17ebb24ca193d35fa49c10b655dd26335eabcf7f1c9414f914d0bfb748",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0-rc.1.zip",
+        "sha256": "efff8f3ffbb055031bcc59de6428e3369c8bf31354d904a8ce28c2d8af958d7d",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0-rc.2.zip",
+        "sha256": "bc4e26afeace3633fd8f8ab7def510d532cc700dd63ed3dbbf4f8bdcb7a1a514",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "dist/release-manifest-v1.1.0-rc.1.json",
+        "sha256": "07d7886ddff8f7931924754398f392d4261a7e5598064e93b582f668d436adb5",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "dist/release-manifest-v1.1.0-rc.2.json",
+        "sha256": "ffe007866c49b1445f487208aa9da65c0acf23c81d370e2f9a7e92f71e39296e",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "dist/universal/Thien-Skill-Document-Evidence-Universal-v1.1.0-rc.1.zip",
+        "sha256": "491add9a09a316b8968c2248c6368c4bfdc9a39af5b09b10bd5f11abff6e2018",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "dist/universal/Thien-Skill-Document-Evidence-Universal-v1.1.0-rc.2.zip",
+        "sha256": "6d13e21fe7fd177da0da96a06cfb9afedbf2fb848eebf546015c3da0e9b3bc7d",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "qa/phase3-rc2/BASELINE.json",
+        "sha256": "98eaf6ec74ea2dab57c02314631be04ef38dd5ece7b51ea195a40bd42fbc8b60",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "qa/phase3-rc2/CONTROL.json",
+        "sha256": "65547970fe2c0a97270c220b462b231ee32e6a8ff1d83b6af2a448633d7a437e",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "qa/phase3-rc2/SHA256SUMS.txt",
+        "sha256": "7d52f0110fa79a190e0f67b4b03966a5420444eaf5a712b1b74322d854f87c07",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "qa/phase3-rc2/artifact-inventory.json",
+        "sha256": "3978c7f8a93b4c3e2729194e73be2b130cbd6dd72b09fd1a0242514cbef5a57c",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "qa/phase3-rc2/coverage.json",
+        "sha256": "5e2a031adbe8e59b166abf7c94927ca742d59f68d97b7feda82dca9cecae2697",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "qa/phase3-rc2/disposition.json",
+        "sha256": "19ecdf441cb7ae12766bb383f250c93a0bdc5e3129ce2c247a2252d3c2d7a5fd",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "qa/phase3-rc2/executions.json",
+        "sha256": "60612f28176e31d924296ef2046a4b283dde2008ca837fe00a9d01ba48b4145e",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "qa/phase3-rc2/peer-review-final.json",
+        "sha256": "6bca6cc3a6e6bb5aaec696ddda682b013301fecc1e67170f70bb93c35b91519d",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "qa/phase3-rc2/peer-review-initial.json",
+        "sha256": "5ee45ecf4653f4d42541114fb605c03df0e47146ec9bc1bf58bf5e25fa01d4a5",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "qa/phase3-rc2/qa-intake.json",
+        "sha256": "7b9974c60ead3a946c9c99a73c4b8a918ec1b695e67a96799b57bef3278da780",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "qa/phase3-rc2/review-plan.json",
+        "sha256": "e031e972be583bebf5931a28973375ab438ec50a21b3f9416dfd20dfa9bb24bc",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "qa/phase3-rc2/review-record.json",
+        "sha256": "9f2ffdacae0b76c5a4a93e6ffa07ed2bd541e7f7aafe90573831461c9f22c3f4",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "qa/phase3-rc2/sources.json",
+        "sha256": "40a292e6e4854f4170a4e57b3f8f4559f817d69f93c1969adcbb35d5c5b0026d",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "qa/phase3-rc2/test-author-report.json",
+        "sha256": "be3af76cf920f0470215d17d5be0864f7bdc3490bd66c27f79e3eac4f89ef8c0",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "qa/phase3-rc2/validate_qa_contracts.py",
+        "sha256": "34e862e0c59a2d8d284227cb0dc0bd2987df9ff76bb1cc2170f5e0b6dd428b75",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "qa/phase3-rc2/verify_dossier.py",
+        "sha256": "381f5aa6b7cff762a17503fec7f8a24784adc58d9148894120313868d0fdb155",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "tests/test_phase3_packaged_workflows.py",
+        "sha256": "792e09b943cd2b672d1065d27f0e6d221c09c8dfc307f6fd5d5cd8d3fac5af3d",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "ACCEPTANCE-REPORT.md",
+        "sha256": "a6878d0ba0ae3825e1b0390dbed277f8c52fa74275be57a14d79926a012edeaa",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "LEGAL-REVIEW.md",
+        "sha256": "59e1bfc4420133ac1dc29bc23bdcb0271402d04cc47e79e462ed8570c955f593",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "dist/PARITY-v1.0.0.json",
+        "sha256": "8804602e7b6c3e7678749e4bd2f06f7eb50450c5d7eaf5595a367aacca14d627",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "dist/SHA256SUMS-v1.0.0.txt",
+        "sha256": "e5618beb2d9d362e8f7d976da36a40effedbf1f0de437a609eebe242f4ff000b",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "dist/claude/Thien-Skill-Document-Evidence-Claude-v1.0.0.zip",
+        "sha256": "38243aa58c953a3092ac4ce611f6d7315bceaa4dc686131b4e5704de7a83db5c",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.0.0.zip",
+        "sha256": "cb8aa92c2e47d81ef1e75f8cbe0c530e343b6746829dd18a441751de675e2f40",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "dist/release-manifest-v1.0.0.json",
+        "sha256": "a7e66d827e06d0e875390bbd5d97df0b4e309632edaa4e3164a947626c9373ad",
+        "status": "UNCHANGED"
+      },
+      {
+        "path": "dist/universal/Thien-Skill-Document-Evidence-Universal-v1.0.0.zip",
+        "sha256": "79ca2f44e11577852363d2ab3f83fe42c0e5f0b641aa4c8a9596ab7525c58624",
+        "status": "UNCHANGED"
+      }
+    ],
+    "notes": "Tracked and non-ignored untracked files were hashed. Finder .DS_Store is not source or a release payload and was not deleted or overwritten."
+  },
+  "final_artifacts": [
+    {
+      "file_count": 100,
+      "format": "native-openai-plugin",
+      "path": "openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip",
+      "platform": "openai",
+      "root_layout": "thien-skill-document-evidence/",
+      "sha256": "6d9033446f2b3e53d208dba11fc09f6ba90892fc4f3ce01a9b5155def23bf319",
+      "size_bytes": 3818419
+    },
+    {
+      "file_count": 97,
+      "format": "native-claude-plugin",
+      "path": "claude/Thien-Skill-Document-Evidence-Claude-v1.1.0.zip",
+      "platform": "claude",
+      "root_layout": "thien-skill-document-evidence/",
+      "sha256": "eba9cba922f72bc4205b046d0ced096874ab429268fef2c0cb45e4e863c13261",
+      "size_bytes": 2716147
+    },
+    {
+      "file_count": 91,
+      "format": "universal-agent-skill",
+      "path": "universal/Thien-Skill-Document-Evidence-Universal-v1.1.0.zip",
+      "platform": "universal",
+      "root_layout": "thien-skill-document-evidence/",
+      "sha256": "9af2c542a487484d0f26b090b9061f80836d386eb885ef1eb4946d95619b9aaa",
+      "size_bytes": 2678854
+    }
+  ],
+  "final_report_sha256": "91b3cac8832a38b2f2ba270aaa36c697a26561e84587142d830cff7bef1273f9",
+  "final_test_sha256": "10472cc31d561f6937dc6a4d94f2d189a7e1bf5573766fc8934798394f542fab",
+  "full_regression": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover -s tests -v",
+    "exit_code": 0,
+    "methods_run": 145,
+    "passed": 144,
+    "optional_skipped": 1,
+    "output": "test_brand_assets_preserve_declared_dimensions_and_hashes (test_artifact_integrity.ArtifactIntegrityTests.test_brand_assets_preserve_declared_dimensions_and_hashes) ... ok\ntest_master_license_is_byte_identical_in_canonical_skill (test_artifact_integrity.ArtifactIntegrityTests.test_master_license_is_byte_identical_in_canonical_skill) ... ok\ntest_workbook_builder_requires_a_matching_schema_report (test_artifact_integrity.ArtifactIntegrityTests.test_workbook_builder_requires_a_matching_schema_report) ... ok\ntest_workbook_template_has_safe_structure (test_artifact_integrity.ArtifactIntegrityTests.test_workbook_template_has_safe_structure) ... ok\ntest_asset_checksum_mismatch_is_rejected_before_publication (test_conversion_artifacts.ConversionArtifactTests.test_asset_checksum_mismatch_is_rejected_before_publication) ... ok\ntest_atomic_no_overwrite_publication_does_not_clobber_racing_file (test_conversion_artifacts.ConversionArtifactTests.test_atomic_no_overwrite_publication_does_not_clobber_racing_file) ... ok\ntest_canonical_and_asset_reads_are_bounded (test_conversion_artifacts.ConversionArtifactTests.test_canonical_and_asset_reads_are_bounded) ... ok\ntest_collision_extension_escape_symlink_and_inode_alias_are_rejected (test_conversion_artifacts.ConversionArtifactTests.test_collision_extension_escape_symlink_and_inode_alias_are_rejected) ... ok\ntest_conversion_run_sidecar_links_runtime_source_and_both_outputs (test_conversion_artifacts.ConversionArtifactTests.test_conversion_run_sidecar_links_runtime_source_and_both_outputs) ... ok\ntest_editable_presentation_paginates_and_keeps_every_shape_on_canvas (test_conversion_artifacts.ConversionArtifactTests.test_editable_presentation_paginates_and_keeps_every_shape_on_canvas) ... ok\ntest_every_format_is_deterministic_for_identical_relative_inputs (test_conversion_artifacts.ConversionArtifactTests.test_every_format_is_deterministic_for_identical_relative_inputs) ... ok\ntest_geometry_fidelity_is_distinct_page_mapped_and_fail_closed (test_conversion_artifacts.ConversionArtifactTests.test_geometry_fidelity_is_distinct_page_mapped_and_fail_closed) ... ok\ntest_invalid_schema_and_semantic_invariants_are_rejected (test_conversion_artifacts.ConversionArtifactTests.test_invalid_schema_and_semantic_invariants_are_rejected) ... ok\ntest_json_and_markdown_preserve_semantics_and_source_locator (test_conversion_artifacts.ConversionArtifactTests.test_json_and_markdown_preserve_semantics_and_source_locator) ... ok\ntest_office_outputs_are_real_structural_ooxml_with_canonical_provenance (test_conversion_artifacts.ConversionArtifactTests.test_office_outputs_are_real_structural_ooxml_with_canonical_provenance) ... ok\ntest_pptx_intent_pairing_and_page_image_gate_are_fail_closed (test_conversion_artifacts.ConversionArtifactTests.test_pptx_intent_pairing_and_page_image_gate_are_fail_closed) ... ok\ntest_three_file_transaction_rolls_back_create_and_overwrite_failures (test_conversion_artifacts.ConversionArtifactTests.test_three_file_transaction_rolls_back_create_and_overwrite_failures) ... ok\ntest_xlsx_refuses_oversize_cell_without_truncation_or_partial_outputs (test_conversion_artifacts.ConversionArtifactTests.test_xlsx_refuses_oversize_cell_without_truncation_or_partial_outputs) ... ok\ntest_atomic_publication_success_overwrite_and_inode_alias_guard (test_domain_scripts.AtomicPublicationTestCase.test_atomic_publication_success_overwrite_and_inode_alias_guard) ... ok\ntest_no_overwrite_publication_is_atomic_against_destination_race (test_domain_scripts.AtomicPublicationTestCase.test_no_overwrite_publication_is_atomic_against_destination_race) ... ok\ntest_inventory_is_deterministic_read_only_and_links_duplicate_content (test_domain_scripts.InventoryTestCase.test_inventory_is_deterministic_read_only_and_links_duplicate_content) ... ok\ntest_inventory_records_validate_against_bundled_document_schema (test_domain_scripts.InventoryTestCase.test_inventory_records_validate_against_bundled_document_schema) ... ok\ntest_ooxml_active_content_and_unsafe_member_are_flagged_without_extraction (test_domain_scripts.InventoryTestCase.test_ooxml_active_content_and_unsafe_member_are_flagged_without_extraction) ... ok\ntest_symlink_and_path_escape_are_rejected (test_domain_scripts.InventoryTestCase.test_symlink_and_path_escape_are_rejected) ... ok\ntest_approved_tolerance_is_applied_and_unapproved_is_not_passed (test_domain_scripts.ReconciliationTestCase.test_approved_tolerance_is_applied_and_unapproved_is_not_passed) ... ok\ntest_bank_account_conflict_creates_contract_discrepancy_without_conclusion (test_domain_scripts.ReconciliationTestCase.test_bank_account_conflict_creates_contract_discrepancy_without_conclusion) ... ok\ntest_cli_atomic_write_no_overwrite_and_dry_run (test_domain_scripts.ReconciliationTestCase.test_cli_atomic_write_no_overwrite_and_dry_run) ... ok\ntest_config_and_schema_native_results_validate_against_bundled_schemas (test_domain_scripts.ReconciliationTestCase.test_config_and_schema_native_results_validate_against_bundled_schemas) ... ok\ntest_declared_aggregation_controls_aggregated_partial_flow (test_domain_scripts.ReconciliationTestCase.test_declared_aggregation_controls_aggregated_partial_flow) ... ok\ntest_fuzzy_or_executable_configuration_is_rejected (test_domain_scripts.ReconciliationTestCase.test_fuzzy_or_executable_configuration_is_rejected) ... ok\ntest_leading_zero_mismatch_missing_field_and_ambiguity_are_not_confirmed (test_domain_scripts.ReconciliationTestCase.test_leading_zero_mismatch_missing_field_and_ambiguity_are_not_confirmed) ... ok\ntest_partial_flow_and_allocation_are_explicit (test_domain_scripts.ReconciliationTestCase.test_partial_flow_and_allocation_are_explicit) ... ok\ntest_partial_overallocation_requires_review (test_domain_scripts.ReconciliationTestCase.test_partial_overallocation_requires_review) ... ok\ntest_reconciliation_is_deterministic_and_does_not_mutate_inputs (test_domain_scripts.ReconciliationTestCase.test_reconciliation_is_deterministic_and_does_not_mutate_inputs) ... ok\ntest_leading_zero_identifier_is_not_coerced_and_missing_field_is_clear (test_domain_scripts.ValidatorTestCase.test_leading_zero_identifier_is_not_coerced_and_missing_field_is_clear) ... ok\ntest_package_hash_validation_rejects_mismatch_and_symlink (test_domain_scripts.ValidatorTestCase.test_package_hash_validation_rejects_mismatch_and_symlink) ... ok\ntest_report_is_deterministic_and_marks_invalid_record (test_domain_scripts.ValidatorTestCase.test_report_is_deterministic_and_marks_invalid_record) ... ok\ntest_archive_inspection_rejects_unsafe_members_metadata_and_size (test_packaging.PackagingTestCase.test_archive_inspection_rejects_unsafe_members_metadata_and_size) ... ok\ntest_archive_layout_permissions_manifests_legal_and_core_parity (test_packaging.PackagingTestCase.test_archive_layout_permissions_manifests_legal_and_core_parity) ... ok\ntest_archive_tampering_breaks_embedded_hash_verification (test_packaging.PackagingTestCase.test_archive_tampering_breaks_embedded_hash_verification) ... ok\ntest_build_preserves_and_validates_configured_historical_release (test_packaging.PackagingTestCase.test_build_preserves_and_validates_configured_historical_release) ... ok\ntest_builder_rejects_todo_secret_junk_symlink_and_case_collision (test_packaging.PackagingTestCase.test_builder_rejects_todo_secret_junk_symlink_and_case_collision) ... ok\ntest_config_identity_native_names_and_private_repository (test_packaging.PackagingTestCase.test_config_identity_native_names_and_private_repository) ... ok\ntest_config_rejects_non_https_repository (test_packaging.PackagingTestCase.test_config_rejects_non_https_repository) ... ok\ntest_exact_check_does_not_ignore_finder_named_symlink (test_packaging.PackagingTestCase.test_exact_check_does_not_ignore_finder_named_symlink) ... ok\ntest_exact_check_ignores_regular_finder_metadata_only (test_packaging.PackagingTestCase.test_exact_check_ignores_regular_finder_metadata_only) ... ok\ntest_openai_archive_passes_plugin_creator_validator_when_available (test_packaging.PackagingTestCase.test_openai_archive_passes_plugin_creator_validator_when_available) ... skipped 'plugin-creator validator or PyYAML is unavailable'\ntest_plugin_manifest_identity_and_repository_are_build_gates (test_packaging.PackagingTestCase.test_plugin_manifest_identity_and_repository_are_build_gates) ... ok\ntest_release_manifests_checksums_and_exact_check_mode (test_packaging.PackagingTestCase.test_release_manifests_checksums_and_exact_check_mode) ... ok\ntest_render_is_deterministic_and_side_effect_free (test_packaging.PackagingTestCase.test_render_is_deterministic_and_side_effect_free) ... ok\ntest_artifact_manifest_covers_all_phase1_formats_and_statuses (test_phase1_contracts.Phase1ContractTests.test_artifact_manifest_covers_all_phase1_formats_and_statuses) ... ok\ntest_canonical_content_supports_semantics_order_and_conditional_geometry (test_phase1_contracts.Phase1ContractTests.test_canonical_content_supports_semantics_order_and_conditional_geometry) ... ok\ntest_companion_schemas_are_additive_and_independently_versioned (test_phase1_contracts.Phase1ContractTests.test_companion_schemas_are_additive_and_independently_versioned) ... ok\ntest_new_document_profiles_validate_and_are_internally_consistent (test_phase1_contracts.Phase1ContractTests.test_new_document_profiles_validate_and_are_internally_consistent) ... ok\ntest_phase1_behavioral_catalog_is_complete_and_specification_only (test_phase1_contracts.Phase1ContractTests.test_phase1_behavioral_catalog_is_complete_and_specification_only) ... ok\ntest_rag_package_defaults_collection_manifest_and_optional_chunks (test_phase1_contracts.Phase1ContractTests.test_rag_package_defaults_collection_manifest_and_optional_chunks) ... ok\ntest_task_profiles_are_exclusive_and_matching_roles_are_extensible (test_phase1_contracts.Phase1ContractTests.test_task_profiles_are_exclusive_and_matching_roles_are_extensible) ... ok\ntest_all_bundled_profiles_validate_without_embedded_tolerance_values (test_phase2_reconciliation.Phase2ReconciliationTests.test_all_bundled_profiles_validate_without_embedded_tolerance_values) ... ok\ntest_approved_partial_is_preserved_and_cumulative_overallocation_is_blocked (test_phase2_reconciliation.Phase2ReconciliationTests.test_approved_partial_is_preserved_and_cumulative_overallocation_is_blocked) ... ok\ntest_cli_exact_command_and_existing_validator_compatibility (test_phase2_reconciliation.Phase2ReconciliationTests.test_cli_exact_command_and_existing_validator_compatibility) ... ok\ntest_contract_order_and_receipt_alternative_branches_reconcile (test_phase2_reconciliation.Phase2ReconciliationTests.test_contract_order_and_receipt_alternative_branches_reconcile) ... ok\ntest_custom_dotted_source_mapping_is_resolved_deterministically (test_phase2_reconciliation.Phase2ReconciliationTests.test_custom_dotted_source_mapping_is_resolved_deterministically) ... ok\ntest_duplicate_business_content_with_distinct_ids_is_retained_and_flagged (test_phase2_reconciliation.Phase2ReconciliationTests.test_duplicate_business_content_with_distinct_ids_is_retained_and_flagged) ... ok\ntest_invoice_payment_request_bank_settlement_exact_and_approved_partial (test_phase2_reconciliation.Phase2ReconciliationTests.test_invoice_payment_request_bank_settlement_exact_and_approved_partial) ... ok\ntest_nonpass_reconciliation_is_never_labeled_ready_for_limited_use (test_phase2_reconciliation.Phase2ReconciliationTests.test_nonpass_reconciliation_is_never_labeled_ready_for_limited_use) ... ok\ntest_open_profile_registry_and_semantic_mutations_fail_closed (test_phase2_reconciliation.Phase2ReconciliationTests.test_open_profile_registry_and_semantic_mutations_fail_closed) ... ok\ntest_per_file_failure_missing_roles_and_conditional_sheets_are_explicit (test_phase2_reconciliation.Phase2ReconciliationTests.test_per_file_failure_missing_roles_and_conditional_sheets_are_explicit) ... ok\ntest_pr_po_canonical_mapping_reconciles_end_to_end (test_phase2_reconciliation.Phase2ReconciliationTests.test_pr_po_canonical_mapping_reconciles_end_to_end) ... ok\ntest_publish_is_atomic_no_overwrite_and_cleans_failed_stage (test_phase2_reconciliation.Phase2ReconciliationTests.test_publish_is_atomic_no_overwrite_and_cleans_failed_stage) ... ok\ntest_required_component_mappings_align_with_bundled_source_schemas (test_phase2_reconciliation.Phase2ReconciliationTests.test_required_component_mappings_align_with_bundled_source_schemas) ... ok\ntest_unsafe_paths_symlinks_and_output_members_are_rejected (test_phase2_reconciliation.Phase2ReconciliationTests.test_unsafe_paths_symlinks_and_output_members_are_rejected) ... ok\ntest_workflow_package_is_byte_stable_role_conditional_and_formula_safe (test_phase2_reconciliation.Phase2ReconciliationTests.test_workflow_package_is_byte_stable_role_conditional_and_formula_safe) ... ok\ntest_archive_preflight_rejects_unsafe_paths_types_and_collisions (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_archive_preflight_rejects_unsafe_paths_types_and_collisions) ... ok\ntest_frozen_hashes_embedded_manifests_and_exact_core_parity (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_frozen_hashes_embedded_manifests_and_exact_core_parity) ... ok\ntest_packaged_contract_acceptance_invoice_request_default_branch (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_packaged_contract_acceptance_invoice_request_default_branch) ... ok\ntest_packaged_default_rag_has_no_chunks (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_packaged_default_rag_has_no_chunks) ... ok\ntest_packaged_docx_conversion (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_packaged_docx_conversion) ... ok\ntest_packaged_explicit_target_rag_chunks (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_packaged_explicit_target_rag_chunks) ... ok\ntest_packaged_inventory_count_book_stock_exact (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_packaged_inventory_count_book_stock_exact) ... ok\ntest_packaged_invoice_payment_request_bank_exact (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_packaged_invoice_payment_request_bank_exact) ... ok\ntest_packaged_json_conversion (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_packaged_json_conversion) ... ok\ntest_packaged_markdown_conversion (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_packaged_markdown_conversion) ... ok\ntest_packaged_outbound_issue_customer_receipt_exact (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_packaged_outbound_issue_customer_receipt_exact) ... ok\ntest_packaged_pptx_editable_conversion (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_packaged_pptx_editable_conversion) ... ok\ntest_packaged_pr_po_exact (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_packaged_pr_po_exact) ... ok\ntest_packaged_pr_po_grn_invoice_exact (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_packaged_pr_po_grn_invoice_exact) ... ok\ntest_packaged_rag_collection (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_packaged_rag_collection) ... ok\ntest_packaged_rag_dry_run_has_no_output (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_packaged_rag_dry_run_has_no_output) ... ok\ntest_packaged_rag_incomplete_target_request_fails_closed (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_packaged_rag_incomplete_target_request_fails_closed) ... ok\ntest_packaged_reconciliation_refuses_overwrite_without_changing_output (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_packaged_reconciliation_refuses_overwrite_without_changing_output) ... ok\ntest_packaged_two_receipts_two_invoices_approved_partial (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_packaged_two_receipts_two_invoices_approved_partial) ... ok\ntest_packaged_two_receipts_two_invoices_overallocation_requires_review (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_packaged_two_receipts_two_invoices_overallocation_requires_review) ... ok\ntest_packaged_xlsx_conversion (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_packaged_xlsx_conversion) ... ok\ntest_python_process_isolation_and_no_inherited_pythonpath (test_phase3_packaged_workflows.Phase3PackagedWorkflowTests.test_python_process_isolation_and_no_inherited_pythonpath) ... ok\ntest_asset_checksum_path_and_active_svg_guards (test_rag_builder.RagBuilderTests.test_asset_checksum_path_and_active_svg_guards) ... ok\ntest_chunks_require_explicit_target_and_config_and_are_stable (test_rag_builder.RagBuilderTests.test_chunks_require_explicit_target_and_config_and_are_stable) ... ok\ntest_cli_help_documents_offline_controls (test_rag_builder.RagBuilderTests.test_cli_help_documents_offline_controls) ... ok\ntest_collection_build_has_verified_collection_and_document_manifests (test_rag_builder.RagBuilderTests.test_collection_build_has_verified_collection_and_document_manifests) ... ok\ntest_document_build_is_deterministic_and_every_checksum_verifies (test_rag_builder.RagBuilderTests.test_document_build_is_deterministic_and_every_checksum_verifies) ... ok\ntest_dry_run_fully_validates_without_creating_output (test_rag_builder.RagBuilderTests.test_dry_run_fully_validates_without_creating_output) ... ok\ntest_duplicate_json_keys_and_invalid_chunk_config_are_rejected (test_rag_builder.RagBuilderTests.test_duplicate_json_keys_and_invalid_chunk_config_are_rejected) ... ok\ntest_generated_paths_asset_prefix_and_prefix_collisions_are_reserved (test_rag_builder.RagBuilderTests.test_generated_paths_asset_prefix_and_prefix_collisions_are_reserved) ... ok\ntest_hardlink_and_input_output_collisions_are_rejected (test_rag_builder.RagBuilderTests.test_hardlink_and_input_output_collisions_are_rejected) ... ok\ntest_media_extension_signature_and_binary_structure_are_fail_closed (test_rag_builder.RagBuilderTests.test_media_extension_signature_and_binary_structure_are_fail_closed) ... ok\ntest_no_overwrite_and_explicit_safe_overwrite (test_rag_builder.RagBuilderTests.test_no_overwrite_and_explicit_safe_overwrite) ... ok\ntest_relative_assets_root_is_anchored_to_authorized_root (test_rag_builder.RagBuilderTests.test_relative_assets_root_is_anchored_to_authorized_root) ... ok\ntest_reused_asset_path_is_consolidated_with_all_source_blocks (test_rag_builder.RagBuilderTests.test_reused_asset_path_is_consolidated_with_all_source_blocks) ... ok\ntest_schema_and_semantic_failures_leave_no_partial_output (test_rag_builder.RagBuilderTests.test_schema_and_semantic_failures_leave_no_partial_output) ... ok\ntest_svg_namespace_element_event_href_and_css_pocs_are_rejected (test_rag_builder.RagBuilderTests.test_svg_namespace_element_event_href_and_css_pocs_are_rejected) ... ok\ntest_symlink_inputs_assets_and_outputs_are_rejected (test_rag_builder.RagBuilderTests.test_symlink_inputs_assets_and_outputs_are_rejected) ... ok\ntest_archive_preflight_rejects_unsafe_paths_types_and_collisions (test_release_110.FinalReleaseWorkflowTests.test_archive_preflight_rejects_unsafe_paths_types_and_collisions) ... ok\ntest_final_core_only_changes_release_metadata (test_release_110.FinalReleaseWorkflowTests.test_final_core_only_changes_release_metadata) ... ok\ntest_final_identity_and_current_report_names (test_release_110.FinalReleaseWorkflowTests.test_final_identity_and_current_report_names) ... ok\ntest_frozen_hashes_embedded_manifests_and_exact_core_parity (test_release_110.FinalReleaseWorkflowTests.test_frozen_hashes_embedded_manifests_and_exact_core_parity) ... ok\ntest_packaged_contract_acceptance_invoice_request_default_branch (test_release_110.FinalReleaseWorkflowTests.test_packaged_contract_acceptance_invoice_request_default_branch) ... ok\ntest_packaged_default_rag_has_no_chunks (test_release_110.FinalReleaseWorkflowTests.test_packaged_default_rag_has_no_chunks) ... ok\ntest_packaged_docx_conversion (test_release_110.FinalReleaseWorkflowTests.test_packaged_docx_conversion) ... ok\ntest_packaged_explicit_target_rag_chunks (test_release_110.FinalReleaseWorkflowTests.test_packaged_explicit_target_rag_chunks) ... ok\ntest_packaged_inventory_count_book_stock_exact (test_release_110.FinalReleaseWorkflowTests.test_packaged_inventory_count_book_stock_exact) ... ok\ntest_packaged_invoice_payment_request_bank_exact (test_release_110.FinalReleaseWorkflowTests.test_packaged_invoice_payment_request_bank_exact) ... ok\ntest_packaged_json_conversion (test_release_110.FinalReleaseWorkflowTests.test_packaged_json_conversion) ... ok\ntest_packaged_markdown_conversion (test_release_110.FinalReleaseWorkflowTests.test_packaged_markdown_conversion) ... ok\ntest_packaged_outbound_issue_customer_receipt_exact (test_release_110.FinalReleaseWorkflowTests.test_packaged_outbound_issue_customer_receipt_exact) ... ok\ntest_packaged_pptx_editable_conversion (test_release_110.FinalReleaseWorkflowTests.test_packaged_pptx_editable_conversion) ... ok\ntest_packaged_pr_po_exact (test_release_110.FinalReleaseWorkflowTests.test_packaged_pr_po_exact) ... ok\ntest_packaged_pr_po_grn_invoice_exact (test_release_110.FinalReleaseWorkflowTests.test_packaged_pr_po_grn_invoice_exact) ... ok\ntest_packaged_rag_collection (test_release_110.FinalReleaseWorkflowTests.test_packaged_rag_collection) ... ok\ntest_packaged_rag_dry_run_has_no_output (test_release_110.FinalReleaseWorkflowTests.test_packaged_rag_dry_run_has_no_output) ... ok\ntest_packaged_rag_incomplete_target_request_fails_closed (test_release_110.FinalReleaseWorkflowTests.test_packaged_rag_incomplete_target_request_fails_closed) ... ok\ntest_packaged_reconciliation_refuses_overwrite_without_changing_output (test_release_110.FinalReleaseWorkflowTests.test_packaged_reconciliation_refuses_overwrite_without_changing_output) ... ok\ntest_packaged_two_receipts_two_invoices_approved_partial (test_release_110.FinalReleaseWorkflowTests.test_packaged_two_receipts_two_invoices_approved_partial) ... ok\ntest_packaged_two_receipts_two_invoices_overallocation_requires_review (test_release_110.FinalReleaseWorkflowTests.test_packaged_two_receipts_two_invoices_overallocation_requires_review) ... ok\ntest_packaged_xlsx_conversion (test_release_110.FinalReleaseWorkflowTests.test_packaged_xlsx_conversion) ... ok\ntest_python_process_isolation_and_no_inherited_pythonpath (test_release_110.FinalReleaseWorkflowTests.test_python_process_isolation_and_no_inherited_pythonpath) ... ok\ntest_no_overwrite_publishes_and_overwrite_replaces_regular_target (test_workbook_builder_safety.WorkbookBuilderSafetyTests.test_no_overwrite_publishes_and_overwrite_replaces_regular_target) ... ok\ntest_no_overwrite_refuses_target_created_after_initial_preflight (test_workbook_builder_safety.WorkbookBuilderSafetyTests.test_no_overwrite_refuses_target_created_after_initial_preflight) ... ok\ntest_output_requires_xlsx_extension_before_dependency_loading (test_workbook_builder_safety.WorkbookBuilderSafetyTests.test_output_requires_xlsx_extension_before_dependency_loading) ... ok\ntest_overwrite_rejects_exact_package_and_report_paths (test_workbook_builder_safety.WorkbookBuilderSafetyTests.test_overwrite_rejects_exact_package_and_report_paths) ... ok\ntest_overwrite_rejects_package_and_report_hardlink_aliases (test_workbook_builder_safety.WorkbookBuilderSafetyTests.test_overwrite_rejects_package_and_report_hardlink_aliases) ... ok\ntest_preview_no_overwrite_preserves_late_target (test_workbook_builder_safety.WorkbookBuilderSafetyTests.test_preview_no_overwrite_preserves_late_target) ... ok\ntest_maps_relationships_adds_controls_and_is_deterministic (test_workbook_finalizer.WorkbookFinalizerTests.test_maps_relationships_adds_controls_and_is_deterministic) ... ok\ntest_path_collision_no_overwrite_and_symlink_guards (test_workbook_finalizer.WorkbookFinalizerTests.test_path_collision_no_overwrite_and_symlink_guards) ... ok\ntest_rejects_ambiguous_or_wrong_type_table_relationships (test_workbook_finalizer.WorkbookFinalizerTests.test_rejects_ambiguous_or_wrong_type_table_relationships) ... ok\ntest_rejects_encryption_and_configured_oversize_boundary (test_workbook_finalizer.WorkbookFinalizerTests.test_rejects_encryption_and_configured_oversize_boundary) ... ok\ntest_rejects_formula_hyperlink_external_vba_and_unsafe_member (test_workbook_finalizer.WorkbookFinalizerTests.test_rejects_formula_hyperlink_external_vba_and_unsafe_member) ... ok\n\n----------------------------------------------------------------------\nRan 145 tests in 32.983s\n\nOK (skipped=1)\n"
+  },
+  "final_zip_retest": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest tests.test_release_110 -v",
+    "exit_code": 0,
+    "methods_run": 24,
+    "passed": 24,
+    "skipped": 0,
+    "output": "test_archive_preflight_rejects_unsafe_paths_types_and_collisions (tests.test_release_110.FinalReleaseWorkflowTests.test_archive_preflight_rejects_unsafe_paths_types_and_collisions) ... ok\ntest_final_core_only_changes_release_metadata (tests.test_release_110.FinalReleaseWorkflowTests.test_final_core_only_changes_release_metadata) ... ok\ntest_final_identity_and_current_report_names (tests.test_release_110.FinalReleaseWorkflowTests.test_final_identity_and_current_report_names) ... ok\ntest_frozen_hashes_embedded_manifests_and_exact_core_parity (tests.test_release_110.FinalReleaseWorkflowTests.test_frozen_hashes_embedded_manifests_and_exact_core_parity) ... ok\ntest_packaged_contract_acceptance_invoice_request_default_branch (tests.test_release_110.FinalReleaseWorkflowTests.test_packaged_contract_acceptance_invoice_request_default_branch) ... ok\ntest_packaged_default_rag_has_no_chunks (tests.test_release_110.FinalReleaseWorkflowTests.test_packaged_default_rag_has_no_chunks) ... ok\ntest_packaged_docx_conversion (tests.test_release_110.FinalReleaseWorkflowTests.test_packaged_docx_conversion) ... ok\ntest_packaged_explicit_target_rag_chunks (tests.test_release_110.FinalReleaseWorkflowTests.test_packaged_explicit_target_rag_chunks) ... ok\ntest_packaged_inventory_count_book_stock_exact (tests.test_release_110.FinalReleaseWorkflowTests.test_packaged_inventory_count_book_stock_exact) ... ok\ntest_packaged_invoice_payment_request_bank_exact (tests.test_release_110.FinalReleaseWorkflowTests.test_packaged_invoice_payment_request_bank_exact) ... ok\ntest_packaged_json_conversion (tests.test_release_110.FinalReleaseWorkflowTests.test_packaged_json_conversion) ... ok\ntest_packaged_markdown_conversion (tests.test_release_110.FinalReleaseWorkflowTests.test_packaged_markdown_conversion) ... ok\ntest_packaged_outbound_issue_customer_receipt_exact (tests.test_release_110.FinalReleaseWorkflowTests.test_packaged_outbound_issue_customer_receipt_exact) ... ok\ntest_packaged_pptx_editable_conversion (tests.test_release_110.FinalReleaseWorkflowTests.test_packaged_pptx_editable_conversion) ... ok\ntest_packaged_pr_po_exact (tests.test_release_110.FinalReleaseWorkflowTests.test_packaged_pr_po_exact) ... ok\ntest_packaged_pr_po_grn_invoice_exact (tests.test_release_110.FinalReleaseWorkflowTests.test_packaged_pr_po_grn_invoice_exact) ... ok\ntest_packaged_rag_collection (tests.test_release_110.FinalReleaseWorkflowTests.test_packaged_rag_collection) ... ok\ntest_packaged_rag_dry_run_has_no_output (tests.test_release_110.FinalReleaseWorkflowTests.test_packaged_rag_dry_run_has_no_output) ... ok\ntest_packaged_rag_incomplete_target_request_fails_closed (tests.test_release_110.FinalReleaseWorkflowTests.test_packaged_rag_incomplete_target_request_fails_closed) ... ok\ntest_packaged_reconciliation_refuses_overwrite_without_changing_output (tests.test_release_110.FinalReleaseWorkflowTests.test_packaged_reconciliation_refuses_overwrite_without_changing_output) ... ok\ntest_packaged_two_receipts_two_invoices_approved_partial (tests.test_release_110.FinalReleaseWorkflowTests.test_packaged_two_receipts_two_invoices_approved_partial) ... ok\ntest_packaged_two_receipts_two_invoices_overallocation_requires_review (tests.test_release_110.FinalReleaseWorkflowTests.test_packaged_two_receipts_two_invoices_overallocation_requires_review) ... ok\ntest_packaged_xlsx_conversion (tests.test_release_110.FinalReleaseWorkflowTests.test_packaged_xlsx_conversion) ... ok\ntest_python_process_isolation_and_no_inherited_pythonpath (tests.test_release_110.FinalReleaseWorkflowTests.test_python_process_isolation_and_no_inherited_pythonpath) ... ok\n\n----------------------------------------------------------------------\nRan 24 tests in 14.976s\n\nOK\n",
+    "scope": "After the final acceptance-report rebuild: all three final ZIPs, 7 representative matching profiles, conversion/RAG and identity/core-diff checks."
+  },
+  "final_exact_build_check": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -B build/build_skill_packages.py && PYTHONDONTWRITEBYTECODE=1 python3 -B build/build_skill_packages.py --check",
+    "exit_code": 0,
+    "output": "Built: dist/PARITY-v1.1.0.json\nBuilt: dist/SHA256SUMS-v1.1.0.txt\nBuilt: dist/claude/Thien-Skill-Document-Evidence-Claude-v1.1.0.zip\nBuilt: dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip\nBuilt: dist/release-manifest-v1.1.0.json\nBuilt: dist/universal/Thien-Skill-Document-Evidence-Universal-v1.1.0.zip\nVerified: dist/PARITY-v1.1.0.json\nVerified: dist/SHA256SUMS-v1.1.0.txt\nVerified: dist/claude/Thien-Skill-Document-Evidence-Claude-v1.1.0.zip\nVerified: dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip\nVerified: dist/release-manifest-v1.1.0.json\nVerified: dist/universal/Thien-Skill-Document-Evidence-Universal-v1.1.0.zip\n"
+  },
+  "checksums": {
+    "cwd": "dist",
+    "versions": [
+      "1.1.0",
+      "1.1.0-rc.2",
+      "1.1.0-rc.1",
+      "1.0.0"
+    ],
+    "targets_checked": 20,
+    "exit_code": 0,
+    "output": "PARITY-v1.1.0.json: OK\nclaude/Thien-Skill-Document-Evidence-Claude-v1.1.0.zip: OK\nopenai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip: OK\nrelease-manifest-v1.1.0.json: OK\nuniversal/Thien-Skill-Document-Evidence-Universal-v1.1.0.zip: OK\nPARITY-v1.1.0-rc.2.json: OK\nclaude/Thien-Skill-Document-Evidence-Claude-v1.1.0-rc.2.zip: OK\nopenai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0-rc.2.zip: OK\nrelease-manifest-v1.1.0-rc.2.json: OK\nuniversal/Thien-Skill-Document-Evidence-Universal-v1.1.0-rc.2.zip: OK\nPARITY-v1.1.0-rc.1.json: OK\nclaude/Thien-Skill-Document-Evidence-Claude-v1.1.0-rc.1.zip: OK\nopenai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0-rc.1.zip: OK\nrelease-manifest-v1.1.0-rc.1.json: OK\nuniversal/Thien-Skill-Document-Evidence-Universal-v1.1.0-rc.1.zip: OK\nPARITY-v1.0.0.json: OK\nclaude/Thien-Skill-Document-Evidence-Claude-v1.0.0.zip: OK\nopenai/Thien-Skill-Document-Evidence-OpenAI-v1.0.0.zip: OK\nrelease-manifest-v1.0.0.json: OK\nuniversal/Thien-Skill-Document-Evidence-Universal-v1.0.0.zip: OK\n"
+  },
+  "quick_validate": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -B /Users/thiendeptrainhat/.codex/skills/.system/skill-creator/scripts/quick_validate.py thien-skill-document-evidence",
+    "exit_code": 1,
+    "status": "UNAVAILABLE",
+    "reason": "ModuleNotFoundError: No module named 'yaml'",
+    "dependency_installed": false
+  },
+  "authoring_incidents": [
+    {
+      "stage": "Initial exact release check",
+      "outcome": "failed",
+      "reason": "An ordinary dist/.DS_Store was treated as an unexpected release artifact.",
+      "resolution": "Checker ignores only regular .DS_Store files; preserves file bytes and still rejects unexpected artifacts and symlinks, including dangling links."
+    },
+    {
+      "stage": "Checker regression during implementation",
+      "outcome": "1 error in145-method run;1optional skip",
+      "reason": "Missing grouping around the file-or-symlink predicate made the metadata exclusion ineffective.",
+      "resolution": "Added explicit parentheses;13 targeted packaging tests (12PASS+1optionalSKIP), then145 full tests (144PASS+1optionalSKIP) passed.",
+      "failure_output": "lder_safety.WorkbookBuilderSafetyTests.test_output_requires_xlsx_extension_before_dependency_loading) ... ok\ntest_overwrite_rejects_exact_package_and_report_paths (test_workbook_builder_safety.WorkbookBuilderSafetyTests.test_overwrite_rejects_exact_package_and_report_paths) ... ok\ntest_overwrite_rejects_package_and_report_hardlink_aliases (test_workbook_builder_safety.WorkbookBuilderSafetyTests.test_overwrite_rejects_package_and_report_hardlink_aliases) ... ok\ntest_preview_no_overwrite_preserves_late_target (test_workbook_builder_safety.WorkbookBuilderSafetyTests.test_preview_no_overwrite_preserves_late_target) ... ok\ntest_maps_relationships_adds_controls_and_is_deterministic (test_workbook_finalizer.WorkbookFinalizerTests.test_maps_relationships_adds_controls_and_is_deterministic) ... ok\ntest_path_collision_no_overwrite_and_symlink_guards (test_workbook_finalizer.WorkbookFinalizerTests.test_path_collision_no_overwrite_and_symlink_guards) ... ok\ntest_rejects_ambiguous_or_wrong_type_table_relationships (test_workbook_finalizer.WorkbookFinalizerTests.test_rejects_ambiguous_or_wrong_type_table_relationships) ... ok\ntest_rejects_encryption_and_configured_oversize_boundary (test_workbook_finalizer.WorkbookFinalizerTests.test_rejects_encryption_and_configured_oversize_boundary) ... ok\ntest_rejects_formula_hyperlink_external_vba_and_unsafe_member (test_workbook_finalizer.WorkbookFinalizerTests.test_rejects_formula_hyperlink_external_vba_and_unsafe_member) ... ok\n\n======================================================================\nERROR: test_exact_check_ignores_regular_finder_metadata_only (test_packaging.PackagingTestCase.test_exact_check_ignores_regular_finder_metadata_only)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/thiendeptrainhat/Documents/Thien's Skills Library/Thien-Document-Evidence/tests/test_packaging.py\", line 262, in test_exact_check_ignores_regular_finder_metadata_only\n    self.assertEqual(BUILD.build_release(self.project, check=True), outputs)\n                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/thiendeptrainhat/Documents/Thien's Skills Library/Thien-Document-Evidence/build/build_skill_packages.py\", line 968, in build_release\n    raise PackagingError(\"release check failed: \" + \"; \".join(mismatches))\ndocument_evidence_build_skill_packages.PackagingError: release check failed: unexpected .DS_Store, openai/.DS_Store\n\n----------------------------------------------------------------------\nRan 145 tests in 32.790s\n\nFAILED (errors=1, skipped=1)\n"
+    }
+  ],
+  "limitations": [
+    "No installation, discovery sync, commit, tag, push or public/marketplace publication.",
+    "No fresh live-platform/OCR/raw-statement/target-RAG/new visual-render evidence.",
+    "Version number is final1.1.0; QA Testing and human-review conditions remain explicit.",
+    "Historical RC2 whole-working-tree checker intentionally detects the new version metadata; the historical dossier and ZIPs themselves remain byte-identical.",
+    "Legal notes are version-identification updates only, not a new legal review."
+  ]
+}

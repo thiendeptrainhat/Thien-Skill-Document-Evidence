@@ -1,0 +1,35 @@
+{
+  "$schema": "../../schemas/common/matching-profile.schema.json",
+  "schema_version": "1.0.0",
+  "profile_id": "OUTBOUND_INVOICE_GOODS_ISSUE_CUSTOMER_RECEIPT",
+  "profile_version": "1.0.0",
+  "profile_kind": "OUTBOUND_INVOICE_GOODS_ISSUE_CUSTOMER_RECEIPT",
+  "title": "Outbound invoice, goods issue and customer receipt",
+  "description": "Extensible outbound-flow matching across sales invoice, warehouse issue and customer receipt or delivery acknowledgement.",
+  "mode": "THREE_WAY",
+  "grain": "LINE_ITEM",
+  "roles": [
+    {"role_id": "OUTBOUND_INVOICE", "label": "Outbound invoice", "source_kind": "DOCUMENT", "document_types": ["OUTBOUND_INVOICE", "SALES_INVOICE"], "role_aliases": ["AR_INVOICE"], "required": true, "field_mappings": {"sales_order_number": "sales_order_number", "delivery_number": "delivery_number", "invoice_date": "invoice_date", "item_code": "item_code", "quantity": "quantity", "amount": "net_amount", "currency": "currency"}, "output_sheet": "OUTBOUND_INVOICES"},
+    {"role_id": "GOODS_ISSUE", "label": "Goods issue", "source_kind": "DOCUMENT", "document_types": ["GOODS_ISSUE", "WAREHOUSE_ISSUE"], "role_aliases": ["DELIVERY_NOTE"], "required": true, "field_mappings": {"sales_order_number": "sales_order_number", "delivery_number": "delivery_number", "issue_date": "issue_date", "item_code": "item_code", "quantity": "quantity"}, "output_sheet": "GOODS_ISSUES"},
+    {"role_id": "CUSTOMER_RECEIPT", "label": "Customer receipt", "source_kind": "DOCUMENT", "document_types": ["CUSTOMER_RECEIPT", "DELIVERY_ACKNOWLEDGEMENT", "PROOF_OF_DELIVERY"], "role_aliases": ["POD"], "required": true, "field_mappings": {"delivery_number": "delivery_number", "item_code": "item_code", "quantity": "quantity", "receipt_date": "receipt_date"}, "output_sheet": "CUSTOMER_RECEIPTS"}
+  ],
+  "match_rules": [
+    {"rule_id": "invoice-to-goods-issue", "left_role": "OUTBOUND_INVOICE", "right_role": "GOODS_ISSUE", "cardinality": "ONE_TO_MANY", "components": [
+      {"component_id": "sales-order-number", "left_field": "sales_order_number", "right_field": "sales_order_number", "comparator": "IDENTIFIER_EXACT", "normalizers": ["IDENTIFIER_PRESERVE"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}},
+      {"component_id": "item-code", "left_field": "item_code", "right_field": "item_code", "comparator": "IDENTIFIER_EXACT", "normalizers": ["IDENTIFIER_PRESERVE"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}},
+      {"component_id": "quantity", "left_field": "quantity", "right_field": "quantity", "comparator": "DECIMAL_ABSOLUTE", "normalizers": ["DECIMAL_CANONICAL_STRING"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "RUN_REQUEST", "unit": "QUANTITY", "approval_reference_required": true}}
+    ], "partial_handling": {"mode": "REQUIRE_APPROVED_RUN_POLICY", "allowed_relation": "RIGHT_LESS_THAN_OR_EQUAL_LEFT", "policy_source": "APPROVED_PROCESS_POLICY"}, "missing_field_policy": "HUMAN_REVIEW_REQUIRED", "multiple_candidate_policy": "AMBIGUOUS_MATCH", "explicit_bridge": null},
+    {"rule_id": "goods-issue-to-customer-receipt", "left_role": "GOODS_ISSUE", "right_role": "CUSTOMER_RECEIPT", "cardinality": "ONE_TO_ONE", "components": [
+      {"component_id": "delivery-number", "left_field": "delivery_number", "right_field": "delivery_number", "comparator": "IDENTIFIER_EXACT", "normalizers": ["IDENTIFIER_PRESERVE"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}},
+      {"component_id": "item-code", "left_field": "item_code", "right_field": "item_code", "comparator": "IDENTIFIER_EXACT", "normalizers": ["IDENTIFIER_PRESERVE"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}},
+      {"component_id": "quantity", "left_field": "quantity", "right_field": "quantity", "comparator": "DECIMAL_ABSOLUTE", "normalizers": ["DECIMAL_CANONICAL_STRING"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "RUN_REQUEST", "unit": "QUANTITY", "approval_reference_required": true}}
+    ], "partial_handling": {"mode": "REQUIRE_APPROVED_RUN_POLICY", "allowed_relation": "RIGHT_LESS_THAN_OR_EQUAL_LEFT", "policy_source": "APPROVED_PROCESS_POLICY"}, "missing_field_policy": "HUMAN_REVIEW_REQUIRED", "multiple_candidate_policy": "AMBIGUOUS_MATCH", "explicit_bridge": null}
+  ],
+  "aggregation_rules": [],
+  "comparison_basis": {"date": {"input_representation": "ISO_8601", "role_date_fields": {"OUTBOUND_INVOICE": "invoice_date", "GOODS_ISSUE": "issue_date", "CUSTOMER_RECEIPT": "receipt_date"}, "ambiguous_date_policy": "HUMAN_REVIEW_REQUIRED", "window_source": "NOT_APPLICABLE"}, "currency": {"comparison_mode": "EXACT_CURRENCY_ONLY", "role_currency_fields": {"OUTBOUND_INVOICE": "currency"}, "cross_currency_policy": "REQUIRE_APPROVED_ADAPTER", "exchange_rate_source": "REQUIRE_APPROVED_RUN_INPUT"}},
+  "policy_sources": {"tolerance_values": "REQUIRE_APPROVED_RUN_INPUT", "partial_matching": "REQUIRE_APPROVED_RUN_INPUT_WHEN_ALLOWED", "currency_conversion": "EXACT_CURRENCY_UNLESS_APPROVED_ADAPTER", "materiality_use": "NOT_USED_AS_MATCH_TOLERANCE"},
+  "exception_policy": {"partial_match": "REQUIRE_APPROVED_RUN_POLICY", "many_to_many": "REQUIRE_EXPLICIT_BRIDGE_AND_ALLOCATION", "duplicate": "FLAG_AND_REQUIRE_HUMAN_REVIEW", "missing_required_role": "FLAG_AND_REQUIRE_HUMAN_REVIEW", "missing_required_field": "HUMAN_REVIEW_REQUIRED", "ambiguous_candidate": "AMBIGUOUS_MATCH"},
+  "review_rule": {"review_required_for": ["PARTIAL_MATCH", "AMBIGUOUS_MATCH", "CONFLICTING_MATCH", "UNMATCHED", "MISSING_REQUIRED_ROLE", "MISSING_REQUIRED_FIELD", "DUPLICATE_CONTENT", "UNCLASSIFIED_DOCUMENT", "PER_FILE_FAILURE"], "automatic_business_decision": false, "release_gate": "ACCOUNTABLE_HUMAN_REVIEW"},
+  "workbook_contract": {"role_sheets": "ONLY_ROLES_WITH_RECORDS", "source_index": "ACCESSIBLE_INPUTS_ONLY", "run_log": "ACTUAL_EXECUTION_ONLY", "empty_sheet_policy": "DO_NOT_CREATE", "identifier_policy": "PRESERVE_AS_TEXT", "value_policy": "PRESERVE_RAW_AND_NORMALIZED", "provenance_policy": "FIELD_AND_SOURCE_REFERENCE", "formula_policy": "UNTRUSTED_TEXT_NEVER_FORMULA"},
+  "limitations": ["Customer receipt and proof-of-delivery classifications may require source-specific aliases in a custom profile.", "The profile records candidate consistency only and does not conclude title transfer, revenue recognition, or customer acceptance."]
+}

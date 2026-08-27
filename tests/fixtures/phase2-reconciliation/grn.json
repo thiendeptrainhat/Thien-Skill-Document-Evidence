@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "document_id": "GRN-000777",
+  "document_type": "GOODS_RECEIPT",
+  "fields": {
+    "grn_number": "000777",
+    "receipt_date": "2026-08-05",
+    "po_number": "000123",
+    "item_code": "000045",
+    "delivered_quantity": "50"
+  },
+  "data_classification": ["INTERNAL"]
+}

@@ -128,8 +128,11 @@ class PackagingTestCase(unittest.TestCase):
         name: str,
         *,
         mode: int = stat.S_IFREG | 0o644,
-        timestamp: tuple[int, int, int, int, int, int] = (2026, 8, 23, 0, 0, 0),
+        timestamp: tuple[int, int, int, int, int, int] | None = None,
     ) -> zipfile.ZipInfo:
+        if timestamp is None:
+            year, month, day = (int(part) for part in self.config["release_date"].split("-"))
+            timestamp = (year, month, day, 0, 0, 0)
         info = zipfile.ZipInfo(name, timestamp)
         info.create_system = 3
         info.external_attr = mode << 16
@@ -142,21 +145,29 @@ class PackagingTestCase(unittest.TestCase):
             config["display_name"],
             "Thien Skill — Document Intelligence, Evidence & Reconciliation",
         )
-        self.assertEqual(config["version"], "1.0.0")
+        self.assertEqual(config["version"], "1.1.0")
         self.assertEqual(config["status"], "Testing")
-        self.assertEqual(config["release_date"], "2026-08-23")
+        self.assertEqual(config["release_date"], "2026-08-27")
         self.assertEqual(config["repository_status"], "private")
         self.assertNotIn("repository", config)
         self.assertEqual(
             config["distribution_files"],
-            ["INSTALLATION.md", "ACCEPTANCE-REPORT.md", "LEGAL-REVIEW.md"],
+            [
+                "INSTALLATION.md",
+                "ACCEPTANCE-REPORT-v1.1.0.md",
+                "LEGAL-REVIEW-v1.1.0.md",
+            ],
+        )
+        self.assertEqual(
+            config["preserved_dist_versions"],
+            ["1.0.0", "1.1.0-rc.1", "1.1.0-rc.2"],
         )
         self.assertEqual(
             config["artifact_names"],
             {
-                "openai": "Thien-Skill-Document-Evidence-OpenAI-v1.0.0.zip",
-                "claude": "Thien-Skill-Document-Evidence-Claude-v1.0.0.zip",
-                "universal": "Thien-Skill-Document-Evidence-Universal-v1.0.0.zip",
+                "openai": "Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip",
+                "claude": "Thien-Skill-Document-Evidence-Claude-v1.1.0.zip",
+                "universal": "Thien-Skill-Document-Evidence-Universal-v1.1.0.zip",
             },
         )
         for platform in ("openai", "claude"):
@@ -180,6 +191,34 @@ class PackagingTestCase(unittest.TestCase):
         second = BUILD.render_release(self.project)
         self.assertEqual(first, second)
         self.assertFalse((self.project / "dist").exists())
+
+    def test_build_preserves_and_validates_configured_historical_release(self) -> None:
+        BUILD.build_release(self.project)
+        historical = BUILD._release_paths_for_version(self.config, "1.0.0")
+        for relative in historical.values():
+            source = REPOSITORY / "dist" / relative
+            destination = self.project / "dist" / relative
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, destination)
+        before = {
+            relative: (self.project / "dist" / relative).read_bytes()
+            for relative in historical.values()
+        }
+
+        BUILD.build_release(self.project)
+        BUILD.build_release(self.project, check=True)
+        self.assertEqual(
+            before,
+            {
+                relative: (self.project / "dist" / relative).read_bytes()
+                for relative in historical.values()
+            },
+        )
+
+        parity = self.project / "dist" / historical["parity"]
+        parity.write_bytes(parity.read_bytes() + b"\n")
+        with self.assertRaisesRegex(BUILD.PackagingError, "preserved release checksum mismatch"):
+            BUILD.build_release(self.project, check=True)
 
     def test_release_manifests_checksums_and_exact_check_mode(self) -> None:
         outputs = BUILD.build_release(self.project)
@@ -215,10 +254,35 @@ class PackagingTestCase(unittest.TestCase):
         with self.assertRaisesRegex(BUILD.PackagingError, "unexpected unmanaged.txt"):
             BUILD.build_release(self.project, check=True)
 
+    def test_exact_check_ignores_regular_finder_metadata_only(self) -> None:
+        outputs = BUILD.build_release(self.project)
+        metadata_paths = [self.project / "dist/.DS_Store", self.project / "dist/openai/.DS_Store"]
+        for path in metadata_paths:
+            path.write_bytes(b"synthetic Finder metadata")
+        self.assertEqual(BUILD.build_release(self.project, check=True), outputs)
+        for path in metadata_paths:
+            self.assertEqual(path.read_bytes(), b"synthetic Finder metadata")
+        unmanaged = self.project / "dist/openai/.unmanaged"
+        unmanaged.write_text("not a release artifact\n", encoding="utf-8")
+        with self.assertRaisesRegex(BUILD.PackagingError, "unexpected openai/.unmanaged"):
+            BUILD.build_release(self.project, check=True)
+
+    def test_exact_check_does_not_ignore_finder_named_symlink(self) -> None:
+        BUILD.build_release(self.project)
+        target = self.project / "finder-target"
+        target.write_bytes(b"not an ordinary Finder metadata file")
+        (self.project / "dist/.DS_Store").symlink_to(target)
+        with self.assertRaisesRegex(BUILD.PackagingError, "unexpected .DS_Store"):
+            BUILD.build_release(self.project, check=True)
+        target.unlink()  # Also reject the now-dangling link in this private fixture.
+        with self.assertRaisesRegex(BUILD.PackagingError, "unexpected .DS_Store"):
+            BUILD.build_release(self.project, check=True)
+
     def test_archive_layout_permissions_manifests_legal_and_core_parity(self) -> None:
         outputs = BUILD.render_release(self.project)
         inspected: dict[str, dict[str, object]] = {}
-        expected_time = (2026, 8, 23, 0, 0, 0)
+        year, month, day = (int(part) for part in self.config["release_date"].split("-"))
+        expected_time = (year, month, day, 0, 0, 0)
         expected_license = (self.skill / "LICENSE.md").read_bytes()
         for platform in BUILD.PLATFORMS:
             payload = outputs[self.artifact_relative(platform)]

@@ -4,7 +4,7 @@
 
 # Thien Skill — Document Intelligence, Evidence & Reconciliation
 
-Skill chuyên xử lý tài liệu thành dữ liệu và gói bằng chứng có thể truy nguyên: kiểm kê, phân loại, trích xuất, kiểm tra, đối soát, lập evidence register, tạo workbook/JSON và chuyển các điểm chưa chắc chắn sang human review.
+Skill chuyên xử lý tài liệu thành nội dung, dữ liệu và gói bằng chứng có thể truy nguyên: kiểm kê, phân loại, trích xuất, chuyển đổi artifact theo capability, chuẩn bị nguồn RAG, đối soát vai trò chứng từ, lập evidence register và chuyển các điểm chưa chắc chắn sang human review.
 
 > GitHub là nơi lưu trữ source và các gói phát hành. Việc clone repository **không tự kích hoạt skill**. Skill chỉ hoạt động sau khi được cài vào đúng vị trí discovery hoặc được nạp như plugin trên ChatGPT/Codex/Claude.
 
@@ -13,14 +13,14 @@ Skill chuyên xử lý tài liệu thành dữ liệu và gói bằng chứng c�
 | Thuộc tính | Giá trị |
 |---|---|
 | Skill ID | `thien-skill-document-evidence` |
-| Version | `1.0.0` |
-| Product status | `Testing` |
+| Version | `1.1.0` |
+| Product status / QA | `Testing` — độc lập với số phiên bản phát hành |
 | Readiness ceiling | `READY_FOR_HUMAN_REVIEW` |
 | Repository | Private |
 | Owner | Tran Ngoc Thien |
 | License | Tran Ngoc Thien's Skills Commercial Source-Available License 2.0 |
 
-Phiên bản này dành cho kiểm thử và human review. Không được hiểu là production-ready, forensic-certified, legal approval hoặc fraud/audit conclusion.
+Bản phát hành `1.1.0` không còn hậu tố RC, kế thừa Phase 2 Implementation và Phase 3 nghiệm thu gói: có CLI offline cho RAG package, conversion artifact và reconciliation package/profile, đồng thời giữ các contract v1.0 tương thích. Chưa live-install trên nền tảng và không được hiểu là production-ready, forensic-certified, legal approval, platform certification hoặc fraud/audit conclusion.
 
 ## Cài đặt nhanh từ GitHub
 
@@ -38,20 +38,20 @@ cd Thien-Skill-Document-Evidence
 Trên macOS:
 
 ```bash
-(cd dist && shasum -a 256 -c SHA256SUMS-v1.0.0.txt)
+(cd dist && shasum -a 256 -c SHA256SUMS-v1.1.0.txt)
 ```
 
 Trên Linux:
 
 ```bash
-(cd dist && sha256sum -c SHA256SUMS-v1.0.0.txt)
+(cd dist && sha256sum -c SHA256SUMS-v1.1.0.txt)
 ```
 
 Tất cả artifact phải trả về `OK`. Kiểm tra thêm:
 
-- [release-manifest-v1.0.0.json](./dist/release-manifest-v1.0.0.json);
-- [PARITY-v1.0.0.json](./dist/PARITY-v1.0.0.json) phải có `status: PASS`;
-- [ACCEPTANCE-REPORT.md](./ACCEPTANCE-REPORT.md);
+- [release-manifest-v1.1.0.json](./dist/release-manifest-v1.1.0.json);
+- [PARITY-v1.1.0.json](./dist/PARITY-v1.1.0.json) phải có `status: PASS`;
+- [ACCEPTANCE-REPORT-v1.1.0.md](./ACCEPTANCE-REPORT-v1.1.0.md);
 - [LICENSE-APPLICATION.md](./LICENSE-APPLICATION.md) và [LICENSE](./LICENSE).
 
 ### 3. Chọn đúng phương án cài đặt
@@ -60,16 +60,16 @@ Tất cả artifact phải trả về `OK`. Kiểm tra thêm:
 |---|---|
 | Codex local — cài nhanh từ GitHub | `$skill-installer` với đường dẫn canonical skill |
 | Codex local — personal/project skill | Sao chép canonical folder vào `.agents/skills/` |
-| ChatGPT/ChatGPT Work có quyền import plugin | [OpenAI ZIP](./dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.0.0.zip) |
-| Claude Code plugin | [Claude ZIP](./dist/claude/Thien-Skill-Document-Evidence-Claude-v1.0.0.zip) |
+| ChatGPT/ChatGPT Work có quyền import plugin | [OpenAI ZIP](./dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip) |
+| Claude Code plugin | [Claude ZIP](./dist/claude/Thien-Skill-Document-Evidence-Claude-v1.1.0.zip) |
 | Claude Code standalone | Sao chép canonical folder vào `.claude/skills/` |
-| Nền tảng hỗ trợ Agent Skills chuẩn mở | [Universal ZIP](./dist/universal/Thien-Skill-Document-Evidence-Universal-v1.0.0.zip) |
+| Nền tảng hỗ trợ Agent Skills chuẩn mở | [Universal ZIP](./dist/universal/Thien-Skill-Document-Evidence-Universal-v1.1.0.zip) |
 
 Không trộn file giữa các gói. Canonical source duy nhất là [thien-skill-document-evidence/](./thien-skill-document-evidence/).
 
 ## Cài cho OpenAI ChatGPT và Codex
 
-OpenAI hiện hỗ trợ explicit invocation và implicit invocation: trong ChatGPT, gõ `@` rồi chọn skill; trong Codex CLI/IDE có thể dùng `/skills` hoặc gõ `$` để chọn skill. Codex đọc local skills từ các thư mục `.agents/skills/` ở phạm vi project và `~/.agents/skills/` ở phạm vi người dùng. Xem [OpenAI — Build skills](https://learn.chatgpt.com/docs/build-skills).
+OpenAI hỗ trợ skill được đóng gói từ `SKILL.md` cùng references/scripts/assets tùy chọn; invocation và discovery phụ thuộc bề mặt/host đang dùng. Xem [OpenAI — Build skills](https://developers.openai.com/plugins/build/skills) và [OpenAI — Build plugins](https://developers.openai.com/plugins/build/plugins).
 
 ### Cách A — dùng `$skill-installer` trong Codex
 
@@ -114,7 +114,7 @@ Commit thư mục `.agents/skills/thien-skill-document-evidence/` nếu muốn c
 
 Sử dụng nguyên file:
 
-[Thien-Skill-Document-Evidence-OpenAI-v1.0.0.zip](./dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.0.0.zip)
+[Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip](./dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip)
 
 Gói chứa:
 
@@ -143,7 +143,7 @@ Claude Code đọc personal skills từ `~/.claude/skills/<skill-name>/SKILL.md`
 ### Cách A — nạp Claude plugin ZIP
 
 ```bash
-claude --plugin-dir ./dist/claude/Thien-Skill-Document-Evidence-Claude-v1.0.0.zip
+claude --plugin-dir ./dist/claude/Thien-Skill-Document-Evidence-Claude-v1.1.0.zip
 ```
 
 Claude Code hỗ trợ `--plugin-dir` với cả thư mục và ZIP. Sau khi mở phiên:
@@ -184,7 +184,7 @@ Nếu tạo mới thư mục skill cấp cao trong khi Claude Code đang chạy 
 
 Sử dụng:
 
-[Thien-Skill-Document-Evidence-Universal-v1.0.0.zip](./dist/universal/Thien-Skill-Document-Evidence-Universal-v1.0.0.zip)
+[Thien-Skill-Document-Evidence-Universal-v1.1.0.zip](./dist/universal/Thien-Skill-Document-Evidence-Universal-v1.1.0.zip)
 
 Gói Universal dành cho bề mặt hỗ trợ Agent Skills hoặc custom skill upload. ZIP có đúng một thư mục cấp cao; sau khi giải nén, `SKILL.md` nằm ngay tại:
 
@@ -226,7 +226,7 @@ Cách tách này giúp tránh mất leading zero, tự đoán ngày mơ hồ, đ
 
 ### 3. Đối soát có kiểm soát
 
-Invoice, PO, GRN, payment/bank hoặc ERP records được liên kết bằng grain, keys, direction, partial rules và tolerance đã khai báo. Kết quả phân biệt exact match, within tolerance, partial, ambiguous, conflicting và unmatched thay vì biến mọi chênh lệch thành một kết luận chung.
+Document roles được liên kết bằng grain, keys, direction, partial rules và tolerance đã khai báo. Named profiles bao quát procurement/contract/payment; custom role mapping cho phép mở rộng sang outbound invoice, goods issue, customer receipt/proof of delivery, inventory count và chứng từ khác mà không đổi engine. Kết quả phân biệt exact match, within tolerance, partial, ambiguous, conflicting và unmatched.
 
 ### 4. Tạo output phục vụ review
 
@@ -234,6 +234,8 @@ Skill có contracts và templates cho:
 
 - document inventory;
 - extraction package JSON;
+- task request, canonical content-block và artifact manifest contracts;
+- RAG package gồm Markdown, metadata, manifest và optional assets/chunks;
 - field dictionary;
 - line-item và clause/obligation registers;
 - reconciliation results và discrepancy log;
@@ -254,14 +256,22 @@ Các script deterministic hỗ trợ inventory, schema validation, reconciliatio
 
 OpenAI, Claude và Universal packages được sinh từ một canonical source. Portable core parity giúp hạn chế việc cùng một yêu cầu nhưng mỗi nền tảng dùng một bộ quy tắc nghiệp vụ khác nhau.
 
-## Sáu nhóm tính năng chính
+## Ba task profile
+
+| Task profile | Mục tiêu | Default chính |
+|---|---|---|
+| `CONVERT_DOCUMENT` | Chuyển tài liệu nhưng giữ cấu trúc, reading order và provenance | DOCX `SEMANTIC_EDITABLE`; XLSX `STRUCTURED_DATA`; PPTX intent-aware |
+| `PREPARE_RAG_SOURCE` | Tạo nguồn RAG truy nguyên theo từng tài liệu/folder | Root `rag-package.json` + per-document `document.md`/`metadata.json`/`manifest.json`; chunks chỉ khi có target/config |
+| `RECONCILE_DOCUMENT_SET` | Link/match các role chứng từ theo rule được phê duyệt | Named profile hoặc custom deterministic role mapping |
+
+## Sáu lifecycle route
 
 | Route | Tính năng | Output điển hình |
 |---|---|---|
 | `INTAKE_INTEGRITY` | Inventory, SHA-256, MIME/signature, duplicate-content link, encryption/active-content flags, page/completeness status | Document inventory, integrity issues, processing eligibility |
 | `CLASSIFY_EXTRACT` | Phân loại tài liệu; ưu tiên native text rồi mới layout/OCR/vision; ghi adapter metadata | Classification result, raw candidates, coverage |
 | `STRUCTURE_VALIDATE` | Schema-first extraction cho field, table, line item, party, date, amount, clause và obligation | Validated JSON, field/table registers, review items |
-| `LINK_RECONCILE` | Two/three/four-way matching, partial flow, tolerance gate, conflict/duplicate candidate handling | Reconciliation register, discrepancies, unresolved links |
+| `LINK_RECONCILE` | Named/custom role matching, partial flow, tolerance gate, conflict/duplicate candidate handling | Reconciliation register, discrepancies, unresolved links |
 | `EVIDENCE_DISCLOSURE` | Provenance, reliability, chain of custody, redaction working-copy/log, controlled handoff | Evidence package, custody/redaction logs, disclosure limitations |
 | `REVIEW_REPERFORM` | Review extraction, schema, workbook, reconciliation, security và unsupported conclusions | QA results, rerun evidence, limitations, human-review queue |
 
@@ -270,14 +280,16 @@ OpenAI, Claude và Universal packages được sinh từ một canonical source.
 Skill được thiết kế cho:
 
 - PDF có native text, PDF scan và ảnh tài liệu;
-- hóa đơn, PO, GRN/biên bản nhận hàng;
-- chứng từ thanh toán và bank/ERP records;
+- purchase requisition, PO, GRN/biên bản nhận hàng và hóa đơn;
+- payment request, bank statement/transaction và ERP records;
 - hợp đồng, phụ lục, clause và obligation register;
 - receipt/expense và generic business documents;
-- document-to-Excel, document-to-JSON và package reconciliation;
+- document-to-Markdown/DOCX/XLSX/PPTX/JSON theo capability, RAG source preparation và package reconciliation;
 - evidence indexing, controlled review và reperformance.
 
 OCR, vision, handwriting, layout/table parsing và redaction thực tế cần runtime adapter do host cung cấp hoặc người dùng phê duyệt. Skill điều phối, đặt contract và guardrail; nó không bundle model OCR/cloud service.
+
+Phase 2 cung cấp helper offline để sinh RAG package và artifact JSON/Markdown/DOCX/XLSX/PPTX thật từ canonical content, cùng preparation workflow cho reconciliation. Structural generation không tự chứng minh visual fidelity hoặc live-platform compatibility; visual-fidelity vẫn là best-effort, cần geometry/render evidence và không phải cam kết pixel-perfect.
 
 ## Điều gì thay đổi trong cách agent làm việc?
 
@@ -320,6 +332,14 @@ Giữ nguyên base text, tạo supersession links, trích party/action/trigger/d
 Không đưa ra kết luận hiệu lực hoặc compliance.
 ```
 
+### Chuẩn bị nguồn RAG
+
+```text
+Dùng $thien-skill-document-evidence để tạo RAG source package theo từng tài liệu.
+Mặc định tạo root rag-package.json cùng document.md, metadata.json và manifest.json; giữ stable block IDs,
+page provenance và collection manifest. Chưa tạo chunks nếu tôi chưa chỉ định target.
+```
+
 ### Evidence review
 
 ```text
@@ -356,8 +376,8 @@ Skill không:
 ├── tests/                           # Automated và behavioral specifications
 ├── dist/                            # Ba ZIP + checksums/manifests
 ├── INSTALLATION.md                  # Hướng dẫn vận hành chi tiết
-├── ACCEPTANCE-REPORT.md             # Evidence và release gates
-└── LEGAL-REVIEW.md                  # Legal issue-spotting
+├── ACCEPTANCE-REPORT-v*.md          # Evidence và release gates theo version
+└── LEGAL-REVIEW-v*.md               # Versioned legal/license release note
 ```
 
 Không sửa trực tiếp nội dung trong `dist/`. Mọi thay đổi portable phải thực hiện tại canonical source rồi chạy lại builder.
@@ -370,7 +390,16 @@ PYTHONDONTWRITEBYTECODE=1 python3 -B build/build_skill_packages.py --check
 PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover -s tests -p 'test_*.py'
 ```
 
-Release 1.0.0 đã có package parity, checksum, schema/workbook safety và package-native validation. Xem [ACCEPTANCE-REPORT.md](./ACCEPTANCE-REPORT.md) để phân biệt các scenario đã thực thi với catalog `SPECIFICATION_ONLY`.
+Bản phát hành `1.1.0` có contract/regression tests, kiểm thử implementation Phase 2, package parity, checksum và package-native structural validation. Xem [ACCEPTANCE-REPORT-v1.1.0.md](./ACCEPTANCE-REPORT-v1.1.0.md) để phân biệt gate đã chạy, `NOT_TESTED` và giới hạn còn lại. Release `1.0.0`, `1.1.0-rc.1`, `1.1.0-rc.2` cùng hồ sơ lịch sử của chúng được giữ nguyên trong repository.
+
+### Phase 2 CLIs
+
+- `scripts/render_canonical_artifacts.py`: sinh deterministic JSON/Markdown/DOCX/XLSX/PPTX từ canonical content; PPTX bắt buộc intent/profile rõ; mỗi lần chạy liên kết artifact, artifact manifest và closed `conversion-run.json` sidecar.
+- `scripts/build_rag_package.py`: sinh DOCUMENT/COLLECTION RAG package, root control, payload manifests, asset media validation và optional configured chunks.
+- `scripts/prepare_reconciliation_workbook.py`: inventory structured JSON/canonical package theo phạm vi, áp dụng bundled/custom matching profile rồi sinh deterministic reconciliation package và role-aware review workbook.
+- Mọi đường dẫn đều bị giới hạn trong authorized root, no-overwrite mặc định và không gọi mạng hoặc tự cài dependency. Directory package được stage rồi rename; conversion dùng atomic replacement cho từng file và rollback khi lỗi được bắt, nhưng không tuyên bố power-loss transaction trên nhiều rename.
+
+Xem [INSTALLATION.md](./INSTALLATION.md) để có command đầy đủ. Structural ZIP/XML/schema PASS không tự chuyển thành visual, live-ingestion hoặc platform-install PASS.
 
 ## Cập nhật skill
 
@@ -398,8 +427,8 @@ Hướng dẫn nâng cao về reconciliation CLI, schema gate, workbook pipeline
 
 Áp dụng [Tran Ngoc Thien's Skills Commercial Source-Available License 2.0](./LICENSE). Bản tiếng Việt được ưu tiên khi có mâu thuẫn; pháp luật và tòa án Việt Nam áp dụng theo master license.
 
-Việc xem, clone hoặc nhận package không tự tạo quyền sử dụng thương mại. Đọc [LICENSE-APPLICATION.md](./LICENSE-APPLICATION.md), [NOTICE](./NOTICE), [THIRD-PARTY-NOTICES.md](./THIRD-PARTY-NOTICES.md) và [LEGAL-REVIEW.md](./LEGAL-REVIEW.md) trước khi sao chép, sửa đổi, phân phối hoặc dùng ngoài môi trường kiểm thử.
+Việc xem, clone hoặc nhận package không tự tạo quyền sử dụng thương mại. Đọc [LICENSE-APPLICATION.md](./LICENSE-APPLICATION.md), [NOTICE](./NOTICE), [THIRD-PARTY-NOTICES.md](./THIRD-PARTY-NOTICES.md) và [LEGAL-REVIEW-v1.1.0.md](./LEGAL-REVIEW-v1.1.0.md) trước khi sao chép, sửa đổi, phân phối hoặc dùng ngoài môi trường kiểm thử.
 
 ---
 
-**English summary:** This private repository provides one canonical document-intelligence skill and deterministic OpenAI, Claude, and Universal packages. Install the skill into the discovery location for your platform or load the matching plugin ZIP; hosting it on GitHub alone does not activate it. Once enabled, it guides document inventory, extraction, schema validation, reconciliation, evidence provenance, controlled workbook export, and human review without claiming legal validity, fraud, audit opinion, or document authenticity.
+**English summary:** This private repository provides one canonical document-intelligence skill and deterministic OpenAI, Claude, and Universal packages. Version `1.1.0` implements offline RAG-package, artifact-conversion, and extensible role-configured reconciliation helpers while retaining v1.0 data contracts. The packages are structurally validated but are not live-installed. The skill does not claim legal validity, fraud, audit opinion, document authenticity, or platform certification.

@@ -1,0 +1,52 @@
+{
+  "peer_record_id": "P3-PEER-INITIAL",
+  "engagement_id": "DE-PHASE3-RC2-20260827",
+  "handoff_id": "P3-H01",
+  "task_id": "P3-T02",
+  "recorded_at": "2026-08-27T04:43:20.785Z",
+  "record_author": "codex-root; structured consolidation of agent reply",
+  "reviewer": "phase3_scope_review",
+  "review_relationship": "peer_review",
+  "depth": "L2_full within document/static-assertion scope",
+  "disposition": "ready_with_conditions",
+  "approval_status": "pending_human_approval",
+  "method": "Read-only full HANDOFF/README/INSTALLATION/Phase1-2 reports/target SKILL/relevant references plus test assertions and fixture inventory. No tests, build, install, renderer or network executed by this reviewer.",
+  "findings": [
+    {
+      "finding_id": "P3-SCOPE-F01",
+      "finding_type": "methodology_limitation",
+      "severity": "medium",
+      "state": "open",
+      "readiness_impact": "non_blocking for PACKAGE_ONLY",
+      "criterion": "HANDOFF.md §6.13 (lines 363-379)",
+      "condition": "Original raw-source minimum corpus incomplete: receipt image, multipage scanned PDF, full bank-statement balances; initial static review also lacked complete two-GRN/two-invoice partial-flow fixture.",
+      "consequence": "No full raw classification/OCR/source-fidelity/cross-platform acceptance evidence.",
+      "required_action": "Keep PARTIAL_COVERAGE / NOT_TESTED and restrict conclusion to package-only; future raw-source testing requires explicit scope."
+    },
+    {
+      "finding_id": "P3-SCOPE-F02",
+      "finding_type": "methodology_limitation",
+      "severity": "medium",
+      "state": "open",
+      "readiness_impact": "non_blocking for PACKAGE_ONLY",
+      "criterion": "references/acceptance-scenarios.md profile support and HANDOFF.md implementation gates",
+      "condition": "No integration assertion seen for PR_PO_GRN_INVOICE, outbound, inventory, or default contract+acceptance branch.",
+      "consequence": "Registry/schema/materialization evidence alone does not prove workflow behavior.",
+      "required_action": "Add targeted synthetic integration assertions or explicitly limit coverage claim."
+    }
+  ],
+  "observed_checks": {
+    "markdown_files": 24,
+    "local_markdown_targets": 48,
+    "missing_local_markdown_targets": 0,
+    "skill_reference_files": 14,
+    "unique_canonical_codespan_paths": 27,
+    "missing_canonical_codespan_paths": 0,
+    "behavioral_case_ids": 64,
+    "behavioral_case_state": "NOT_TESTED",
+    "behavioral_catalog_status": "SPECIFICATION_ONLY",
+    "handoff_sha256": "3d1c4c360d1f69d3fc23c3b830a28c6f79286f6460dbaa15ddb05fe19b14dd55"
+  },
+  "observation": "README ZIP vs INSTALLATION directory route needed clarification; subsequently checked by root against official docs (see sources.json), both documented.",
+  "limitation": "Prior Phase2 runtime results were read as historical report evidence, not reproduced by this reviewer."
+}

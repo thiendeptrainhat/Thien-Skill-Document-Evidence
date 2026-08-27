@@ -1,0 +1,24 @@
+{
+  "adapters": {
+    "claude": ".claude-plugin/plugin.json",
+    "openai": ".codex-plugin/plugin.json",
+    "universal": null
+  },
+  "canonical_only": [
+    "agents/openai.yaml"
+  ],
+  "core_file_count": 87,
+  "core_sha256": "7c67b20eba5c884289449f363b6c2b49ca0f05422e516a7c2cec20ce792c7c9c",
+  "distribution_files": [
+    "INSTALLATION.md",
+    "ACCEPTANCE-REPORT-v1.1.0.md",
+    "LEGAL-REVIEW-v1.1.0.md"
+  ],
+  "ignored_generated_files": [
+    "PACKAGE-MANIFEST.json"
+  ],
+  "schema_version": 1,
+  "skill_id": "thien-skill-document-evidence",
+  "status": "PASS",
+  "version": "1.1.0"
+}

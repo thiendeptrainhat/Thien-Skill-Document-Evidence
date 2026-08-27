@@ -4,11 +4,13 @@
 
 Liên kết document/system records theo business grain và tạo kết quả có thể tái thực hiện. Reconciliation là control độc lập: count match không che amount mismatch; aggregate tie không che line/key exception.
 
-## Chuỗi package tham chiếu
+## Chuỗi package tham chiếu (một ví dụ)
 
 `Contract → Requisition → PO → Delivery/GRN/Acceptance → Invoice → Payment Request/Approval → Bank Payment → ERP Record`
 
-Không yêu cầu mọi package có đủ mọi loại. Expected-document set do process/owner xác định; absence chỉ là discrepancy khi expectation có căn cứ.
+Đây là chuỗi procurement/payables minh họa, không phải ontology đóng. Không yêu cầu mọi package có đủ mọi loại. Expected-document set do process/owner xác định; absence chỉ là discrepancy khi expectation có căn cứ.
+
+Reconciliation dùng `matching_profile_id` và danh sách roles có cấu hình. `role_id` là identifier mở rộng (ví dụ `PURCHASE_ORDER`, `SALES_INVOICE`, `INVENTORY_COUNT`), không phải enum procurement. Document type, business role và physical filename là ba khái niệm riêng.
 
 ## Chuẩn bị trước match
 
@@ -45,21 +47,44 @@ Fuzzy/weighted similarity nằm ngoài deterministic core. Adapter có thể t�
 
 Không cho config chứa code, `eval`, SQL, shell, regex tùy ý hoặc URL action.
 
-## Two-, three- và four-way
+## Named matching profiles
 
-### Three-way
+Không mô tả workflow chỉ bằng “two-way/three-way/four-way”, vì cùng số sides có thể có roles, grain và control objective khác nhau. Mỗi run phải ghi `matching_profile_id`, profile version, role mapping và config hash.
 
-`PO ↔ Goods Receipt/Acceptance ↔ Invoice`
+### `PR_PO_GRN_INVOICE`
 
-So sánh vendor/entity, item/PO line, ordered/received/invoiced quantity, UOM, unit price, tax, amount, currency, dates và tolerance.
+Roles tham chiếu: `PURCHASE_REQUISITION` ↔ `PURCHASE_ORDER` ↔ `GOODS_RECEIPT` ↔ `PURCHASE_INVOICE`.
 
-### Four-way
+So sánh requester/entity/vendor, requested/ordered/received/invoiced item và quantity, UOM, unit price, tax, amount, currency, dates, approvals và tolerance. Profile phải định nghĩa partial requisition/order/receipt/invoice và amendment/cancellation behavior.
 
-`Contract/PO ↔ Receipt/Acceptance ↔ Invoice ↔ Payment`
+### `CONTRACT_ACCEPTANCE_INVOICE_PAYMENT_REQUEST`
 
-Thêm ceiling/schedule/terms, approval state, amount paid, allocation, value/payment date, fee/withholding, partial/reversal/credit-note effects.
+Roles tham chiếu: `CONTRACT` ↔ `ACCEPTANCE_RECORD` ↔ `PURCHASE_INVOICE` ↔ `PAYMENT_REQUEST`.
 
-Four-way definition có thể khác theo process; phải ghi config, không hard-code một mô hình duy nhất.
+So sánh contract/version/schedule/ceiling, deliverable/acceptance state, invoice references/amounts và payment-request approvals/allocations. Payment request không được coi là bank settlement.
+
+### `INVOICE_PAYMENT_BANK_SETTLEMENT`
+
+Roles tham chiếu: `PURCHASE_INVOICE` hoặc `SALES_INVOICE` ↔ `PAYMENT_REQUEST`/`PAYMENT_RECORD` ↔ `BANK_TRANSACTION` theo process được cấu hình.
+
+So sánh invoice/party/account/reference/currency, requested/paid/settled amount, value/posting dates, fee/withholding, allocation, reversal và credit-note effects. Bank statement row là source riêng; không mặc định ưu tiên hơn ERP hoặc source document.
+
+Các profile ID trên là defaults/minh họa, không làm registry đóng. Một tổ chức có thể version profile riêng như outbound flow `SALES_ORDER` ↔ `SALES_INVOICE` ↔ `GOODS_ISSUE` ↔ `DELIVERY_NOTE` ↔ `PROOF_OF_DELIVERY`/`CUSTOMER_RECEIPT`, hoặc inventory flow `INVENTORY_COUNT` ↔ `INVENTORY_LEDGER` ↔ `SYSTEM_RECORD`.
+
+Bundled machine-readable profiles nằm dưới `assets/reconciliation-profiles/` và validate bằng `schemas/common/matching-profile.schema.json`. Registry RC2 gồm bảy chuỗi bắt buộc `PR_PO`, `PO_GRN_INVOICE`, `PR_PO_GRN_INVOICE`, `CONTRACT_ACCEPTANCE_INVOICE_PAYMENT_REQUEST`, `INVOICE_PAYMENT_BANK_SETTLEMENT`, `CONTRACT_PO_GRN_INVOICE_BANK_PAYMENT`, `CUSTOM_N_WAY`, cùng hai ví dụ mở rộng outbound/inventory. `profile_kind` là uppercase identifier mở; thêm profile không cần đổi enum nhưng vẫn phải qua schema + semantic validation về unique role/rule/sheet IDs, role references, mapping variants, mode/role count, aggregation, comparator/tolerance unit và date/currency basis.
+
+`mode` trong reconciliation config (`TWO_WAY`, `THREE_WAY`, `FOUR_WAY`, `ERP_DOCUMENT`, `CUSTOM_DETERMINISTIC`) chỉ là technical engine mode để giữ compatibility. Nó không định nghĩa business profile. Dùng `CUSTOM_DETERMINISTIC` khi roles không khớp mode có sẵn; không cần thêm enum mới để mở rộng role set.
+
+## Role registry mở rộng
+
+Role ID nên là stable uppercase identifier và có definition/version trong matching profile. Ví dụ:
+
+- procurement/payables: `PURCHASE_REQUISITION`, `PURCHASE_ORDER`, `GOODS_RECEIPT`, `ACCEPTANCE_RECORD`, `PURCHASE_INVOICE`, `PAYMENT_REQUEST`, `PAYMENT_RECORD`, `BANK_TRANSACTION`;
+- sales/fulfilment: `SALES_ORDER`, `SALES_INVOICE`, `GOODS_ISSUE`, `DELIVERY_NOTE`, `PROOF_OF_DELIVERY`, `CUSTOMER_RECEIPT`;
+- inventory/system: `INVENTORY_COUNT`, `INVENTORY_LEDGER`, `SYSTEM_RECORD`;
+- contractual/custom: `CONTRACT` hoặc domain-specific role theo pattern contract.
+
+Trong registry này, `CUSTOMER_RECEIPT` phải được định nghĩa rõ là customer receipt/acceptance of delivered goods; chứng từ thu tiền dùng role khác như `CUSTOMER_PAYMENT_RECEIPT`. Thêm role không tự tạo comparator, key hoặc tolerance. Profile phải định nghĩa required/optional status, document/schema candidates, grain, keys, cardinality, rules, rollups và missing/multi-candidate policy. “Other document” cần named custom role và definition; không dùng một catch-all không semantics.
 
 ## Status
 
@@ -150,7 +175,17 @@ Config versioned và approved:
 }
 ```
 
+`matching_profile_id` có thể nằm trong task request/profile registry, còn config v1.0 vẫn giữ contract hiện hữu. Không thêm field vào config cũ nếu schema không cho phép; liên kết hai object bằng task/run metadata và hashes.
+
+`schema_version`/`config_version` và reconciliation script/tool compatibility `1.0.0` không phải RC release label và không được relabel. Ghi release provenance bằng `skill_id`/`skill_release_version` trong companion task/artifact objects hoặc release manifest liên kết; giữ config/tool version riêng để tái thực hiện logic v1.
+
 Mỗi numeric tolerance là decimal string với unit/basis/owner/approval reference. Currency conversion mặc định disabled; rate/source/date chưa được cấp thì không convert.
+
+## Workflow helper Phase 2
+
+`scripts/prepare_reconciliation_workbook.py` nhận requested structured JSON/canonical extraction packages trong authorized root, inventory/cô lập lỗi từng file, classify theo named/custom profile, materialize config chỉ từ approved policy input, gọi `scripts/reconcile_records.py` và sinh role-aware workbook/package. Raw PDF/ảnh/attachment cần upstream inventory/classification/extraction; helper không tự OCR, gọi model hoặc mạng.
+
+Output directory được stage cạnh đích rồi publish no-overwrite bằng rename. Nó gồm `matching-profile.json`, `records.json`, `reconciliation-config.json`, `reconciliation-result.json`, `workbook-package.json`, validation report, `reconciliation-workbook.xlsx` và `workflow-manifest.json`. Chỉ tạo role sheet có dữ liệu; luôn giữ `MATCH_RESULTS`, `DISCREPANCIES`, `HUMAN_REVIEW`, `SOURCE_INDEX` hoặc `RUN_LOG` khi có ý nghĩa theo package. `READY_FOR_LIMITED_USE` chỉ hợp lệ khi không có preparation issue và deterministic reconciliation đạt pass state; mọi non-pass chuyển human review, không tự phê duyệt nghiệp vụ.
 
 ## Output và QA
 

@@ -1,0 +1,620 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "conversion-run.schema.json",
+  "title": "Canonical artifact conversion run",
+  "description": "Closed, deterministic run record linking canonical input, rendered artifact, and artifact manifest without relabeling source release provenance.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "tool",
+    "runtime_skill",
+    "source_canonical",
+    "request",
+    "outputs",
+    "generated_at",
+    "status",
+    "structural_qa_status",
+    "visual_qa_status",
+    "limitations",
+    "human_review_status"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "run_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "const": "thien-canonical-artifact-renderer"
+        },
+        "version": {
+          "const": "1.0.0"
+        }
+      }
+    },
+    "runtime_skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "skill_id",
+        "release_version"
+      ],
+      "properties": {
+        "skill_id": {
+          "const": "thien-skill-document-evidence"
+        },
+        "release_version": {
+          "$ref": "#/$defs/semanticVersion"
+        }
+      }
+    },
+    "source_canonical": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "location_reference",
+        "schema_version",
+        "source_skill_release_version",
+        "content_id",
+        "document_id",
+        "checksum"
+      ],
+      "properties": {
+        "location_reference": {
+          "$ref": "#/$defs/safeRelativePath"
+        },
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "source_skill_release_version": {
+          "$ref": "#/$defs/semanticVersion"
+        },
+        "content_id": {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        "document_id": {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        "checksum": {
+          "$ref": "shared-definitions.schema.json#/$defs/checksum"
+        }
+      }
+    },
+    "request": {
+      "$ref": "#/$defs/conversionRequest"
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact",
+        "artifact_manifest"
+      ],
+      "properties": {
+        "artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "artifact_id",
+            "format",
+            "media_type",
+            "location_reference",
+            "checksum"
+          ],
+          "properties": {
+            "artifact_id": {
+              "$ref": "shared-definitions.schema.json#/$defs/identifier"
+            },
+            "format": {
+              "enum": [
+                "JSON",
+                "MD",
+                "DOCX",
+                "XLSX",
+                "PPTX"
+              ]
+            },
+            "media_type": {
+              "type": "string",
+              "minLength": 1
+            },
+            "location_reference": {
+              "$ref": "#/$defs/safeRelativePath"
+            },
+            "checksum": {
+              "$ref": "shared-definitions.schema.json#/$defs/checksum"
+            }
+          }
+        },
+        "artifact_manifest": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "manifest_id",
+            "media_type",
+            "location_reference",
+            "checksum"
+          ],
+          "properties": {
+            "manifest_id": {
+              "$ref": "shared-definitions.schema.json#/$defs/identifier"
+            },
+            "media_type": {
+              "const": "application/json"
+            },
+            "location_reference": {
+              "$ref": "#/$defs/safeRelativePath"
+            },
+            "checksum": {
+              "$ref": "shared-definitions.schema.json#/$defs/checksum"
+            }
+          }
+        }
+      }
+    },
+    "generated_at": {
+      "$ref": "shared-definitions.schema.json#/$defs/timestampOrState"
+    },
+    "status": {
+      "$ref": "shared-definitions.schema.json#/$defs/qualityStatus"
+    },
+    "structural_qa_status": {
+      "const": "PASS"
+    },
+    "visual_qa_status": {
+      "$ref": "shared-definitions.schema.json#/$defs/validationStatus"
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+      }
+    },
+    "human_review_status": {
+      "$ref": "shared-definitions.schema.json#/$defs/humanReviewStatus"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "request": {
+            "properties": {
+              "output_format": {
+                "const": "JSON"
+              }
+            },
+            "required": [
+              "output_format"
+            ]
+          }
+        },
+        "required": [
+          "request"
+        ]
+      },
+      "then": {
+        "properties": {
+          "outputs": {
+            "properties": {
+              "artifact": {
+                "properties": {
+                  "format": {
+                    "const": "JSON"
+                  },
+                  "media_type": {
+                    "const": "application/json"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "request": {
+            "properties": {
+              "output_format": {
+                "const": "MD"
+              }
+            },
+            "required": [
+              "output_format"
+            ]
+          }
+        },
+        "required": [
+          "request"
+        ]
+      },
+      "then": {
+        "properties": {
+          "outputs": {
+            "properties": {
+              "artifact": {
+                "properties": {
+                  "format": {
+                    "const": "MD"
+                  },
+                  "media_type": {
+                    "const": "text/markdown"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "request": {
+            "properties": {
+              "output_format": {
+                "const": "DOCX"
+              }
+            },
+            "required": [
+              "output_format"
+            ]
+          }
+        },
+        "required": [
+          "request"
+        ]
+      },
+      "then": {
+        "properties": {
+          "outputs": {
+            "properties": {
+              "artifact": {
+                "properties": {
+                  "format": {
+                    "const": "DOCX"
+                  },
+                  "media_type": {
+                    "const": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "request": {
+            "properties": {
+              "output_format": {
+                "const": "XLSX"
+              }
+            },
+            "required": [
+              "output_format"
+            ]
+          }
+        },
+        "required": [
+          "request"
+        ]
+      },
+      "then": {
+        "properties": {
+          "outputs": {
+            "properties": {
+              "artifact": {
+                "properties": {
+                  "format": {
+                    "const": "XLSX"
+                  },
+                  "media_type": {
+                    "const": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "request": {
+            "properties": {
+              "output_format": {
+                "const": "PPTX"
+              }
+            },
+            "required": [
+              "output_format"
+            ]
+          }
+        },
+        "required": [
+          "request"
+        ]
+      },
+      "then": {
+        "properties": {
+          "outputs": {
+            "properties": {
+              "artifact": {
+                "properties": {
+                  "format": {
+                    "const": "PPTX"
+                  },
+                  "media_type": {
+                    "const": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "conversionRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "output_format",
+        "output_profile",
+        "presentation_intent"
+      ],
+      "properties": {
+        "output_format": {
+          "enum": [
+            "JSON",
+            "MD",
+            "DOCX",
+            "XLSX",
+            "PPTX"
+          ]
+        },
+        "output_profile": {
+          "oneOf": [
+            {
+              "enum": [
+                "SEMANTIC_EDITABLE",
+                "STRUCTURED_DATA",
+                "EDITABLE_PRESENTATION",
+                "PAGE_AS_SLIDE",
+                "VISUAL_FIDELITY_BEST_EFFORT"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "presentation_intent": {
+          "oneOf": [
+            {
+              "enum": [
+                "NOT_APPLICABLE",
+                "PRESENTATION",
+                "FAITHFUL_PAGE_CONVERSION",
+                "VISUAL_FIDELITY"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "output_format": {
+                "enum": [
+                  "JSON",
+                  "MD"
+                ]
+              }
+            },
+            "required": [
+              "output_format"
+            ]
+          },
+          "then": {
+            "properties": {
+              "output_profile": {
+                "type": "null"
+              },
+              "presentation_intent": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "output_format": {
+                "const": "DOCX"
+              }
+            },
+            "required": [
+              "output_format"
+            ]
+          },
+          "then": {
+            "properties": {
+              "output_profile": {
+                "const": "SEMANTIC_EDITABLE"
+              },
+              "presentation_intent": {
+                "const": "NOT_APPLICABLE"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "output_format": {
+                "const": "XLSX"
+              }
+            },
+            "required": [
+              "output_format"
+            ]
+          },
+          "then": {
+            "properties": {
+              "output_profile": {
+                "const": "STRUCTURED_DATA"
+              },
+              "presentation_intent": {
+                "const": "NOT_APPLICABLE"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "output_format": {
+                "const": "PPTX"
+              }
+            },
+            "required": [
+              "output_format"
+            ]
+          },
+          "then": {
+            "oneOf": [
+              {
+                "properties": {
+                  "output_profile": {
+                    "const": "EDITABLE_PRESENTATION"
+                  },
+                  "presentation_intent": {
+                    "const": "PRESENTATION"
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "output_profile": {
+                    "const": "PAGE_AS_SLIDE"
+                  },
+                  "presentation_intent": {
+                    "const": "FAITHFUL_PAGE_CONVERSION"
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "output_profile": {
+                    "const": "VISUAL_FIDELITY_BEST_EFFORT"
+                  },
+                  "presentation_intent": {
+                    "const": "VISUAL_FIDELITY"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "output_profile": {
+                "const": "EDITABLE_PRESENTATION"
+              }
+            },
+            "required": [
+              "output_profile"
+            ]
+          },
+          "then": {
+            "properties": {
+              "output_format": {
+                "const": "PPTX"
+              },
+              "presentation_intent": {
+                "const": "PRESENTATION"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "output_profile": {
+                "const": "PAGE_AS_SLIDE"
+              }
+            },
+            "required": [
+              "output_profile"
+            ]
+          },
+          "then": {
+            "properties": {
+              "output_format": {
+                "const": "PPTX"
+              },
+              "presentation_intent": {
+                "const": "FAITHFUL_PAGE_CONVERSION"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "output_profile": {
+                "const": "VISUAL_FIDELITY_BEST_EFFORT"
+              }
+            },
+            "required": [
+              "output_profile"
+            ]
+          },
+          "then": {
+            "properties": {
+              "output_format": {
+                "const": "PPTX"
+              },
+              "presentation_intent": {
+                "const": "VISUAL_FIDELITY"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "safeRelativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?![A-Za-z]:)(?!/)(?!(?:\\.{1,2})(?:/|$))(?!(?:(?:[Cc][Oo][Nn]|[Pp][Rr][Nn]|[Aa][Uu][Xx]|[Nn][Uu][Ll]|[Cc][Oo][Mm][1-9]|[Ll][Pp][Tt][1-9]))(?:\\.[^/]*|/|$))(?=[^/]*[^. /](?:/|$))[^<>:\"/\\\\|?*\\u0000-\\u001F]+(?:/(?!(?:\\.{1,2})(?:/|$))(?!(?:(?:[Cc][Oo][Nn]|[Pp][Rr][Nn]|[Aa][Uu][Xx]|[Nn][Uu][Ll]|[Cc][Oo][Mm][1-9]|[Ll][Pp][Tt][1-9]))(?:\\.[^/]*|/|$))(?=[^/]*[^. /](?:/|$))[^<>:\"/\\\\|?*\\u0000-\\u001F]+)*$"
+    },
+    "semanticVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    }
+  }
+}

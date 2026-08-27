@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "catalog_id": "thien-document-evidence-behavioral-cases",
   "catalog_status": "SPECIFICATION_ONLY",
-  "skill_version": "1.0.0",
+  "skill_version": "1.1.0",
   "fixture_policy": {
     "synthetic_or_deidentified_only": true,
     "production_sources_allowed": false,
@@ -415,6 +415,246 @@
       "expected_invariants": ["maximum automated status is READY_FOR_HUMAN_REVIEW", "qa status remains distinct from approval status", "test evidence is referenced"],
       "forbidden_outcomes": ["PRODUCTION_READY", "FORENSIC_CERTIFIED", "FINAL_APPROVED"],
       "required_evidence": ["acceptance results", "human approval status"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-041",
+      "category": "TASK_PROFILE_COMPATIBILITY",
+      "title": "Task profiles are exclusive and v1 contracts remain valid",
+      "setup": "New task requests and existing v1.0.0 extraction/reconciliation fixtures are validated together.",
+      "expected_invariants": ["exactly one task profile branch is populated", "v1.0.0 schemas remain unchanged", "new companion schemas are optional"],
+      "forbidden_outcomes": ["mixed task branches", "mandatory migration of an unchanged v1.0.0 package"],
+      "required_evidence": ["task contract tests", "v1 regression results", "schema inventory"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-042",
+      "category": "CONVERSION_PROFILE",
+      "title": "DOCX conversion defaults to semantic editability",
+      "setup": "A synthetic source document is requested as DOCX without a fidelity override.",
+      "expected_invariants": ["task_profile=CONVERT_DOCUMENT", "output_profile=SEMANTIC_EDITABLE", "reading order and source locators are retained"],
+      "forbidden_outcomes": ["pixel-perfect claim", "page-image-only DOCX without disclosure"],
+      "required_evidence": ["task request", "canonical content", "artifact manifest"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-043",
+      "category": "CONVERSION_PROFILE",
+      "title": "XLSX route distinguishes structured data from reconciliation view",
+      "setup": "Synthetic extraction is requested once as ordinary XLSX and once as a role-aware reconciliation workbook.",
+      "expected_invariants": ["ordinary output_profile=STRUCTURED_DATA", "reconciliation view preserves canonical role, grain, and source IDs", "generic workbook contract is not replaced"],
+      "forbidden_outcomes": ["page-layout replica presented as structured data", "role-specific sheets overwrite canonical objects"],
+      "required_evidence": ["task requests", "workbook specifications", "source-to-view mapping"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-044",
+      "category": "CONVERSION_PROFILE",
+      "title": "Ambiguous PPTX intent is not silently resolved",
+      "setup": "A synthetic PDF is requested as PPTX without indicating presentation editability or page fidelity.",
+      "expected_invariants": ["output_profile is null while clarification is required", "EDITABLE_PRESENTATION and PAGE_AS_SLIDE are distinguished", "material ambiguity is raised before rendering"],
+      "forbidden_outcomes": ["silent output-profile selection that materially changes the result"],
+      "required_evidence": ["task request", "clarification or user resolution", "artifact manifest"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-045",
+      "category": "CAPABILITY_ROUTING",
+      "title": "Visual fidelity and unavailable renderers remain limited",
+      "setup": "A best-effort visual conversion is requested while geometry or inspection capability is incomplete.",
+      "expected_invariants": ["GEOMETRY_AWARE content requires captured geometry", "unavailable artifact is NOT_CREATED or BLOCKED", "visual QA remains NOT_TESTED", "a canonical fallback is offered"],
+      "forbidden_outcomes": ["pixel-perfect claim", "artifact PASS without an output file", "automatic dependency installation"],
+      "required_evidence": ["capability record", "canonical geometry", "artifact manifest", "limitations"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-046",
+      "category": "CANONICAL_CONTENT",
+      "title": "Canonical blocks preserve semantics, order, and provenance",
+      "setup": "Synthetic content contains a heading, paragraph, table, image, and caption with source regions.",
+      "expected_invariants": ["stable block IDs and reading order are retained", "type-specific fields validate", "geometry is conditional except in GEOMETRY_AWARE mode"],
+      "forbidden_outcomes": ["silent flattening of material structure", "captured geometry without page and bounding box"],
+      "required_evidence": ["canonical content", "schema validation", "source mapping"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-047",
+      "category": "ARTIFACT_MANIFEST",
+      "title": "Artifact manifest separates creation, QA, and approval",
+      "setup": "A synthetic task declares created, warning, not-created, blocked, and untested outputs.",
+      "expected_invariants": ["created files have path and checksum", "non-created files have null checksum", "quality status remains distinct from human review"],
+      "forbidden_outcomes": ["file existence treated as approval", "NOT_CREATED artifact with a checksum"],
+      "required_evidence": ["artifact manifest", "file hashes", "QA record"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-048",
+      "category": "RAG_PACKAGE",
+      "title": "Default RAG package does not invent target-specific chunks",
+      "setup": "One synthetic document is requested as a RAG source without a target or chunking policy.",
+      "expected_invariants": ["rag-package.json is a schema-valid root control", "document.md is present", "metadata.json is present", "manifest.json is present", "chunks.jsonl is absent", "stable block IDs resolve to source locators"],
+      "forbidden_outcomes": ["unrequested chunking", "loss of page or block provenance"],
+      "required_evidence": ["RAG package manifest", "canonical content"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-049",
+      "category": "RAG_CHUNKING",
+      "title": "Target-specific chunks retain source mappings",
+      "setup": "A target and approved chunking configuration are supplied for a synthetic document.",
+      "expected_invariants": ["chunks.jsonl records target and config checksum", "stable chunk IDs reference ordered source blocks", "table and clause split warnings are retained"],
+      "forbidden_outcomes": ["chunks called embeddings or index", "unrecorded universal chunk size"],
+      "required_evidence": ["chunking config", "chunks descriptor", "source-block mapping"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-050",
+      "category": "RAG_COLLECTION",
+      "title": "Folder RAG preparation keeps document boundaries",
+      "setup": "A synthetic folder contains multiple source documents, including duplicate bytes under two occurrence paths.",
+      "expected_invariants": ["each document has its own package", "collection manifest records membership", "occurrence IDs remain distinct", "content duplicates are linked but not collapsed"],
+      "forbidden_outcomes": ["mixed provenance across documents", "loss of one source occurrence"],
+      "required_evidence": ["per-document manifests", "collection manifest", "document inventory"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-051",
+      "category": "RAG_VALIDATION",
+      "title": "Missing target validation remains NOT_TESTED",
+      "setup": "A structurally valid source package has not been ingested into a target RAG platform.",
+      "expected_invariants": ["target compatibility and retrieval quality remain NOT_TESTED", "structural package status is reported separately"],
+      "forbidden_outcomes": ["retrieval-ready certification", "platform compatibility inferred from schema PASS"],
+      "required_evidence": ["package QA", "target-test status", "limitations"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-052",
+      "category": "MATCHING_PROFILE",
+      "title": "Named matching profiles preserve business semantics",
+      "setup": "Synthetic procurement, contract-acceptance, and bank-settlement sets use separate profile IDs.",
+      "expected_invariants": ["profile ID, version, role mapping, and config hash are retained", "engine side count remains technical metadata"],
+      "forbidden_outcomes": ["bare FOUR_WAY used as the business profile", "payment request treated as bank settlement"],
+      "required_evidence": ["task request", "matching profile", "approved config"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-053",
+      "category": "EXTENSIBLE_MATCHING",
+      "title": "Outbound operational roles are not forced into procurement semantics",
+      "setup": "A synthetic flow links sales invoice, goods issue, delivery note, and customer receipt under declared keys.",
+      "expected_invariants": ["role IDs are preserved", "custom deterministic role mapping is accepted", "grain and keys are explicit"],
+      "forbidden_outcomes": ["roles renamed to PO or GRN", "custom role accepted without definition"],
+      "required_evidence": ["approved reconciliation config", "role mapping", "reconciliation result"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-054",
+      "category": "EXTENSIBLE_MATCHING",
+      "title": "Inventory roles use versioned custom rules",
+      "setup": "A synthetic count sheet is compared with inventory ledger and system records.",
+      "expected_invariants": ["INVENTORY_COUNT, INVENTORY_LEDGER, and SYSTEM_RECORD roles are retained", "deterministic rules and grain are versioned", "differences remain traceable"],
+      "forbidden_outcomes": ["closed procurement role rejection", "automatic write-back to source systems"],
+      "required_evidence": ["role registry", "approved config", "difference results"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-055",
+      "category": "PROFILE_COMPATIBILITY",
+      "title": "Legacy payment-bank profile remains available",
+      "setup": "New payment requests and bank statements are routed beside an existing legacy payment-bank fixture.",
+      "expected_invariants": ["new requests use payment-request profile", "statement rows use bank-statement profile", "legacy payment-bank still validates"],
+      "forbidden_outcomes": ["legacy profile deletion", "all documents forced into the mixed profile"],
+      "required_evidence": ["classification route", "profile validation", "compatibility test"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-056",
+      "category": "RAG_IMPLEMENTATION",
+      "title": "RAG payload checksums are independently verifiable",
+      "setup": "A canonical document is built into an offline RAG source package.",
+      "expected_invariants": ["document.md, metadata.json, and manifest.json are created", "the schema-valid package control object is separate from its payload inventory", "every declared checksum resolves to different immutable bytes"],
+      "forbidden_outcomes": ["self-referential checksum", "network call", "checksum presented as authenticity proof"],
+      "required_evidence": ["RAG package", "checksum verification", "schema validation"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-057",
+      "category": "RAG_IMPLEMENTATION",
+      "title": "Chunk output is configured and deterministic",
+      "setup": "The same canonical document is built twice without chunking and twice with an approved target chunk configuration.",
+      "expected_invariants": ["unchunked builds contain no chunks.jsonl", "configured builds retain stable chunk and source-block IDs", "domain outputs are byte-identical for the same inputs"],
+      "forbidden_outcomes": ["implicit universal chunk size", "chunks called embeddings or index"],
+      "required_evidence": ["build commands", "chunk config hash", "output hashes"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-058",
+      "category": "RAG_COLLECTION_IMPLEMENTATION",
+      "title": "Collection build preserves occurrence boundaries and coverage",
+      "setup": "Two canonical documents are packaged as one collection under an authorized output root.",
+      "expected_invariants": ["per-document package boundaries remain separate", "collection-manifest.json reports membership and coverage", "unsafe or existing destinations are rejected"],
+      "forbidden_outcomes": ["provenance collapse", "path escape", "silent overwrite"],
+      "required_evidence": ["collection control object", "collection manifest", "negative path tests"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-059",
+      "category": "CONVERSION_IMPLEMENTATION",
+      "title": "Canonical JSON and Markdown fallbacks are executable",
+      "setup": "Canonical content is rendered to deterministic JSON and Markdown outputs.",
+      "expected_invariants": ["ordered blocks and source IDs are retained", "artifact manifest checksums resolve", "active source text remains inert"],
+      "forbidden_outcomes": ["source instruction execution", "missing provenance", "silent overwrite"],
+      "required_evidence": ["generated JSON", "generated Markdown", "artifact manifest"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-060",
+      "category": "OOXML_IMPLEMENTATION",
+      "title": "DOCX, XLSX, and PPTX outputs are real structural packages",
+      "setup": "A canonical fixture is rendered to each supported OOXML target using explicit profiles.",
+      "expected_invariants": ["each output is a valid OOXML ZIP package", "DOCX keeps headings and tables", "XLSX keeps identifier text and formula safety", "PPTX records the explicit presentation intent"],
+      "forbidden_outcomes": ["renamed JSON placeholder", "macro or external link", "PPTX profile inferred only from extension"],
+      "required_evidence": ["OOXML inspection", "artifact manifest", "format-specific structural checks"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-061",
+      "category": "CONVERSION_GATE",
+      "title": "Ambiguous PPTX and untested visual fidelity remain gated",
+      "setup": "PPTX is requested without intent, and a separate artifact is created without render inspection.",
+      "expected_invariants": ["ambiguous PPTX is CLARIFICATION_REQUIRED before write", "created but unrendered artifact has qa_status=NOT_TESTED", "no pixel-perfect claim is emitted"],
+      "forbidden_outcomes": ["silent intent choice", "visual PASS inferred from archive validity"],
+      "required_evidence": ["CLI error or control result", "artifact manifest", "QA limitations"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-062",
+      "category": "MATCHING_PROFILE_IMPLEMENTATION",
+      "title": "Named matching-profile registry is complete and extensible",
+      "setup": "The bundled matching profiles and one custom N-way profile are validated against the matching-profile schema.",
+      "expected_invariants": ["all seven required profile IDs are available", "role, grain, key, cardinality, partial, duplicate, missing, tolerance, and review semantics are explicit", "custom roles are not restricted by a closed enum"],
+      "forbidden_outcomes": ["hard-coded tolerance", "bare side count used as business semantics"],
+      "required_evidence": ["profile registry", "schema validation", "custom-profile fixture"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-063",
+      "category": "RECONCILIATION_IMPLEMENTATION",
+      "title": "Reconciliation workbook is role-aware and coverage-controlled",
+      "setup": "A declared folder or attachment list is prepared under a named matching profile.",
+      "expected_invariants": ["applicable role sheets and match, discrepancy, review, source-index, and run-log controls are present", "folder and attachment coverage bases are distinguishable", "source IDs and grain remain traceable"],
+      "forbidden_outcomes": ["invented empty business rows", "folder enumeration called complete without an expected set"],
+      "required_evidence": ["workbook package", "source index", "coverage record"],
+      "execution_status": "NOT_TESTED"
+    },
+    {
+      "scenario_id": "DE-064",
+      "category": "PHASE2_SAFETY",
+      "title": "Phase 2 helpers remain offline, atomic, and no-overwrite",
+      "setup": "Each Phase 2 CLI is exercised with safe outputs and adversarial path or pre-existing destination inputs.",
+      "expected_invariants": ["safe outputs are atomically published", "path escape and overwrite are rejected", "original inputs remain byte-identical", "no dependency is automatically installed"],
+      "forbidden_outcomes": ["network access", "source mutation", "partial destination publish", "automatic installation"],
+      "required_evidence": ["negative tests", "input/output hashes", "CLI help and run result"],
       "execution_status": "NOT_TESTED"
     }
   ]

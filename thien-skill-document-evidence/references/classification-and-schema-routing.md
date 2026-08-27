@@ -18,15 +18,19 @@ Taxonomy label không xác thực nội dung hoặc status pháp lý. Khi một 
 
 | Classification | Schema mặc định |
 |---|---|
-| Invoice, tax invoice, debit/credit invoice | `schemas/document-types/invoice.schema.json` |
-| Purchase order/amendment | `purchase-order.schema.json` |
-| GRN, receipt, warehouse/delivery acceptance | `goods-receipt.schema.json` hoặc generic + type extension |
-| Payment request/voucher, bank/remittance advice | `payment-document.schema.json` |
-| Receipt/expense claim | `receipt-expense.schema.json` |
-| Contract/master/addendum | `contract.schema.json` với version relationship |
-| Không đủ hoặc type khác | `generic-document.schema.json` |
+| Purchase requisition/request | `schemas/document-types/purchase-requisition.json` |
+| Purchase order/amendment | `schemas/document-types/purchase-order.json` |
+| Invoice, tax invoice, debit/credit invoice | `schemas/document-types/invoice.json` |
+| GRN, goods receipt, warehouse/delivery acceptance | `schemas/document-types/goods-receipt.json` hoặc generic + type extension |
+| Payment request/approval | `schemas/document-types/payment-request.json` |
+| Bank statement và transaction rows | `schemas/document-types/bank-statement.json` |
+| Receipt/expense claim | `schemas/document-types/receipt-expense.json` |
+| Contract/master/addendum | `schemas/document-types/contract.json` với version relationship |
+| Không đủ hoặc type khác | `schemas/document-types/generic-document.json` |
 
 Schema chuyên biệt mở rộng common `$defs`; không sao chép semantics mâu thuẫn. Chọn schema version tại extraction-run start và ghi vào từng record.
+
+`schemas/document-types/payment-bank.json` được giữ làm legacy mixed profile để tương thích output/config hiện hữu. Với task mới, ưu tiên `payment-request.json` cho yêu cầu/phê duyệt thanh toán và `bank-statement.json` cho statement/transaction rows. Payment voucher hoặc remittance không khớp profile mới phải dùng legacy/generic có extension và review; không ép map chỉ vì có từ “payment” hoặc “bank”.
 
 ## Schema lifecycle
 
@@ -36,6 +40,8 @@ Schema chuyên biệt mở rộng common `$defs`; không sao chép semantics mâ
 - Không sửa output cũ tại chỗ; giữ schema version và migration/normalization log.
 - Unknown field từ source có thể đi vào `extensions` với namespace; không tự đổi common model.
 - Khi document không khớp required discriminator, giữ generic/unclassified và review.
+
+Tách ba trục provenance: `skill_release_version` của companion object là release đang chạy; `schema_version` là machine-contract version; legacy extraction/tool compatibility `1.0.0` được giữ nguyên để output và scripts hiện hữu tiếp tục validate. Không relabel schema/config/tool v1.0.0 thành RC và không suy release provenance chỉ từ một legacy version field.
 
 ## Common document record
 
@@ -116,8 +122,11 @@ Data types: `TEXT`, `INTEGER`, `DECIMAL`, `PERCENTAGE`, `CURRENCY_AMOUNT`, `DATE
 
 - **Invoice:** header/status, seller/buyer, references, currency/exchange rate, line items, tax/charges/totals, amount in words, approval/signature presence.
 - **PO:** requisition/quotation/contract refs, buyer/vendor, ship/bill-to, terms, approval/version, budget/cost center/project/plant, line items và total.
+- **Purchase requisition:** requester/department/entity, request/date/need-by date, justification, budget/cost center/project, approvals và requested item/service lines; không tự coi requisition là PO/commitment.
 - **Goods receipt:** PO/delivery/invoice refs, warehouse/location/receiver/inspector, batch/lot/serial, ordered/delivered/accepted/rejected/damaged quantity, quality/weight và presence indicators.
-- **Payment:** dates, payer/beneficiary/bank/accounts, transaction/bank refs, related invoice/PO/contract, gross/fee/withholding/net, purpose, approval/reversal/settlement.
+- **Payment request:** requester/payer/beneficiary, request/due dates, related invoice/PO/contract/acceptance refs, gross/tax/withholding/net, currency, purpose, approval state và requested allocations; không tự coi là settled payment.
+- **Bank statement:** account/owner/bank, statement period/opening/closing balance, transaction value/posting dates, debit/credit/amount/currency, counterparty, narrative và bank transaction/reference IDs; mỗi row giữ statement/page/line provenance.
+- **Legacy payment/bank:** dates, payer/beneficiary/bank/accounts, transaction/bank refs, related invoice/PO/contract, gross/fee/withholding/net, purpose, approval/reversal/settlement; dùng có chủ đích cho compatibility, không phải default cho request hoặc statement mới.
 - **Receipt/expense:** merchant/tax/date/time/employee/claim/category, item amounts/tax/tip/total/currency/payment method/card-last-four, travel/project/cost center/approver và image-quality/duplicate fingerprint.
 - **Contract:** identity/version/dates/language/law/dispute raw text, parties/roles, commercial/operational/legal clause groups, signature blocks, clause and obligation registers. Không legal conclusion.
 
@@ -132,4 +141,4 @@ Khi source chứa field mới:
 
 ## Machine-readable files
 
-JSON Schema Draft 2020-12 trong `schemas/` là contract kiểm tra structure/type/enum. Nó không chứng minh semantic correctness, source authenticity, legal validity hoặc business acceptability. `scripts/validate_records.py` có thể dùng validator runtime sẵn có; nếu dependency thiếu, dừng với hướng dẫn rõ thay vì bỏ validation.
+JSON Schema Draft 2020-12 trong `schemas/` là contract kiểm tra structure/type/enum. Nó không chứng minh semantic invariants, source authenticity, legal validity hoặc business acceptability. Semantic checks chưa thực sự chạy phải là `NOT_TESTED`, dù structural/schema validation PASS. `scripts/validate_records.py` có thể dùng validator runtime sẵn có; nếu dependency thiếu, dừng với hướng dẫn rõ thay vì bỏ validation.

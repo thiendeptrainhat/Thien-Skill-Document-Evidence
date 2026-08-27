@@ -1,0 +1,515 @@
+{
+  "schema_version": "1.0.0",
+  "plan_id": "P3-PLAN-001",
+  "engagement_id": "DE-PHASE3-RC2-20260827",
+  "created_at": "2026-08-27T04:34:04.227935+00:00",
+  "created_by": {
+    "actor_id": "codex-root",
+    "display_name": "Codex — maker/reviewer chính",
+    "role": "reviewer"
+  },
+  "artifact_inventory_id": "P3-INVENTORY-001",
+  "objectives": [
+    "Nghiệm thu tính toàn vẹn/tái lập của ba gói RC2 trong phạm vi package-only.",
+    "Kiểm thử các CLI được đóng gói và đối chiếu yêu cầu bằng synthetic fixtures.",
+    "Bàn giao hồ sơ có thể tái thực hiện, không nâng claim live/platform/production."
+  ],
+  "scope": {
+    "included_artifact_ids": [
+      "P3-OPENAI-ZIP",
+      "P3-CLAUDE-ZIP",
+      "P3-UNIVERSAL-ZIP",
+      "P3-RELEASE-MANIFEST",
+      "P3-PARITY",
+      "P3-SHA256",
+      "P3-HANDOFF-ORIGINAL",
+      "P3-PHASE2-REPORT",
+      "P3-README",
+      "P3-INSTALLATION",
+      "P3-BUILD-CONFIG",
+      "P3-SKILL"
+    ],
+    "excluded_items": [
+      {
+        "item": "Live installation/invocation trên Codex, ChatGPT, Claude và local skill sync",
+        "rationale": "Người dùng yêu cầu chỉ gói cài đặt, không cài thử."
+      },
+      {
+        "item": "Raw scan/receipt OCR, tài liệu thật và target RAG ingestion/retrieval",
+        "rationale": "Không có host/target hoặc source corpus được đưa vào Phase 3 package-only; giữ NOT_TESTED."
+      },
+      {
+        "item": "Stable release/production approval/publication",
+        "rationale": "RC2 Testing không tự trở thành stable hoặc human-approved sau technical QA."
+      }
+    ]
+  },
+  "profiles": [
+    "evidence_traceability",
+    "report_language_cross_artifact",
+    "code_automation",
+    "findings_actions_closure"
+  ],
+  "control_overlays": [
+    "security_privacy_confidentiality"
+  ],
+  "review_relationship": "self_check",
+  "review_depth": "L2_full",
+  "review_phase": "closure",
+  "role_separation": {
+    "maker": {
+      "actor_id": "codex-root",
+      "role": "maker"
+    },
+    "reviewer": {
+      "actor_id": "codex-root",
+      "display_name": "Codex — maker/reviewer chính",
+      "role": "reviewer"
+    },
+    "approver": null,
+    "separation_status": "partially_separated",
+    "rationale": "Root có prior implementation. phase3_scope_review rà soát chỉ đọc; phase3_packaged_tests tạo test mới, không phải reviewer độc lập của chính test đó. Peer cuối đánh giá hồ sơ sau root."
+  },
+  "check_selection": [
+    {
+      "check_id": "QA-SHARED-SCOPE",
+      "applicability": "required",
+      "rationale": "Quyết định package-only thay thế live-install gate, không thay bằng PASS",
+      "artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP",
+        "P3-RELEASE-MANIFEST",
+        "P3-PARITY",
+        "P3-SHA256",
+        "P3-HANDOFF-ORIGINAL",
+        "P3-PHASE2-REPORT",
+        "P3-README",
+        "P3-INSTALLATION",
+        "P3-BUILD-CONFIG",
+        "P3-SKILL"
+      ],
+      "evidence_expected": [
+        "Intake + request messages + scope matrix"
+      ],
+      "assigned_reviewer_id": "codex-root"
+    },
+    {
+      "check_id": "QA-SHARED-INVENTORY",
+      "applicability": "required",
+      "rationale": "Định danh exact RC2/historical artifacts và bảo toàn nguồn",
+      "artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP",
+        "P3-RELEASE-MANIFEST",
+        "P3-PARITY",
+        "P3-SHA256",
+        "P3-HANDOFF-ORIGINAL",
+        "P3-PHASE2-REPORT",
+        "P3-README",
+        "P3-INSTALLATION",
+        "P3-BUILD-CONFIG",
+        "P3-SKILL"
+      ],
+      "evidence_expected": [
+        "BASELINE.json + final hash comparison"
+      ],
+      "assigned_reviewer_id": "codex-root"
+    },
+    {
+      "check_id": "QA-SHARED-INDEPENDENCE",
+      "applicability": "required",
+      "rationale": "Phân biệt maker self_check, peer_review và human approval",
+      "artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP",
+        "P3-RELEASE-MANIFEST",
+        "P3-PARITY",
+        "P3-SHA256",
+        "P3-HANDOFF-ORIGINAL",
+        "P3-PHASE2-REPORT",
+        "P3-README",
+        "P3-INSTALLATION",
+        "P3-BUILD-CONFIG",
+        "P3-SKILL"
+      ],
+      "evidence_expected": [
+        "Role disclosure + peer reports"
+      ],
+      "assigned_reviewer_id": "codex-root"
+    },
+    {
+      "check_id": "QA-SHARED-VERSION",
+      "applicability": "required",
+      "rationale": "RC2 source, manifests, archives không stale/mixed versions",
+      "artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP",
+        "P3-RELEASE-MANIFEST",
+        "P3-PARITY",
+        "P3-SHA256",
+        "P3-HANDOFF-ORIGINAL",
+        "P3-PHASE2-REPORT",
+        "P3-README",
+        "P3-INSTALLATION",
+        "P3-BUILD-CONFIG",
+        "P3-SKILL"
+      ],
+      "evidence_expected": [
+        "Exact --check + metadata comparison"
+      ],
+      "assigned_reviewer_id": "codex-root"
+    },
+    {
+      "check_id": "QA-SHARED-TRACE",
+      "applicability": "required",
+      "rationale": "Mọi kết luận nghiệm thu có evidence locator",
+      "artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP",
+        "P3-RELEASE-MANIFEST",
+        "P3-PARITY",
+        "P3-SHA256",
+        "P3-HANDOFF-ORIGINAL",
+        "P3-PHASE2-REPORT",
+        "P3-README",
+        "P3-INSTALLATION",
+        "P3-BUILD-CONFIG",
+        "P3-SKILL"
+      ],
+      "evidence_expected": [
+        "Review record + report assertion matrix"
+      ],
+      "assigned_reviewer_id": "codex-root"
+    },
+    {
+      "check_id": "QA-SHARED-LIMITS",
+      "applicability": "required",
+      "rationale": "Live host/OCR/RAG không được nâng trạng thái",
+      "artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP",
+        "P3-RELEASE-MANIFEST",
+        "P3-PARITY",
+        "P3-SHA256",
+        "P3-HANDOFF-ORIGINAL",
+        "P3-PHASE2-REPORT",
+        "P3-README",
+        "P3-INSTALLATION",
+        "P3-BUILD-CONFIG",
+        "P3-SKILL"
+      ],
+      "evidence_expected": [
+        "27-cell platform matrix + omitted procedures"
+      ],
+      "assigned_reviewer_id": "codex-root"
+    },
+    {
+      "check_id": "QA-SHARED-LANGUAGE",
+      "applicability": "required",
+      "rationale": "Báo cáo tiếng Việt, identifiers giữ canonical",
+      "artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP",
+        "P3-RELEASE-MANIFEST",
+        "P3-PARITY",
+        "P3-SHA256",
+        "P3-HANDOFF-ORIGINAL",
+        "P3-PHASE2-REPORT",
+        "P3-README",
+        "P3-INSTALLATION",
+        "P3-BUILD-CONFIG",
+        "P3-SKILL"
+      ],
+      "evidence_expected": [
+        "Report inspection"
+      ],
+      "assigned_reviewer_id": "codex-root"
+    },
+    {
+      "check_id": "QA-SHARED-DISPOSITION",
+      "applicability": "required",
+      "rationale": "QA readiness không phải human production approval",
+      "artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP",
+        "P3-RELEASE-MANIFEST",
+        "P3-PARITY",
+        "P3-SHA256",
+        "P3-HANDOFF-ORIGINAL",
+        "P3-PHASE2-REPORT",
+        "P3-README",
+        "P3-INSTALLATION",
+        "P3-BUILD-CONFIG",
+        "P3-SKILL"
+      ],
+      "evidence_expected": [
+        "Disposition + approval_status"
+      ],
+      "assigned_reviewer_id": "codex-root"
+    },
+    {
+      "check_id": "QA-SHARED-CRITICAL",
+      "applicability": "required",
+      "rationale": "Không phát hành readiness khi có Critical/High chặn use case",
+      "artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP",
+        "P3-RELEASE-MANIFEST",
+        "P3-PARITY",
+        "P3-SHA256",
+        "P3-HANDOFF-ORIGINAL",
+        "P3-PHASE2-REPORT",
+        "P3-README",
+        "P3-INSTALLATION",
+        "P3-BUILD-CONFIG",
+        "P3-SKILL"
+      ],
+      "evidence_expected": [
+        "Finding register + peer closure"
+      ],
+      "assigned_reviewer_id": "codex-root"
+    },
+    {
+      "check_id": "QA-CODE-REQ",
+      "applicability": "required",
+      "rationale": "Đối chiếu 3 objectives và profile requirements với code/docs/tests",
+      "artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP",
+        "P3-RELEASE-MANIFEST",
+        "P3-PARITY",
+        "P3-SHA256",
+        "P3-HANDOFF-ORIGINAL",
+        "P3-PHASE2-REPORT",
+        "P3-README",
+        "P3-INSTALLATION",
+        "P3-BUILD-CONFIG",
+        "P3-SKILL"
+      ],
+      "evidence_expected": [
+        "Peer requirement matrix"
+      ],
+      "assigned_reviewer_id": "codex-root"
+    },
+    {
+      "check_id": "QA-CODE-TEST",
+      "applicability": "required",
+      "rationale": "Regressions và packaged helper behavior có assertions thực",
+      "artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP",
+        "P3-RELEASE-MANIFEST",
+        "P3-PARITY",
+        "P3-SHA256",
+        "P3-HANDOFF-ORIGINAL",
+        "P3-PHASE2-REPORT",
+        "P3-README",
+        "P3-INSTALLATION",
+        "P3-BUILD-CONFIG",
+        "P3-SKILL"
+      ],
+      "evidence_expected": [
+        "Full suite + extracted-package smoke logs"
+      ],
+      "assigned_reviewer_id": "codex-root"
+    },
+    {
+      "check_id": "QA-CODE-DEPS",
+      "applicability": "required",
+      "rationale": "Dependency và optional validator gaps được ghi trung thực",
+      "artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP",
+        "P3-RELEASE-MANIFEST",
+        "P3-PARITY",
+        "P3-SHA256",
+        "P3-HANDOFF-ORIGINAL",
+        "P3-PHASE2-REPORT",
+        "P3-README",
+        "P3-INSTALLATION",
+        "P3-BUILD-CONFIG",
+        "P3-SKILL"
+      ],
+      "evidence_expected": [
+        "Runtime inventory + quick_validate/PyYAML evidence"
+      ],
+      "assigned_reviewer_id": "codex-root"
+    },
+    {
+      "check_id": "QA-CODE-EXEC",
+      "applicability": "required",
+      "rationale": "Chỉ test offline isolated, không installation/external mutation",
+      "artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP",
+        "P3-RELEASE-MANIFEST",
+        "P3-PARITY",
+        "P3-SHA256",
+        "P3-HANDOFF-ORIGINAL",
+        "P3-PHASE2-REPORT",
+        "P3-README",
+        "P3-INSTALLATION",
+        "P3-BUILD-CONFIG",
+        "P3-SKILL"
+      ],
+      "evidence_expected": [
+        "Exact commands + no-network/no-discovery-directory writes"
+      ],
+      "assigned_reviewer_id": "codex-root"
+    },
+    {
+      "check_id": "QA-XART-ID",
+      "applicability": "required",
+      "rationale": "Version, skill ID, license và portable core consistent",
+      "artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP",
+        "P3-RELEASE-MANIFEST",
+        "P3-PARITY",
+        "P3-SHA256",
+        "P3-HANDOFF-ORIGINAL",
+        "P3-PHASE2-REPORT",
+        "P3-README",
+        "P3-INSTALLATION",
+        "P3-BUILD-CONFIG",
+        "P3-SKILL"
+      ],
+      "evidence_expected": [
+        "Package manifest/parity/checksums"
+      ],
+      "assigned_reviewer_id": "codex-root"
+    },
+    {
+      "check_id": "QA-XART-COVERAGE",
+      "applicability": "required",
+      "rationale": "Phân biệt static/specification, offline runtime và live coverage",
+      "artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP",
+        "P3-RELEASE-MANIFEST",
+        "P3-PARITY",
+        "P3-SHA256",
+        "P3-HANDOFF-ORIGINAL",
+        "P3-PHASE2-REPORT",
+        "P3-README",
+        "P3-INSTALLATION",
+        "P3-BUILD-CONFIG",
+        "P3-SKILL"
+      ],
+      "evidence_expected": [
+        "Requirements + fixtures + behavioral catalog matrix"
+      ],
+      "assigned_reviewer_id": "codex-root"
+    },
+    {
+      "check_id": "QA-EVD-PROVENANCE",
+      "applicability": "required",
+      "rationale": "Logs/hash/time/query links đủ tái thực hiện",
+      "artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP",
+        "P3-RELEASE-MANIFEST",
+        "P3-PARITY",
+        "P3-SHA256",
+        "P3-HANDOFF-ORIGINAL",
+        "P3-PHASE2-REPORT",
+        "P3-README",
+        "P3-INSTALLATION",
+        "P3-BUILD-CONFIG",
+        "P3-SKILL"
+      ],
+      "evidence_expected": [
+        "Evidence log index and artifact hashes"
+      ],
+      "assigned_reviewer_id": "codex-root"
+    },
+    {
+      "check_id": "QA-FND-ELEMENTS",
+      "applicability": "conditional",
+      "rationale": "Ghi rõ condition/criterion/impact/action cho thiếu sót",
+      "artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP",
+        "P3-RELEASE-MANIFEST",
+        "P3-PARITY",
+        "P3-SHA256",
+        "P3-HANDOFF-ORIGINAL",
+        "P3-PHASE2-REPORT",
+        "P3-README",
+        "P3-INSTALLATION",
+        "P3-BUILD-CONFIG",
+        "P3-SKILL"
+      ],
+      "evidence_expected": [
+        "Finding records"
+      ],
+      "assigned_reviewer_id": "codex-root"
+    },
+    {
+      "check_id": "QA-FND-RETEST",
+      "applicability": "conditional",
+      "rationale": "Chỉ đóng thiếu sót sau retest có bằng chứng",
+      "artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP",
+        "P3-RELEASE-MANIFEST",
+        "P3-PARITY",
+        "P3-SHA256",
+        "P3-HANDOFF-ORIGINAL",
+        "P3-PHASE2-REPORT",
+        "P3-README",
+        "P3-INSTALLATION",
+        "P3-BUILD-CONFIG",
+        "P3-SKILL"
+      ],
+      "evidence_expected": [
+        "Retest log hoặc not_applicable nếu không có sửa source"
+      ],
+      "assigned_reviewer_id": "codex-root"
+    }
+  ],
+  "completion_gates": [
+    {
+      "gate_id": "P3-GATE-IDENTITY",
+      "condition": "Baseline RC2/historical/HANDOFF không đổi; exact check và checksum PASS.",
+      "blocking": true
+    },
+    {
+      "gate_id": "P3-GATE-TESTS",
+      "condition": "Full regression không fail; packaged smoke trên 3 layouts PASS; optional dependency skip được ghi rõ.",
+      "blocking": true
+    },
+    {
+      "gate_id": "P3-GATE-CLAIMS",
+      "condition": "Không có unsupported platform/OCR/RAG/human approval claim; live matrix toàn bộ NOT_TESTED.",
+      "blocking": true
+    },
+    {
+      "gate_id": "P3-GATE-PEER",
+      "condition": "Peer kiểm report/evidence/finding disposition, không còn Critical/High blocker cho package-only.",
+      "blocking": true
+    }
+  ],
+  "known_limitations": [
+    "L2_full chỉ bao phủ control families được chỉ định, không phải full security audit hay toàn bộ business rule correctness.",
+    "Synthetic structured tests không chứng minh raw OCR accuracy hoặc live application compatibility."
+  ]
+}

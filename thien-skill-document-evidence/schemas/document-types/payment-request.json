@@ -1,0 +1,70 @@
+{
+  "$schema": "../common/document-profile.schema.json",
+  "schema_id": "profile.payment-request",
+  "schema_name": "Payment request extraction profile",
+  "document_type": "PAYMENT_REQUEST",
+  "version": "1.0.0",
+  "jurisdictions": ["JURISDICTION_NEUTRAL"],
+  "effective_date": null,
+  "extends": "profile.generic-document",
+  "required_fields": ["payment_request_number", "request_date", "requesting_entity", "beneficiary_name", "requested_amount", "currency"],
+  "optional_fields": ["requester_name", "requested_payment_date", "due_date", "payment_purpose", "beneficiary_code", "beneficiary_tax_id", "beneficiary_bank_name", "beneficiary_bank_account", "contract_number", "po_number", "invoice_number", "grn_number", "acceptance_reference", "cost_center", "project", "gross_amount", "withholding_amount", "net_amount", "priority", "approval_status", "approvers", "payment_reference", "cancellation_status"],
+  "field_definitions": [
+    {"field_name": "payment_request_number", "field_label": "Payment request number", "field_group": "header", "data_type": "IDENTIFIER", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT", "TRIM_OUTER_WHITESPACE"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "request_date", "field_label": "Payment request date", "field_group": "date", "data_type": "DATE", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "ISO_DATE_WHEN_UNAMBIGUOUS"], "sensitivity": "STANDARD"},
+    {"field_name": "requesting_entity", "field_label": "Requesting or paying entity", "field_group": "requester", "data_type": "TEXT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC", "TRIM_OUTER_WHITESPACE"], "sensitivity": "STANDARD"},
+    {"field_name": "beneficiary_name", "field_label": "Beneficiary name", "field_group": "beneficiary", "data_type": "TEXT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC", "TRIM_OUTER_WHITESPACE"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "requested_amount", "field_label": "Requested payment amount", "field_group": "amount", "data_type": "CURRENCY_AMOUNT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "currency", "field_label": "Payment currency", "field_group": "amount", "data_type": "TEXT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "ISO_CURRENCY_CODE_WHEN_EXPLICIT"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "requester_name", "field_label": "Requester name", "field_group": "requester", "data_type": "TEXT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "PERSONAL_DATA"},
+    {"field_name": "requested_payment_date", "field_label": "Requested payment date", "field_group": "date", "data_type": "DATE", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "ISO_DATE_WHEN_UNAMBIGUOUS"], "sensitivity": "STANDARD"},
+    {"field_name": "due_date", "field_label": "Underlying due date", "field_group": "date", "data_type": "DATE", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "ISO_DATE_WHEN_UNAMBIGUOUS"], "sensitivity": "STANDARD"},
+    {"field_name": "payment_purpose", "field_label": "Payment purpose", "field_group": "payment", "data_type": "TEXT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "beneficiary_code", "field_label": "Beneficiary or vendor code", "field_group": "beneficiary", "data_type": "IDENTIFIER", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "beneficiary_tax_id", "field_label": "Beneficiary tax identifier", "field_group": "beneficiary", "data_type": "TAX_IDENTIFIER", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "beneficiary_bank_name", "field_label": "Beneficiary bank name", "field_group": "bank", "data_type": "TEXT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "beneficiary_bank_account", "field_label": "Beneficiary bank account", "field_group": "bank", "data_type": "BANK_ACCOUNT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT", "TRIM_OUTER_WHITESPACE"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "contract_number", "field_label": "Contract reference", "field_group": "reference", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "LEGAL_SENSITIVE"},
+    {"field_name": "po_number", "field_label": "Purchase order reference", "field_group": "reference", "data_type": "IDENTIFIER", "required": false, "critical": true, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "invoice_number", "field_label": "Invoice reference", "field_group": "reference", "data_type": "IDENTIFIER", "required": false, "critical": true, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "grn_number", "field_label": "Goods receipt reference", "field_group": "reference", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "acceptance_reference", "field_label": "Service or customer acceptance reference", "field_group": "reference", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "cost_center", "field_label": "Cost center", "field_group": "accounting", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "project", "field_label": "Project reference", "field_group": "accounting", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "gross_amount", "field_label": "Gross payment amount", "field_group": "amount", "data_type": "CURRENCY_AMOUNT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "withholding_amount", "field_label": "Withholding amount", "field_group": "amount", "data_type": "CURRENCY_AMOUNT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "net_amount", "field_label": "Net payment amount", "field_group": "amount", "data_type": "CURRENCY_AMOUNT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "priority", "field_label": "Payment priority", "field_group": "payment", "data_type": "TEXT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "STANDARD"},
+    {"field_name": "approval_status", "field_label": "Approval status", "field_group": "approval", "data_type": "TEXT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "STANDARD"},
+    {"field_name": "approvers", "field_label": "Named approvers", "field_group": "approval", "data_type": "LIST", "required": false, "critical": false, "multiple": true, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "PERSONAL_DATA"},
+    {"field_name": "payment_reference", "field_label": "Resulting payment or bank reference", "field_group": "reference", "data_type": "IDENTIFIER", "required": false, "critical": true, "multiple": true, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "cancellation_status", "field_label": "Cancellation status", "field_group": "version", "data_type": "TEXT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "STANDARD"}
+  ],
+  "line_item_definitions": [
+    {"field_name": "allocation_line", "field_label": "Payment allocation line", "field_group": "line", "data_type": "IDENTIFIER", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "STANDARD"},
+    {"field_name": "supporting_document_type", "field_label": "Supporting document type", "field_group": "line", "data_type": "TEXT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UPPERCASE_CODE_WHEN_SOURCE_CASE_NOT_MEANINGFUL"], "sensitivity": "STANDARD"},
+    {"field_name": "supporting_document_reference", "field_label": "Supporting document reference", "field_group": "line", "data_type": "IDENTIFIER", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "document_date", "field_label": "Supporting document date", "field_group": "line", "data_type": "DATE", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "ISO_DATE_WHEN_UNAMBIGUOUS"], "sensitivity": "STANDARD"},
+    {"field_name": "allocated_amount", "field_label": "Allocated payment amount", "field_group": "line", "data_type": "CURRENCY_AMOUNT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "allocation_currency", "field_label": "Allocation currency", "field_group": "line", "data_type": "TEXT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "ISO_CURRENCY_CODE_WHEN_EXPLICIT"], "sensitivity": "FINANCIAL_SENSITIVE"}
+  ],
+  "validation_rules": [
+    {"rule_id": "payment-request.required-status", "rule_type": "REQUIRED_STATUS", "fields": ["payment_request_number", "request_date", "requesting_entity", "beneficiary_name", "requested_amount", "currency"], "severity": "CRITICAL", "description": "Critical payment-request fields require explicit records and statuses."},
+    {"rule_id": "payment-request.identifier-text", "rule_type": "IDENTIFIER_AS_TEXT", "fields": ["payment_request_number", "beneficiary_code", "beneficiary_tax_id", "beneficiary_bank_account", "contract_number", "po_number", "invoice_number", "grn_number", "acceptance_reference", "payment_reference"], "severity": "HIGH", "description": "Payment, bank and supporting-document identifiers remain text and preserve leading zeros."},
+    {"rule_id": "payment-request.net-amount", "rule_type": "CROSS_FIELD_CONSISTENCY", "fields": ["gross_amount", "withholding_amount", "net_amount", "requested_amount"], "severity": "CRITICAL", "description": "Gross, withholding, net and requested amounts are compared without inventing missing values."},
+    {"rule_id": "payment-request.allocations", "rule_type": "ARITHMETIC_SUM", "fields": ["allocated_amount", "requested_amount"], "severity": "CRITICAL", "description": "Supporting-document allocations are compared with the requested payment amount."},
+    {"rule_id": "payment-request.date-order", "rule_type": "DATE_ORDER", "fields": ["request_date", "due_date", "requested_payment_date"], "severity": "HIGH", "description": "Request, due and requested-payment date roles remain distinct and are compared when unambiguous."}
+  ],
+  "reconciliation_keys": [
+    {"key_id": "payment-request.number-entity", "fields": ["payment_request_number", "requesting_entity"], "strength": "PRIMARY", "candidate_only": false},
+    {"key_id": "payment-request.supporting-reference", "fields": ["invoice_number", "contract_number", "po_number", "beneficiary_tax_id"], "strength": "SECONDARY", "candidate_only": true},
+    {"key_id": "payment-request.bank-candidate", "fields": ["beneficiary_bank_account", "requested_amount", "currency", "requested_payment_date"], "strength": "SUPPORTING", "candidate_only": true}
+  ],
+  "human_review_rules": [
+    {"condition": "CRITICAL_FIELD_LOW_OR_UNKNOWN_CONFIDENCE", "field_scope": ["payment_request_number", "beneficiary_name", "beneficiary_bank_account", "requested_amount", "currency"], "action": "HUMAN_REVIEW_REQUIRED"},
+    {"condition": "AMBIGUOUS_DATE_OR_LOCALE", "field_scope": ["request_date", "due_date", "requested_payment_date"], "action": "HUMAN_REVIEW_REQUIRED"},
+    {"condition": "BANK_ACCOUNT_CONFLICT", "field_scope": ["beneficiary_name", "beneficiary_bank_name", "beneficiary_bank_account"], "action": "HUMAN_REVIEW_REQUIRED"},
+    {"condition": "UNMATCHED_MATERIAL_AMOUNT", "field_scope": ["requested_amount", "allocated_amount", "payment_reference"], "action": "HUMAN_REVIEW_REQUIRED"}
+  ],
+  "claim_boundaries": ["NO_AUTHENTICITY_CONCLUSION", "NO_SIGNATURE_AUTHENTICATION", "NO_LEGAL_OPINION", "NO_FRAUD_CONCLUSION", "NO_CONTROL_EFFECTIVENESS_CONCLUSION"]
+}

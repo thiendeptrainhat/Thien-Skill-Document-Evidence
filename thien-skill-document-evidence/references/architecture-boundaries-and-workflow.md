@@ -2,7 +2,11 @@
 
 ## Mục đích
 
-Tài liệu này định tuyến engagement có nhiều loại tài liệu hoặc nhiều chuyên môn. Skill chỉ sở hữu lớp `document/evidence`: tiếp nhận, biểu diễn working copy, extraction, provenance, validation, document linking, reconciliation candidate và controlled handoff.
+Tài liệu này định tuyến engagement có nhiều loại tài liệu hoặc nhiều chuyên môn. Skill sở hữu lớp `document/evidence`: tiếp nhận, biểu diễn original/working copy, canonical semantic content, extraction, provenance, validation, document conversion, RAG source packaging, document linking, deterministic reconciliation candidate và controlled handoff.
+
+Task request phải chọn một trong ba profile ở `schemas/common/task-request.schema.json`: `CONVERT_DOCUMENT`, `PREPARE_RAG_SOURCE` hoặc `RECONCILE_DOCUMENT_SET`. Chi tiết capability discovery và fallback nằm tại `platform-capability-routing.md`. Các companion contract mới bổ sung cho extraction package v1.0; không thay thế hoặc âm thầm sửa output cũ.
+
+Companion objects ghi riêng `skill_id: thien-skill-document-evidence` và `skill_release_version` để truy vết release đang chạy, kể cả prerelease/RC. `schema_version: 1.0.0` của companion contract là version của machine contract, không phải release version. Extraction package, reconciliation config và script/tool constants v1.0.0 hiện hữu được giữ như compatibility contract/tool version; không relabel chúng thành RC và không dùng chúng làm bằng chứng duy nhất về release provenance.
 
 ## Ranh giới capability
 
@@ -10,6 +14,8 @@ Tài liệu này định tuyến engagement có nhiều loại tài liệu hoặ
 |---|---|---|
 | Tài liệu nguồn | Inventory, integrity preflight, original/working-copy distinction | System owner xác nhận completeness của source system |
 | OCR/vision | Chọn route, dùng adapter sẵn có, lưu raw output/provenance | Platform/data owner phê duyệt external processing |
+| Conversion | Tạo canonical content và artifact theo output profile/capability thực tế | User/recipient chốt intended use và trade-off editability/fidelity |
+| RAG source | Tạo Markdown/metadata/manifest/assets có traceability | RAG owner chọn chunking, embeddings, index, ingestion và retrieval evaluation |
 | Structured data | Schema, field/table extraction, validation, export | Data Engineering xây pipeline, master-data certification, warehouse |
 | Reconciliation | Match theo key/rule/tolerance được cấp; tạo discrepancy | Business/control owner chốt rule, tolerance và disposition |
 | Audit | Chuẩn bị evidence và test attributes | Auditor kết luận sufficiency, control effectiveness, finding/opinion |
@@ -19,9 +25,21 @@ Tài liệu này định tuyến engagement có nhiều loại tài liệu hoặ
 | Analytics | Tạo canonical rows và evidence references | Analytics/model owner phát hiện pattern hoặc chấm điểm population |
 | Reporting | Bàn giao output đã QA cùng limitations | Reporting owner chọn narrative/visualization và audience release |
 
-Nếu capability đích không có skill tương ứng, tạo handoff theo vai trò và dữ liệu cần thiết; không tự mở rộng nhiệm vụ.
+Nếu capability đích không có skill/runtime tương ứng, tạo canonical handoff theo vai trò và dữ liệu cần thiết; không tự cài dependency, mở rộng nhiệm vụ hoặc tuyên bố platform certification.
 
-## Sáu route
+## Task profiles và workflow branch
+
+| Task profile | Workflow chính | Output contract |
+|---|---|---|
+| `CONVERT_DOCUMENT` | Intake → classify/parse → canonical content → render/export → QA | `canonical-content.schema.json` + `artifact-manifest.schema.json` |
+| `PREPARE_RAG_SOURCE` | Intake → classify/parse → canonical content → RAG package → package QA | `rag-package.schema.json` + artifact manifest |
+| `RECONCILE_DOCUMENT_SET` | Intake → classify/extract → structure/validate → link/reconcile → output QA | Extraction package v1.0 + reconciliation config/result |
+
+Evidence register, chain of custody, investigation controls và redaction là conditional overlays. Chúng chỉ được kích hoạt khi task request, mandate, recipients và authorization yêu cầu; không phải output mặc định của conversion hoặc RAG preparation.
+
+## Sáu operational route
+
+Sáu route dưới đây là lifecycle controls có thể dùng trong task profile phù hợp; không phải mọi task đều chạy mọi route. `EVIDENCE_DISCLOSURE` chỉ áp dụng khi engagement cần evidence/custody/redaction/disclosure controls.
 
 ### `INTAKE_INTEGRITY`
 
@@ -77,71 +95,49 @@ Nếu capability đích không có skill tương ứng, tạo handoff theo vai t
 2. Xác nhận authority, source scope, classification, recipients và execution constraints.
 3. Bảo toàn original; tạo inventory, identifiers và integrity/security flags.
 4. Classify document/package/version; ghi confidence và unresolved items.
-5. Chọn extraction route theo capability thực tế; không giả định engine/dependency.
-6. Chọn schema/version và extract raw + normalized + provenance.
-7. Validate field/table/cross-field; tạo review item cho critical failure.
-8. Link/reconcile khi rules và tolerances đã được cung cấp.
-9. Xuất artifact phù hợp, kiểm tra row counts, formula safety và package completeness.
-10. QA, ghi limitations/partial failures, human approval status và capability-based handoff.
+5. Chọn parse/extraction route theo capability thực tế; không giả định engine/dependency.
+6. Chọn schema/version và tạo raw + normalized + provenance; tạo canonical semantic blocks khi task cần conversion/RAG.
+7. Validate content/field/table/cross-field; tạo review item cho critical failure.
+8. Branch theo task profile: render conversion artifact; build RAG source package; hoặc link/reconcile theo rules/tolerances đã cấp.
+9. Xuất artifact phù hợp và kiểm tra package completeness, source mapping, counts/hashes cùng format-specific safety.
+10. QA, ghi limitations/partial failures, human approval status và capability-based handoff. Schema + contract-defined structural invariants, broader semantic/source-fidelity, render/format và live-platform/install checks cần evidence riêng; check chưa thực sự chạy phải là `NOT_TESTED`.
 
 Không chạy route sau như thể route trước đã pass nếu blocker làm mất tính toàn vẹn. Có thể tiếp tục phần độc lập an toàn và ghi coverage gap.
 
 ## Input contract tối thiểu
 
-Chỉ yêu cầu trường material cho route hiện tại:
+Routing object máy đọc được tuân `schemas/common/task-request.schema.json` và giữ spine sau; chỉ một branch object được dùng theo `task_profile`:
 
 ```yaml
-task_id: string
-engagement_id: string | null
-case_id: string | null
-objective: string
-intended_use: string
-document_sources: [path-or-authorized-reference]
-authorized_scope: string
-data_classification: string
-expected_document_types: [string]
-expected_fields: [string]
-period_and_entities: object | null
-matching_rules: object | null
-tolerances: object | null
-output_format: [json, jsonl, csv, xlsx, markdown]
-output_location: path | null
-cloud_processing_allowed: boolean | null
-local_processing_required: boolean | null
-chain_of_custody_required: boolean
-redaction_requirements: object | null
-available_tools: [string]
-human_approval_requirements: [string]
+schema_version: 1.0.0
+skill_id: thien-skill-document-evidence
+skill_release_version: semver-including-prerelease
+request_id: string
+task_profile: CONVERT_DOCUMENT | PREPARE_RAG_SOURCE | RECONCILE_DOCUMENT_SET
+source_document_ids: [string]
+conversion: object | null
+rag: object | null
+reconciliation: object | null
+requested_by: string | null
+assumptions: [string]
+limitations: [string]
 ```
+
+Engagement/intake context liên kết ngoài routing object vẫn phải có các trường material cho route hiện tại: objective/intended use, authorized sources/scope, data classification/recipients, expected document types/fields, period/entities, matching rules/tolerances, output location, cloud/local policy, capability inventory, approval requirements và — chỉ khi áp dụng — case/custody/redaction requirements. Không thêm các field này trái phép vào schema `additionalProperties: false`; lưu trong engagement/extraction/handoff contract có version tương ứng.
 
 Không tự suy ra `cloud_processing_allowed: true`, tolerance, recipient, data rights, governing locale hoặc investigation mandate.
 
-## Output contract tối thiểu
+## Output object set
 
-```yaml
-task_id: string
-extraction_run_id: string
-skill_version: string
-scope_and_coverage: object
-document_inventory: [object]
-classification_results: [object]
-extracted_fields: [object]
-line_items: [object]
-document_links: [object]
-reconciliation_results: [object]
-discrepancies: [object]
-evidence_register: [object]
-human_review_queue: [object]
-security_flags: [object]
-assumptions: [string]
-limitations: [string]
-unresolved_issues: [object]
-qa_status: string
-human_approval_status: string
-artifacts: [object]
-```
+- Extraction/reconciliation dùng `schemas/common/extraction-package.schema.json` và result/config schemas hiện hữu.
+- Semantic conversion/RAG dùng `schemas/common/canonical-content.schema.json`.
+- Mọi artifact set dùng `schemas/common/artifact-manifest.schema.json`.
+- RAG source package dùng `schemas/common/rag-package.schema.json`.
+- Handoff liên capability dùng contract ở phần tiếp theo.
 
-Một mảng không áp dụng có thể vắng mặt; không tạo record giả để lấp schema. Field material không biết phải có status rõ.
+Mỗi object giữ schema/version, task/request/run/package IDs, source links, coverage, assumptions, limitations, unresolved issues, QA và human-review/approval status theo schema của chính nó. Các object/mảng không áp dụng tuân null/omission semantics của schema tương ứng; không tạo record giả để lấp schema. Không nhập canonical extraction package, canonical content, artifact manifest và RAG package thành một mega-object không version.
+
+Với artifact/RAG descriptors, `creation_status` (`CREATED`, `NOT_CREATED`, `BLOCKED`) chỉ trả lời file đã được tạo hay chưa; `qa_status` dùng `validationStatus` và trả lời check đã chạy/đạt hay chưa. `CREATED` + `NOT_TESTED` là trạng thái hợp lệ. Top-level/package/document chỉ được `PASS` khi mọi descriptor bắt buộc cho profile đã `CREATED` và `qa_status: PASS`; file existence hoặc checksum đơn lẻ không tạo semantic, render hay platform PASS.
 
 ## Handoff contract
 

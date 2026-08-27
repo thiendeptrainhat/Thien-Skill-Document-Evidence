@@ -1,0 +1,64 @@
+{
+  "$schema": "../../schemas/common/matching-profile.schema.json",
+  "schema_version": "1.0.0",
+  "profile_id": "PR_PO_GRN_INVOICE",
+  "profile_version": "1.0.0",
+  "profile_kind": "PR_PO_GRN_INVOICE",
+  "title": "Purchase requisition, order, receipt and invoice",
+  "description": "Four-way line matching from requisition through order and receipt to supplier invoice.",
+  "mode": "FOUR_WAY",
+  "grain": "LINE_ITEM",
+  "roles": [
+    {"role_id": "PR", "label": "Purchase requisition", "source_kind": "DOCUMENT", "document_types": ["PURCHASE_REQUISITION"], "role_aliases": ["REQUISITION"], "required": true, "field_mappings": {"requisition_number": "requisition_number", "requisition_date": "requisition_date", "item_code": "item_code", "quantity": "requested_quantity", "currency": "currency"}, "output_sheet": "PURCHASE_REQUISITIONS"},
+    {"role_id": "PO", "label": "Purchase order", "source_kind": "DOCUMENT", "document_types": ["PURCHASE_ORDER"], "role_aliases": ["ORDER"], "required": true, "field_mappings": {"requisition_number": "requisition_number", "po_number": "po_number", "po_date": "po_date", "item_code": "item_code", "quantity": "ordered_quantity", "amount": "total_po_amount", "currency": "currency"}, "output_sheet": "PURCHASE_ORDERS"},
+    {"role_id": "GRN", "label": "Goods receipt", "source_kind": "DOCUMENT", "document_types": ["GOODS_RECEIPT"], "role_aliases": ["RECEIPT", "GOODS_RECEIPT_NOTE"], "required": true, "field_mappings": {"po_number": "po_number", "receipt_date": "receipt_date", "item_code": "item_code", "quantity": "delivered_quantity"}, "output_sheet": "GOODS_RECEIPTS"},
+    {"role_id": "INVOICE", "label": "Supplier invoice", "source_kind": "DOCUMENT", "document_types": ["INVOICE", "SUPPLIER_INVOICE"], "role_aliases": ["AP_INVOICE"], "required": true, "field_mappings": {"po_number": "po_number", "invoice_date": "invoice_date", "item_code": "item_code", "quantity": "quantity", "amount": "total_amount", "currency": "currency"}, "output_sheet": "INVOICES"}
+  ],
+  "match_rules": [
+    {
+      "rule_id": "pr-to-po", "left_role": "PR", "right_role": "PO", "cardinality": "ONE_TO_MANY",
+      "components": [
+        {"component_id": "requisition-number", "left_field": "requisition_number", "right_field": "requisition_number", "comparator": "IDENTIFIER_EXACT", "normalizers": ["IDENTIFIER_PRESERVE"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}},
+        {"component_id": "item-code", "left_field": "item_code", "right_field": "item_code", "comparator": "IDENTIFIER_EXACT", "normalizers": ["IDENTIFIER_PRESERVE"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}},
+        {"component_id": "quantity", "left_field": "quantity", "right_field": "quantity", "comparator": "DECIMAL_ABSOLUTE", "normalizers": ["DECIMAL_CANONICAL_STRING"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "RUN_REQUEST", "unit": "QUANTITY", "approval_reference_required": true}}
+      ],
+      "partial_handling": {"mode": "REQUIRE_APPROVED_RUN_POLICY", "allowed_relation": "RIGHT_LESS_THAN_OR_EQUAL_LEFT", "policy_source": "RUN_REQUEST"}, "missing_field_policy": "HUMAN_REVIEW_REQUIRED", "multiple_candidate_policy": "AMBIGUOUS_MATCH", "explicit_bridge": null
+    },
+    {
+      "rule_id": "po-to-grn", "left_role": "PO", "right_role": "GRN", "cardinality": "ONE_TO_MANY",
+      "components": [
+        {"component_id": "po-number", "left_field": "po_number", "right_field": "po_number", "comparator": "IDENTIFIER_EXACT", "normalizers": ["IDENTIFIER_PRESERVE"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}},
+        {"component_id": "item-code", "left_field": "item_code", "right_field": "item_code", "comparator": "IDENTIFIER_EXACT", "normalizers": ["IDENTIFIER_PRESERVE"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}},
+        {"component_id": "quantity", "left_field": "quantity", "right_field": "quantity", "comparator": "DECIMAL_ABSOLUTE", "normalizers": ["DECIMAL_CANONICAL_STRING"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "RUN_REQUEST", "unit": "QUANTITY", "approval_reference_required": true}}
+      ],
+      "partial_handling": {"mode": "REQUIRE_APPROVED_RUN_POLICY", "allowed_relation": "RIGHT_LESS_THAN_OR_EQUAL_LEFT", "policy_source": "RUN_REQUEST"}, "missing_field_policy": "HUMAN_REVIEW_REQUIRED", "multiple_candidate_policy": "AMBIGUOUS_MATCH", "explicit_bridge": null
+    },
+    {
+      "rule_id": "po-to-invoice", "left_role": "PO", "right_role": "INVOICE", "cardinality": "ONE_TO_MANY",
+      "components": [
+        {"component_id": "po-number", "left_field": "po_number", "right_field": "po_number", "comparator": "IDENTIFIER_EXACT", "normalizers": ["IDENTIFIER_PRESERVE"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}},
+        {"component_id": "item-code", "left_field": "item_code", "right_field": "item_code", "comparator": "IDENTIFIER_EXACT", "normalizers": ["IDENTIFIER_PRESERVE"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}},
+        {"component_id": "quantity", "left_field": "quantity", "right_field": "quantity", "comparator": "DECIMAL_ABSOLUTE", "normalizers": ["DECIMAL_CANONICAL_STRING"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "RUN_REQUEST", "unit": "QUANTITY", "approval_reference_required": true}},
+        {"component_id": "amount", "left_field": "amount", "right_field": "amount", "comparator": "DECIMAL_ABSOLUTE", "normalizers": ["DECIMAL_CANONICAL_STRING"], "required": false, "candidate_only": false, "tolerance_source": {"mode": "RUN_REQUEST", "unit": "ABSOLUTE_AMOUNT", "approval_reference_required": true}},
+        {"component_id": "currency", "left_field": "currency", "right_field": "currency", "comparator": "EXACT_TEXT", "normalizers": ["NONE"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}}
+      ],
+      "partial_handling": {"mode": "REQUIRE_APPROVED_RUN_POLICY", "allowed_relation": "RIGHT_LESS_THAN_OR_EQUAL_LEFT", "policy_source": "RUN_REQUEST"}, "missing_field_policy": "HUMAN_REVIEW_REQUIRED", "multiple_candidate_policy": "AMBIGUOUS_MATCH", "explicit_bridge": null
+    },
+    {
+      "rule_id": "grn-to-invoice", "left_role": "GRN", "right_role": "INVOICE", "cardinality": "ONE_TO_ONE",
+      "components": [
+        {"component_id": "po-number", "left_field": "po_number", "right_field": "po_number", "comparator": "IDENTIFIER_EXACT", "normalizers": ["IDENTIFIER_PRESERVE"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}},
+        {"component_id": "item-code", "left_field": "item_code", "right_field": "item_code", "comparator": "IDENTIFIER_EXACT", "normalizers": ["IDENTIFIER_PRESERVE"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}},
+        {"component_id": "quantity", "left_field": "quantity", "right_field": "quantity", "comparator": "DECIMAL_ABSOLUTE", "normalizers": ["DECIMAL_CANONICAL_STRING"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "RUN_REQUEST", "unit": "QUANTITY", "approval_reference_required": true}}
+      ],
+      "partial_handling": {"mode": "HUMAN_REVIEW_REQUIRED", "allowed_relation": "NOT_APPLICABLE", "policy_source": "NOT_APPLICABLE"}, "missing_field_policy": "HUMAN_REVIEW_REQUIRED", "multiple_candidate_policy": "AMBIGUOUS_MATCH", "explicit_bridge": null
+    }
+  ],
+  "aggregation_rules": [],
+  "comparison_basis": {"date": {"input_representation": "ISO_8601", "role_date_fields": {"PR": "requisition_date", "PO": "po_date", "GRN": "receipt_date", "INVOICE": "invoice_date"}, "ambiguous_date_policy": "HUMAN_REVIEW_REQUIRED", "window_source": "NOT_APPLICABLE"}, "currency": {"comparison_mode": "EXACT_CURRENCY_ONLY", "role_currency_fields": {"PR": "currency", "PO": "currency", "INVOICE": "currency"}, "cross_currency_policy": "REQUIRE_APPROVED_ADAPTER", "exchange_rate_source": "REQUIRE_APPROVED_RUN_INPUT"}},
+  "policy_sources": {"tolerance_values": "REQUIRE_APPROVED_RUN_INPUT", "partial_matching": "REQUIRE_APPROVED_RUN_INPUT_WHEN_ALLOWED", "currency_conversion": "EXACT_CURRENCY_UNLESS_APPROVED_ADAPTER", "materiality_use": "NOT_USED_AS_MATCH_TOLERANCE"},
+  "exception_policy": {"partial_match": "REQUIRE_APPROVED_RUN_POLICY", "many_to_many": "REQUIRE_EXPLICIT_BRIDGE_AND_ALLOCATION", "duplicate": "FLAG_AND_REQUIRE_HUMAN_REVIEW", "missing_required_role": "FLAG_AND_REQUIRE_HUMAN_REVIEW", "missing_required_field": "HUMAN_REVIEW_REQUIRED", "ambiguous_candidate": "AMBIGUOUS_MATCH"},
+  "review_rule": {"review_required_for": ["PARTIAL_MATCH", "AMBIGUOUS_MATCH", "CONFLICTING_MATCH", "UNMATCHED", "MISSING_REQUIRED_ROLE", "MISSING_REQUIRED_FIELD", "DUPLICATE_CONTENT", "UNCLASSIFIED_DOCUMENT", "PER_FILE_FAILURE"], "automatic_business_decision": false, "release_gate": "ACCOUNTABLE_HUMAN_REVIEW"},
+  "workbook_contract": {"role_sheets": "ONLY_ROLES_WITH_RECORDS", "source_index": "ACCESSIBLE_INPUTS_ONLY", "run_log": "ACTUAL_EXECUTION_ONLY", "empty_sheet_policy": "DO_NOT_CREATE", "identifier_policy": "PRESERVE_AS_TEXT", "value_policy": "PRESERVE_RAW_AND_NORMALIZED", "provenance_policy": "FIELD_AND_SOURCE_REFERENCE", "formula_policy": "UNTRUSTED_TEXT_NEVER_FORMULA"},
+  "limitations": ["No tolerance, materiality, partial-delivery, or partial-invoice value is embedded in the profile.", "Four-way matching is technical reconciliation and does not authorize order, receipt, invoice, or payment release."]
+}

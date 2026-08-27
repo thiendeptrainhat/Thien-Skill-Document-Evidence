@@ -1,0 +1,68 @@
+{
+  "record_id": "P3-TEST-AUTHOR-REPORT",
+  "engagement_id": "DE-PHASE3-RC2-20260827",
+  "task_id": "P3-T03",
+  "handoff_id": "P3-H02",
+  "recorded_at": "2026-08-27T04:51:49.174Z",
+  "record_author": "codex-root; consolidation of phase3_packaged_tests final handoff",
+  "test_author": "phase3_packaged_tests",
+  "evidence_type": "agent_reported_execution_summary; root direct full-suite log recorded separately",
+  "test_file": "tests/test_phase3_packaged_workflows.py",
+  "test_file_sha256": "792e09b943cd2b672d1065d27f0e6d221c09c8dfc307f6fd5d5cd8d3fac5af3d",
+  "runtime": "bundled Python 3.12.13",
+  "normal_command": "PYTHONDONTWRITEBYTECODE=1 '/Users/thiendeptrainhat/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3' -B -m unittest discover -s tests -p 'test_phase3_packaged_workflows.py' -v",
+  "final_counts": {
+    "methods_run": 22,
+    "methods_passed": 22,
+    "subtests_run": 69,
+    "subtests_passed": 69,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "normal_seconds": 10.728,
+    "instrumented_seconds": 10.912
+  },
+  "authoring_attempts": [
+    {
+      "attempt": 1,
+      "methods": 22,
+      "failure_records": 8,
+      "seconds": 10.259,
+      "classification": "test_oracle_error",
+      "explanation": "Six subtest expectations used null instead of schema-normalized NOT_APPLICABLE for DOCX/XLSX intent; two follow-on empty snapshot failures. Corrected test only."
+    },
+    {
+      "attempt": 2,
+      "methods": 22,
+      "passed": 22,
+      "seconds": 10.781,
+      "classification": "pass_after_test_oracle_correction"
+    },
+    {
+      "attempt": 3,
+      "methods": 22,
+      "passed": 22,
+      "seconds": 10.728,
+      "classification": "pass_after_additive_role_worksheet_raw_field_checks"
+    }
+  ],
+  "checksum_attempts": [
+    {
+      "outcome": "invocation_error",
+      "explanation": "A supplemental checksum command used repo cwd instead of dist; relative files not found."
+    },
+    {
+      "outcome": "PASS",
+      "cwd": "dist",
+      "command": "shasum -a 256 -c SHA256SUMS-v1.1.0-rc.2.txt",
+      "targets_ok": 5
+    }
+  ],
+  "limitations": [
+    "Synthetic structured input only.",
+    "No live install/OCR/RAG ingestion/new render.",
+    "Temporary artifacts cleaned after tests; reproducible from frozen script and fixtures.",
+    "No source or archive modifications.",
+    "Two remaining profile families have existing source tests, not new packaged E2E."
+  ]
+}

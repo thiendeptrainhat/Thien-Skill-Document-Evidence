@@ -1,0 +1,181 @@
+{
+  "schema_version": "1.0.0",
+  "disposition_id": "P3-DISPOSITION-001",
+  "engagement_id": "DE-PHASE3-RC2-20260827",
+  "review_record_ids": [
+    "P3-REVIEW-001"
+  ],
+  "issued_at": "2026-08-27T05:00:59.443Z",
+  "issued_by": {
+    "actor_id": "codex-root",
+    "display_name": "Codex — primary self-check reviewer",
+    "role": "reviewer"
+  },
+  "language_policy": "follow_user_language",
+  "report_language": "vi",
+  "scope_summary": "PACKAGE_ONLY nghiệm thu exact RC2 archives, offline CLI workflows và hồ sơ; loại live install/OCR/RAG ingestion/production approval.",
+  "artifacts_covered": [
+    "P3-OPENAI-ZIP",
+    "P3-CLAUDE-ZIP",
+    "P3-UNIVERSAL-ZIP",
+    "P3-RELEASE-MANIFEST",
+    "P3-PARITY",
+    "P3-SHA256",
+    "P3-HANDOFF-ORIGINAL",
+    "P3-PHASE2-REPORT",
+    "P3-README",
+    "P3-INSTALLATION",
+    "P3-BUILD-CONFIG",
+    "P3-SKILL"
+  ],
+  "open_defect_counts": {
+    "critical": 0,
+    "high": 0,
+    "medium": 1,
+    "low": 1
+  },
+  "blocking_open_finding_ids": [],
+  "non_blocking_open_finding_ids": [
+    "P3-SCOPE-F01",
+    "P3-ENV-F03"
+  ],
+  "qa_disposition": "ready_with_conditions",
+  "disposition_rationale": "119 methods run:118 PASS+1 optional SKIP;22 new packaged methods passed. F02 technical coverage gap closed; F01 raw-source and F03 environment limitations open/nonblocking for PACKAGE_ONLY only. Counts include methodology limitations, not observed product defects. Final peer consistency passed; status finalized for technical handover with explicit use restrictions, not human approval.",
+  "conditions": [
+    {
+      "condition_id": "P3-COND-01",
+      "requirement": "Hồ sơ Phase3 phải đi kèm gói và nêu rõ PARTIAL_COVERAGE/NOT_TESTED, Testing/RC2 và pending human approval; root kiểm trước bàn giao.",
+      "owner": {
+        "actor_id": "codex-root",
+        "role": "maker"
+      },
+      "due_date": "2026-08-27",
+      "blocking_if_missed": true
+    },
+    {
+      "condition_id": "P3-COND-02",
+      "requirement": "Giữ nguyên exact RC2 và152 original files; chạy final evidence checks và không cài/sync/publish/nâng stable.",
+      "owner": {
+        "actor_id": "codex-root",
+        "role": "maker"
+      },
+      "due_date": "2026-08-27",
+      "blocking_if_missed": true
+    }
+  ],
+  "residual_risks": [
+    {
+      "risk_id": "P3-RISK-RAW",
+      "description": "Sai lệch raw OCR/source-fidelity hoặc full statement handling chưa được đánh giá.",
+      "likelihood": "unknown",
+      "impact": "unknown",
+      "response": "avoid",
+      "owner": {
+        "actor_id": "user-requester",
+        "role": "requester"
+      },
+      "monitoring_or_mitigation": "Không dựa vào package QA để quyết định nghiệp vụ trên tài liệu thật; nếu mở scope, chọn corpus/host và human reviewer trước khi kiểm."
+    },
+    {
+      "risk_id": "P3-RISK-LIVE",
+      "description": "Host invocation và target RAG interoperability/retrieval chưa được thực nghiệm.",
+      "likelihood": "unknown",
+      "impact": "unknown",
+      "response": "mitigate",
+      "owner": {
+        "actor_id": "user-requester",
+        "role": "requester"
+      },
+      "monitoring_or_mitigation": "27 live cells giữ NOT_TESTED; chỉ chạy acceptance riêng khi người dùng yêu cầu và cấp môi trường."
+    },
+    {
+      "risk_id": "P3-RISK-VALIDATOR",
+      "description": "Thiếu kết quả validator tùy chọn do PyYAML/jsonschema unavailable.",
+      "likelihood": "unknown",
+      "impact": "minor",
+      "response": "mitigate",
+      "owner": {
+        "actor_id": "user-requester",
+        "role": "requester"
+      },
+      "monitoring_or_mitigation": "Giữ giới hạn rõ; chạy lại trong môi trường có dependency nếu user yêu cầu."
+    }
+  ],
+  "handoffs": [
+    {
+      "handoff_id": "P3-H03-CLOSURE",
+      "domain": "engineering",
+      "reason": "Peer verification of missing-profile integration closure.",
+      "required_decision_or_output": "Verify F02 closed; F01 remains open.",
+      "assigned_to": {
+        "actor_id": "phase3-scope-review",
+        "display_name": "phase3_scope_review — separate agent",
+        "role": "reviewer"
+      },
+      "status": "completed",
+      "blocks_readiness": false,
+      "evidence": [
+        {
+          "evidence_id": "P3-E-PEER",
+          "artifact_id": "P3-PEER-FINAL",
+          "locator": "qa/phase3-rc2/peer-review-final.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Peer technical closure and limitations; final dossier consistency tracked separately."
+        },
+        {
+          "evidence_id": "P3-E-FULL",
+          "artifact_id": "P3-EXECUTIONS",
+          "locator": "qa/phase3-rc2/executions.json#P3-EXEC-FULL-REGRESSION",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Root direct execution: 119 methods, 118 PASS, 1 optional SKIP; 17.254s harness runtime."
+        }
+      ]
+    },
+    {
+      "handoff_id": "P3-HUMAN-USE",
+      "domain": "human_approver",
+      "reason": "Technical package QA is not human production/business approval.",
+      "required_decision_or_output": "User selects intended use and authorized reviewer before real operational/production use.",
+      "assigned_to": null,
+      "status": "pending",
+      "blocks_readiness": false
+    }
+  ],
+  "approval_status": "pending_human_approval",
+  "next_actions": [
+    {
+      "action_id": "P3-ACT-HANDOVER",
+      "action": "Bàn giao exact RC2 packages kèm report, peer closure và hồ sơ QA; không cài/sync/publish.",
+      "owner": {
+        "actor_id": "codex-root",
+        "role": "maker"
+      },
+      "status": "complete",
+      "due_date": "2026-08-27"
+    },
+    {
+      "action_id": "P3-ACT-USER",
+      "action": "Nhận/chọn gói; quyết định có mở scope live/raw/RAG/stable trong tương lai hay không.",
+      "owner": {
+        "actor_id": "user-requester",
+        "role": "requester"
+      },
+      "status": "open"
+    },
+    {
+      "action_id": "P3-ACT-LIVE",
+      "action": "Chỉ thực hiện live/raw acceptance khi user mở scope, cung cấp corpus/host và chỉ định owner; chưa có lịch hay automation.",
+      "owner": {
+        "actor_id": "user-requester",
+        "role": "requester"
+      },
+      "status": "deferred"
+    }
+  ],
+  "limitations": [
+    "No human approval recorded; no risk accepted by default.",
+    "No stable promotion, installation, live API upload or new visual-render evidence.",
+    "L2_full is scoped technical review, not full original HANDOFF acceptance.",
+    "QA record validation uses a documented subset adapter, not independent full Draft2020-12 certification."
+  ]
+}

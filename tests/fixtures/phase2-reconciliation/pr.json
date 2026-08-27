@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "document_id": "PR-000001",
+  "document_type": "PURCHASE_REQUISITION",
+  "fields": {
+    "requisition_number": {
+      "raw_value": "000001",
+      "normalized_value": "000001",
+      "display_value": "000001",
+      "data_type": "IDENTIFIER",
+      "provenance": {
+        "source_page": 1,
+        "source_region": "header.requisition_number",
+        "source_snippet": "PR 000001"
+      },
+      "human_review_required": false,
+      "notes": []
+    },
+    "requisition_date": "2026-08-01",
+    "item_code": "000045",
+    "requested_quantity": "100",
+    "currency": "VND"
+  },
+  "data_classification": ["INTERNAL"]
+}

@@ -1,0 +1,138 @@
+{
+  "$schema": "../../schemas/common/matching-profile.schema.json",
+  "schema_version": "1.0.0",
+  "profile_id": "PR_PO",
+  "profile_version": "1.0.0",
+  "profile_kind": "PR_PO",
+  "title": "Purchase requisition to purchase order",
+  "description": "Line-grain deterministic candidate matching from an approved purchase requisition to downstream purchase orders.",
+  "mode": "TWO_WAY",
+  "grain": "LINE_ITEM",
+  "roles": [
+    {
+      "role_id": "PR",
+      "label": "Purchase requisition",
+      "source_kind": "DOCUMENT",
+      "document_types": ["PURCHASE_REQUISITION"],
+      "role_aliases": ["REQUISITION"],
+      "required": true,
+      "field_mappings": {
+        "requisition_number": "requisition_number",
+        "requisition_date": "requisition_date",
+        "item_code": "item_code",
+        "quantity": "requested_quantity",
+        "currency": "currency"
+      },
+      "output_sheet": "PURCHASE_REQUISITIONS"
+    },
+    {
+      "role_id": "PO",
+      "label": "Purchase order",
+      "source_kind": "DOCUMENT",
+      "document_types": ["PURCHASE_ORDER"],
+      "role_aliases": ["ORDER"],
+      "required": true,
+      "field_mappings": {
+        "requisition_number": "requisition_number",
+        "po_date": "po_date",
+        "item_code": "item_code",
+        "quantity": "ordered_quantity",
+        "currency": "currency"
+      },
+      "output_sheet": "PURCHASE_ORDERS"
+    }
+  ],
+  "match_rules": [
+    {
+      "rule_id": "pr-to-po",
+      "left_role": "PR",
+      "right_role": "PO",
+      "cardinality": "ONE_TO_MANY",
+      "components": [
+        {
+          "component_id": "requisition-number",
+          "left_field": "requisition_number",
+          "right_field": "requisition_number",
+          "comparator": "IDENTIFIER_EXACT",
+          "normalizers": ["IDENTIFIER_PRESERVE"],
+          "required": true,
+          "candidate_only": false,
+          "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}
+        },
+        {
+          "component_id": "item-code",
+          "left_field": "item_code",
+          "right_field": "item_code",
+          "comparator": "IDENTIFIER_EXACT",
+          "normalizers": ["IDENTIFIER_PRESERVE"],
+          "required": true,
+          "candidate_only": false,
+          "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}
+        },
+        {
+          "component_id": "quantity",
+          "left_field": "quantity",
+          "right_field": "quantity",
+          "comparator": "DECIMAL_ABSOLUTE",
+          "normalizers": ["DECIMAL_CANONICAL_STRING"],
+          "required": true,
+          "candidate_only": false,
+          "tolerance_source": {"mode": "RUN_REQUEST", "unit": "QUANTITY", "approval_reference_required": true}
+        },
+        {
+          "component_id": "currency",
+          "left_field": "currency",
+          "right_field": "currency",
+          "comparator": "EXACT_TEXT",
+          "normalizers": ["NONE"],
+          "required": true,
+          "candidate_only": false,
+          "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}
+        }
+      ],
+      "partial_handling": {
+        "mode": "REQUIRE_APPROVED_RUN_POLICY",
+        "allowed_relation": "RIGHT_LESS_THAN_OR_EQUAL_LEFT",
+        "policy_source": "RUN_REQUEST"
+      },
+      "missing_field_policy": "HUMAN_REVIEW_REQUIRED",
+      "multiple_candidate_policy": "AMBIGUOUS_MATCH",
+      "explicit_bridge": null
+    }
+  ],
+  "aggregation_rules": [],
+  "comparison_basis": {"date": {"input_representation": "ISO_8601", "role_date_fields": {"PR": "requisition_date", "PO": "po_date"}, "ambiguous_date_policy": "HUMAN_REVIEW_REQUIRED", "window_source": "NOT_APPLICABLE"}, "currency": {"comparison_mode": "EXACT_CURRENCY_ONLY", "role_currency_fields": {"PR": "currency", "PO": "currency"}, "cross_currency_policy": "REQUIRE_APPROVED_ADAPTER", "exchange_rate_source": "REQUIRE_APPROVED_RUN_INPUT"}},
+  "policy_sources": {
+    "tolerance_values": "REQUIRE_APPROVED_RUN_INPUT",
+    "partial_matching": "REQUIRE_APPROVED_RUN_INPUT_WHEN_ALLOWED",
+    "currency_conversion": "EXACT_CURRENCY_UNLESS_APPROVED_ADAPTER",
+    "materiality_use": "NOT_USED_AS_MATCH_TOLERANCE"
+  },
+  "exception_policy": {
+    "partial_match": "REQUIRE_APPROVED_RUN_POLICY",
+    "many_to_many": "REQUIRE_EXPLICIT_BRIDGE_AND_ALLOCATION",
+    "duplicate": "FLAG_AND_REQUIRE_HUMAN_REVIEW",
+    "missing_required_role": "FLAG_AND_REQUIRE_HUMAN_REVIEW",
+    "missing_required_field": "HUMAN_REVIEW_REQUIRED",
+    "ambiguous_candidate": "AMBIGUOUS_MATCH"
+  },
+  "review_rule": {
+    "review_required_for": ["PARTIAL_MATCH", "AMBIGUOUS_MATCH", "CONFLICTING_MATCH", "UNMATCHED", "MISSING_REQUIRED_ROLE", "MISSING_REQUIRED_FIELD", "DUPLICATE_CONTENT", "UNCLASSIFIED_DOCUMENT", "PER_FILE_FAILURE"],
+    "automatic_business_decision": false,
+    "release_gate": "ACCOUNTABLE_HUMAN_REVIEW"
+  },
+  "workbook_contract": {
+    "role_sheets": "ONLY_ROLES_WITH_RECORDS",
+    "source_index": "ACCESSIBLE_INPUTS_ONLY",
+    "run_log": "ACTUAL_EXECUTION_ONLY",
+    "empty_sheet_policy": "DO_NOT_CREATE",
+    "identifier_policy": "PRESERVE_AS_TEXT",
+    "value_policy": "PRESERVE_RAW_AND_NORMALIZED",
+    "provenance_policy": "FIELD_AND_SOURCE_REFERENCE",
+    "formula_policy": "UNTRUSTED_TEXT_NEVER_FORMULA"
+  },
+  "limitations": [
+    "No tolerance, materiality, partial-fulfilment approval, or business release decision is embedded in this profile.",
+    "Source classification and candidate matching require accountable human review when an exception status is present."
+  ]
+}

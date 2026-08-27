@@ -1,0 +1,572 @@
+{
+  "schema_version": "1.0.0",
+  "inventory_id": "P3-INVENTORY-001",
+  "engagement_id": "DE-PHASE3-RC2-20260827",
+  "captured_at": "2026-08-27T04:34:04.227935+00:00",
+  "captured_by": {
+    "actor_id": "codex-root",
+    "display_name": "Codex — maker/reviewer chính",
+    "role": "reviewer"
+  },
+  "completeness": "complete_for_declared_scope",
+  "completeness_basis": "12 artifact đầu mối của RC2; BASELINE.json ghi 152 file tracked/untracked trong phạm vi git ls-files, gồm canonical source và toàn bộ releases lịch sử. Không bao gồm .git, cài đặt host hoặc dữ liệu bên ngoài.",
+  "artifacts": [
+    {
+      "artifact_id": "P3-OPENAI-ZIP",
+      "label": "dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0-rc.2.zip",
+      "role": "primary",
+      "artifact_kind": "archive",
+      "media_type": "application/zip",
+      "locator": "dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0-rc.2.zip",
+      "access_mode": "read_only",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "local_workspace",
+        "supplied_or_generated_at": "2026-08-27T04:34:04.227935+00:00",
+        "provenance_notes": "Thời điểm ghi nhận vào Phase 3, không phải ngày tạo tài liệu gốc. Working tree dirty; dùng SHA-256, không dùng HEAD để mô tả toàn bộ nội dung."
+      },
+      "integrity": {
+        "verification_status": "hash_verified",
+        "sha256": "bc4e26afeace3633fd8f8ab7def510d532cc700dd63ed3dbbf4f8bdcb7a1a514",
+        "size_bytes": 3821458,
+        "modified_at": "2026-08-26T22:04:02.186093+00:00",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "version_label": "1.1.0-rc.2",
+      "safety_flags": [
+        "contains_executable_code"
+      ],
+      "inspection_notes": "Đã kiểm trong Phase3 package-only qua direct checks hoặc peer review; không hàm ý live installation."
+    },
+    {
+      "artifact_id": "P3-CLAUDE-ZIP",
+      "label": "dist/claude/Thien-Skill-Document-Evidence-Claude-v1.1.0-rc.2.zip",
+      "role": "primary",
+      "artifact_kind": "archive",
+      "media_type": "application/zip",
+      "locator": "dist/claude/Thien-Skill-Document-Evidence-Claude-v1.1.0-rc.2.zip",
+      "access_mode": "read_only",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "local_workspace",
+        "supplied_or_generated_at": "2026-08-27T04:34:04.227935+00:00",
+        "provenance_notes": "Thời điểm ghi nhận vào Phase 3, không phải ngày tạo tài liệu gốc. Working tree dirty; dùng SHA-256, không dùng HEAD để mô tả toàn bộ nội dung."
+      },
+      "integrity": {
+        "verification_status": "hash_verified",
+        "sha256": "ff2e3d17ebb24ca193d35fa49c10b655dd26335eabcf7f1c9414f914d0bfb748",
+        "size_bytes": 2719185,
+        "modified_at": "2026-08-26T22:04:02.185042+00:00",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "version_label": "1.1.0-rc.2",
+      "safety_flags": [
+        "contains_executable_code"
+      ],
+      "inspection_notes": "Đã kiểm trong Phase3 package-only qua direct checks hoặc peer review; không hàm ý live installation."
+    },
+    {
+      "artifact_id": "P3-UNIVERSAL-ZIP",
+      "label": "dist/universal/Thien-Skill-Document-Evidence-Universal-v1.1.0-rc.2.zip",
+      "role": "primary",
+      "artifact_kind": "archive",
+      "media_type": "application/zip",
+      "locator": "dist/universal/Thien-Skill-Document-Evidence-Universal-v1.1.0-rc.2.zip",
+      "access_mode": "read_only",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "local_workspace",
+        "supplied_or_generated_at": "2026-08-27T04:34:04.227935+00:00",
+        "provenance_notes": "Thời điểm ghi nhận vào Phase 3, không phải ngày tạo tài liệu gốc. Working tree dirty; dùng SHA-256, không dùng HEAD để mô tả toàn bộ nội dung."
+      },
+      "integrity": {
+        "verification_status": "hash_verified",
+        "sha256": "6d13e21fe7fd177da0da96a06cfb9afedbf2fb848eebf546015c3da0e9b3bc7d",
+        "size_bytes": 2681864,
+        "modified_at": "2026-08-26T22:04:02.187831+00:00",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "version_label": "1.1.0-rc.2",
+      "safety_flags": [
+        "contains_executable_code"
+      ],
+      "inspection_notes": "Đã kiểm trong Phase3 package-only qua direct checks hoặc peer review; không hàm ý live installation."
+    },
+    {
+      "artifact_id": "P3-RELEASE-MANIFEST",
+      "label": "dist/release-manifest-v1.1.0-rc.2.json",
+      "role": "supporting",
+      "artifact_kind": "other",
+      "media_type": "application/json",
+      "locator": "dist/release-manifest-v1.1.0-rc.2.json",
+      "access_mode": "read_only",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "local_workspace",
+        "supplied_or_generated_at": "2026-08-27T04:34:04.227935+00:00",
+        "provenance_notes": "Thời điểm ghi nhận vào Phase 3, không phải ngày tạo tài liệu gốc. Working tree dirty; dùng SHA-256, không dùng HEAD để mô tả toàn bộ nội dung."
+      },
+      "integrity": {
+        "verification_status": "hash_verified",
+        "sha256": "ffe007866c49b1445f487208aa9da65c0acf23c81d370e2f9a7e92f71e39296e",
+        "size_bytes": 1776,
+        "modified_at": "2026-08-26T22:04:02.187143+00:00",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "version_label": "1.1.0-rc.2",
+      "safety_flags": [
+        "contains_untrusted_instructions"
+      ],
+      "inspection_notes": "Đã kiểm trong Phase3 package-only qua direct checks hoặc peer review; không hàm ý live installation."
+    },
+    {
+      "artifact_id": "P3-PARITY",
+      "label": "dist/PARITY-v1.1.0-rc.2.json",
+      "role": "supporting",
+      "artifact_kind": "other",
+      "media_type": "application/json",
+      "locator": "dist/PARITY-v1.1.0-rc.2.json",
+      "access_mode": "read_only",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "local_workspace",
+        "supplied_or_generated_at": "2026-08-27T04:34:04.227935+00:00",
+        "provenance_notes": "Thời điểm ghi nhận vào Phase 3, không phải ngày tạo tài liệu gốc. Working tree dirty; dùng SHA-256, không dùng HEAD để mô tả toàn bộ nội dung."
+      },
+      "integrity": {
+        "verification_status": "hash_verified",
+        "sha256": "d0d5c68f7e010b19259d1132ddaddaffd182310ee84a5b46da66c03cebada127",
+        "size_bytes": 604,
+        "modified_at": "2026-08-26T22:04:02.183313+00:00",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "version_label": "1.1.0-rc.2",
+      "safety_flags": [
+        "contains_untrusted_instructions"
+      ],
+      "inspection_notes": "Đã kiểm trong Phase3 package-only qua direct checks hoặc peer review; không hàm ý live installation."
+    },
+    {
+      "artifact_id": "P3-SHA256",
+      "label": "dist/SHA256SUMS-v1.1.0-rc.2.txt",
+      "role": "supporting",
+      "artifact_kind": "other",
+      "media_type": "text/plain",
+      "locator": "dist/SHA256SUMS-v1.1.0-rc.2.txt",
+      "access_mode": "read_only",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "local_workspace",
+        "supplied_or_generated_at": "2026-08-27T04:34:04.227935+00:00",
+        "provenance_notes": "Thời điểm ghi nhận vào Phase 3, không phải ngày tạo tài liệu gốc. Working tree dirty; dùng SHA-256, không dùng HEAD để mô tả toàn bộ nội dung."
+      },
+      "integrity": {
+        "verification_status": "hash_verified",
+        "sha256": "9f5c2622e1be05c856e74271cd0a8138773125c156e21a19321a2a20d49d07d4",
+        "size_bytes": 574,
+        "modified_at": "2026-08-26T22:04:02.184263+00:00",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "version_label": "1.1.0-rc.2",
+      "safety_flags": [
+        "contains_untrusted_instructions"
+      ],
+      "inspection_notes": "Đã kiểm trong Phase3 package-only qua direct checks hoặc peer review; không hàm ý live installation."
+    },
+    {
+      "artifact_id": "P3-HANDOFF-ORIGINAL",
+      "label": "HANDOFF.md",
+      "role": "reference",
+      "artifact_kind": "document",
+      "media_type": "text/markdown",
+      "locator": "HANDOFF.md",
+      "access_mode": "read_only",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "local_workspace",
+        "supplied_or_generated_at": "2026-08-27T04:34:04.227935+00:00",
+        "provenance_notes": "Thời điểm ghi nhận vào Phase 3, không phải ngày tạo tài liệu gốc. Working tree dirty; dùng SHA-256, không dùng HEAD để mô tả toàn bộ nội dung."
+      },
+      "integrity": {
+        "verification_status": "hash_verified",
+        "sha256": "3d1c4c360d1f69d3fc23c3b830a28c6f79286f6460dbaa15ddb05fe19b14dd55",
+        "size_bytes": 20741,
+        "modified_at": "2026-08-26T19:33:26.142489+00:00",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "version_label": "historical-draft",
+      "safety_flags": [
+        "contains_untrusted_instructions"
+      ],
+      "inspection_notes": "Đã kiểm trong Phase3 package-only qua direct checks hoặc peer review; không hàm ý live installation."
+    },
+    {
+      "artifact_id": "P3-PHASE2-REPORT",
+      "label": "ACCEPTANCE-REPORT-v1.1.0-rc.2.md",
+      "role": "reference",
+      "artifact_kind": "document",
+      "media_type": "text/markdown",
+      "locator": "ACCEPTANCE-REPORT-v1.1.0-rc.2.md",
+      "access_mode": "read_only",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "local_workspace",
+        "supplied_or_generated_at": "2026-08-27T04:34:04.227935+00:00",
+        "provenance_notes": "Thời điểm ghi nhận vào Phase 3, không phải ngày tạo tài liệu gốc. Working tree dirty; dùng SHA-256, không dùng HEAD để mô tả toàn bộ nội dung."
+      },
+      "integrity": {
+        "verification_status": "hash_verified",
+        "sha256": "31540df04a955794cc0ef83fb6e9d2b682e0f54b21c066e7b2ea65b201ad698e",
+        "size_bytes": 9224,
+        "modified_at": "2026-08-26T22:02:56.031841+00:00",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "version_label": "1.1.0-rc.2",
+      "safety_flags": [
+        "contains_untrusted_instructions"
+      ],
+      "inspection_notes": "Đã kiểm trong Phase3 package-only qua direct checks hoặc peer review; không hàm ý live installation."
+    },
+    {
+      "artifact_id": "P3-README",
+      "label": "README.md",
+      "role": "supporting",
+      "artifact_kind": "document",
+      "media_type": "text/markdown",
+      "locator": "README.md",
+      "access_mode": "read_only",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "local_workspace",
+        "supplied_or_generated_at": "2026-08-27T04:34:04.227935+00:00",
+        "provenance_notes": "Thời điểm ghi nhận vào Phase 3, không phải ngày tạo tài liệu gốc. Working tree dirty; dùng SHA-256, không dùng HEAD để mô tả toàn bộ nội dung."
+      },
+      "integrity": {
+        "verification_status": "hash_verified",
+        "sha256": "07db64185fe84b8f56ccbc57a978afe97a49d57075161ab7faa557485f6d9e0d",
+        "size_bytes": 23526,
+        "modified_at": "2026-08-26T21:46:17.785759+00:00",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "version_label": "1.1.0-rc.2",
+      "safety_flags": [
+        "contains_untrusted_instructions"
+      ],
+      "inspection_notes": "Đã kiểm trong Phase3 package-only qua direct checks hoặc peer review; không hàm ý live installation."
+    },
+    {
+      "artifact_id": "P3-INSTALLATION",
+      "label": "INSTALLATION.md",
+      "role": "supporting",
+      "artifact_kind": "document",
+      "media_type": "text/markdown",
+      "locator": "INSTALLATION.md",
+      "access_mode": "read_only",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "local_workspace",
+        "supplied_or_generated_at": "2026-08-27T04:34:04.227935+00:00",
+        "provenance_notes": "Thời điểm ghi nhận vào Phase 3, không phải ngày tạo tài liệu gốc. Working tree dirty; dùng SHA-256, không dùng HEAD để mô tả toàn bộ nội dung."
+      },
+      "integrity": {
+        "verification_status": "hash_verified",
+        "sha256": "5623e5bdeda302f2267001b219ffd0857940f7b30013dcfde4488403ed878b85",
+        "size_bytes": 11218,
+        "modified_at": "2026-08-26T21:46:43.207042+00:00",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "version_label": "1.1.0-rc.2",
+      "safety_flags": [
+        "contains_untrusted_instructions"
+      ],
+      "inspection_notes": "Đã kiểm trong Phase3 package-only qua direct checks hoặc peer review; không hàm ý live installation."
+    },
+    {
+      "artifact_id": "P3-BUILD-CONFIG",
+      "label": "build/config.json",
+      "role": "supporting",
+      "artifact_kind": "source_code",
+      "media_type": "application/json",
+      "locator": "build/config.json",
+      "access_mode": "read_only",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "local_workspace",
+        "supplied_or_generated_at": "2026-08-27T04:34:04.227935+00:00",
+        "provenance_notes": "Thời điểm ghi nhận vào Phase 3, không phải ngày tạo tài liệu gốc. Working tree dirty; dùng SHA-256, không dùng HEAD để mô tả toàn bộ nội dung."
+      },
+      "integrity": {
+        "verification_status": "hash_verified",
+        "sha256": "df59dcc3f7302357c2d8c4cd8a70196e2b19214101ab0d88eecd1ca0394b61b7",
+        "size_bytes": 1376,
+        "modified_at": "2026-08-26T20:52:40.878387+00:00",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "version_label": "1.1.0-rc.2",
+      "safety_flags": [
+        "contains_executable_code"
+      ],
+      "inspection_notes": "Đã kiểm trong Phase3 package-only qua direct checks hoặc peer review; không hàm ý live installation."
+    },
+    {
+      "artifact_id": "P3-SKILL",
+      "label": "thien-skill-document-evidence/SKILL.md",
+      "role": "reference",
+      "artifact_kind": "document",
+      "media_type": "text/markdown",
+      "locator": "thien-skill-document-evidence/SKILL.md",
+      "access_mode": "read_only",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "local_workspace",
+        "supplied_or_generated_at": "2026-08-27T04:34:04.227935+00:00",
+        "provenance_notes": "Thời điểm ghi nhận vào Phase 3, không phải ngày tạo tài liệu gốc. Working tree dirty; dùng SHA-256, không dùng HEAD để mô tả toàn bộ nội dung."
+      },
+      "integrity": {
+        "verification_status": "hash_verified",
+        "sha256": "55b34f798e3c08bff72c448c1d9d0fa90ba70bfee6bc08b059764e5420aace05",
+        "size_bytes": 24462,
+        "modified_at": "2026-08-26T21:52:40.328877+00:00",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "version_label": "1.1.0-rc.2",
+      "safety_flags": [
+        "contains_untrusted_instructions"
+      ],
+      "inspection_notes": "Đã kiểm trong Phase3 package-only qua direct checks hoặc peer review; không hàm ý live installation."
+    },
+    {
+      "artifact_id": "P3-BASELINE",
+      "label": "qa/phase3-rc2/BASELINE.json",
+      "role": "evidence",
+      "artifact_kind": "dataset",
+      "media_type": "application/json",
+      "locator": "qa/phase3-rc2/BASELINE.json",
+      "access_mode": "working_copy",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "generated_output",
+        "supplied_or_generated_at": "2026-08-27T04:54:26.347Z",
+        "provenance_notes": "Additive Phase3 evidence, not frozen RC2 payload; exact final hashes recorded in dossier checksum manifest."
+      },
+      "integrity": {
+        "verification_status": "metadata_only",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "inspection_notes": "Reviewed as generated supporting evidence, not live host proof.",
+      "safety_flags": [
+        "none_identified"
+      ]
+    },
+    {
+      "artifact_id": "P3-EXECUTIONS",
+      "label": "qa/phase3-rc2/executions.json",
+      "role": "evidence",
+      "artifact_kind": "dataset",
+      "media_type": "application/json",
+      "locator": "qa/phase3-rc2/executions.json",
+      "access_mode": "working_copy",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "generated_output",
+        "supplied_or_generated_at": "2026-08-27T04:54:26.347Z",
+        "provenance_notes": "Additive Phase3 evidence, not frozen RC2 payload; exact final hashes recorded in dossier checksum manifest."
+      },
+      "integrity": {
+        "verification_status": "metadata_only",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "inspection_notes": "Reviewed as generated supporting evidence, not live host proof.",
+      "safety_flags": [
+        "none_identified"
+      ]
+    },
+    {
+      "artifact_id": "P3-TESTS",
+      "label": "tests/test_phase3_packaged_workflows.py",
+      "role": "supporting",
+      "artifact_kind": "source_code",
+      "media_type": "text/x-python",
+      "locator": "tests/test_phase3_packaged_workflows.py",
+      "access_mode": "working_copy",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "generated_output",
+        "supplied_or_generated_at": "2026-08-27T04:54:26.347Z",
+        "provenance_notes": "Additive Phase3 evidence, not frozen RC2 payload; exact final hashes recorded in dossier checksum manifest."
+      },
+      "integrity": {
+        "verification_status": "metadata_only",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "inspection_notes": "Reviewed as generated supporting evidence, not live host proof.",
+      "safety_flags": [
+        "contains_executable_code"
+      ]
+    },
+    {
+      "artifact_id": "P3-COVERAGE",
+      "label": "qa/phase3-rc2/coverage.json",
+      "role": "evidence",
+      "artifact_kind": "dataset",
+      "media_type": "application/json",
+      "locator": "qa/phase3-rc2/coverage.json",
+      "access_mode": "working_copy",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "generated_output",
+        "supplied_or_generated_at": "2026-08-27T04:54:26.347Z",
+        "provenance_notes": "Additive Phase3 evidence, not frozen RC2 payload; exact final hashes recorded in dossier checksum manifest."
+      },
+      "integrity": {
+        "verification_status": "metadata_only",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "inspection_notes": "Reviewed as generated supporting evidence, not live host proof.",
+      "safety_flags": [
+        "none_identified"
+      ]
+    },
+    {
+      "artifact_id": "P3-CONTROL",
+      "label": "qa/phase3-rc2/CONTROL.json",
+      "role": "supporting",
+      "artifact_kind": "dataset",
+      "media_type": "application/json",
+      "locator": "qa/phase3-rc2/CONTROL.json",
+      "access_mode": "working_copy",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "generated_output",
+        "supplied_or_generated_at": "2026-08-27T04:54:26.347Z",
+        "provenance_notes": "Additive Phase3 evidence, not frozen RC2 payload; exact final hashes recorded in dossier checksum manifest."
+      },
+      "integrity": {
+        "verification_status": "metadata_only",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "inspection_notes": "Reviewed as generated supporting evidence, not live host proof.",
+      "safety_flags": [
+        "none_identified"
+      ]
+    },
+    {
+      "artifact_id": "P3-INTAKE",
+      "label": "qa/phase3-rc2/qa-intake.json",
+      "role": "supporting",
+      "artifact_kind": "dataset",
+      "media_type": "application/json",
+      "locator": "qa/phase3-rc2/qa-intake.json",
+      "access_mode": "working_copy",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "generated_output",
+        "supplied_or_generated_at": "2026-08-27T04:54:26.347Z",
+        "provenance_notes": "Additive Phase3 evidence, not frozen RC2 payload; exact final hashes recorded in dossier checksum manifest."
+      },
+      "integrity": {
+        "verification_status": "metadata_only",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "inspection_notes": "Reviewed as generated supporting evidence, not live host proof.",
+      "safety_flags": [
+        "none_identified"
+      ]
+    },
+    {
+      "artifact_id": "P3-PEER-INITIAL",
+      "label": "qa/phase3-rc2/peer-review-initial.json",
+      "role": "evidence",
+      "artifact_kind": "dataset",
+      "media_type": "application/json",
+      "locator": "qa/phase3-rc2/peer-review-initial.json",
+      "access_mode": "working_copy",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "generated_output",
+        "supplied_or_generated_at": "2026-08-27T04:54:26.347Z",
+        "provenance_notes": "Additive Phase3 evidence, not frozen RC2 payload; exact final hashes recorded in dossier checksum manifest."
+      },
+      "integrity": {
+        "verification_status": "metadata_only",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "inspection_notes": "Reviewed as generated supporting evidence, not live host proof.",
+      "safety_flags": [
+        "none_identified"
+      ]
+    },
+    {
+      "artifact_id": "P3-PEER-FINAL",
+      "label": "qa/phase3-rc2/peer-review-final.json",
+      "role": "evidence",
+      "artifact_kind": "dataset",
+      "media_type": "application/json",
+      "locator": "qa/phase3-rc2/peer-review-final.json",
+      "access_mode": "working_copy",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "generated_output",
+        "supplied_or_generated_at": "2026-08-27T04:54:26.347Z",
+        "provenance_notes": "Additive Phase3 evidence, not frozen RC2 payload; exact final hashes recorded in dossier checksum manifest."
+      },
+      "integrity": {
+        "verification_status": "metadata_only",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "inspection_notes": "Reviewed as generated supporting evidence, not live host proof.",
+      "safety_flags": [
+        "none_identified"
+      ]
+    },
+    {
+      "artifact_id": "P3-REPORT",
+      "label": "PHASE3-ACCEPTANCE-v1.1.0-rc.2.md",
+      "role": "output",
+      "artifact_kind": "document",
+      "media_type": "text/markdown",
+      "locator": "PHASE3-ACCEPTANCE-v1.1.0-rc.2.md",
+      "access_mode": "working_copy",
+      "confidentiality": "internal",
+      "source": {
+        "origin": "generated_output",
+        "supplied_or_generated_at": "2026-08-27T04:54:26.347Z",
+        "provenance_notes": "Additive Phase3 evidence, not frozen RC2 payload; exact final hashes recorded in dossier checksum manifest."
+      },
+      "integrity": {
+        "verification_status": "metadata_only",
+        "immutable_source_preserved": true
+      },
+      "inspection_status": "inspected",
+      "inspection_notes": "Root and separate agent reviewed material report content; root finalized status fields/checksum link after peer, then reran record/link/hash checks.",
+      "safety_flags": [
+        "none_identified"
+      ]
+    }
+  ],
+  "inventory_limitations": [
+    "Tính đầy đủ chỉ áp dụng cho nguồn được chỉ định trong repository; không chứng minh lịch sử trước khi chụp baseline.",
+    "Không có dữ liệu thực, tài khoản host, live RAG hoặc platform deployment trong inventory.",
+    "Các primary artifacts giữ hash baseline. Generated QA evidence bổ sung được cập nhật đến handoff; checksum dossier riêng định danh bản cuối."
+  ]
+}

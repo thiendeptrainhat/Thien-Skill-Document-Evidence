@@ -1,0 +1,260 @@
+{
+  "engagement_id": "DE-PHASE3-RC2-20260827",
+  "persistence": "durable_repository_dossier",
+  "schema_note": "Local orchestration record; QA canonical contracts are in the separate intake/inventory/plan/review/disposition files.",
+  "updated_at": "2026-08-27T05:00:59.443Z",
+  "workflow_step": "package_only_handover",
+  "next_safe_step": "User receives/selects a package. Any live/raw/RAG/stable scope requires a separate explicit request and human gate.",
+  "overall_status": "COMPLETE_PACKAGE_ONLY",
+  "engagement_mode": "assurance_technical_package_only",
+  "prior_advisory_involvement": "Root implemented Phase 1/2 and performs Phase 3 self-check.",
+  "self_review_risk": "present",
+  "independence_threat": "Same maker is primary reviewer; agents share the same workspace and conversational context.",
+  "safeguards": [
+    "Frozen SHA-256 baseline for all 152 pre-existing files",
+    "Read-only scope reviewer separate from implementation",
+    "New tests execute extracted ZIP code from isolated temporary directories",
+    "Explicit NOT_TESTED live matrix and separate human approval gate"
+  ],
+  "reviewer_independence": "self_check with peer_review; not independent human assurance",
+  "registry_snapshot": {
+    "captured_at": "2026-08-27T04:34:04.227935+00:00",
+    "basis": "Installed SKILL.md files read in this run; seed registry not treated as live installation proof.",
+    "selected_skills": [
+      {
+        "skill_id": "thien-skill-qa-methodology",
+        "version": "1.0.0",
+        "status": "runtime_verified",
+        "role": "lead_review",
+        "runtime_verification_evidence": "/Users/thiendeptrainhat/.agents/skills/thien-skill-qa-methodology/SKILL.md read in full plus selected references and canonical contracts",
+        "eligibility_restrictions": "Technical QA only; no human approval or specialist professional opinion."
+      },
+      {
+        "skill_id": "thien-skill-master-orchestrator",
+        "version": "not_declared",
+        "status": "runtime_verified",
+        "role": "coordination_and_role_separation",
+        "runtime_verification_evidence": "/Users/thiendeptrainhat/.agents/skills/thien-skill-master-orchestrator/SKILL.md and required routing/control references read in full",
+        "eligibility_restrictions": "Cannot approve its own release or invent authority."
+      },
+      {
+        "skill_id": "skill-creator",
+        "version": "not_declared",
+        "status": "runtime_verified",
+        "role": "skill_validation",
+        "runtime_verification_evidence": "/Users/thiendeptrainhat/.codex/skills/.system/skill-creator/SKILL.md and quick_validate.py read",
+        "eligibility_restrictions": "quick_validate runtime unavailable without PyYAML; not reported PASS."
+      }
+    ]
+  },
+  "intake_summary": {
+    "objective": "Nghiệm thu và bàn giao ba ZIP RC2; không cài thử.",
+    "primary_domain": "engineering_quality",
+    "supporting_domains": [
+      "evidence_traceability",
+      "release_handover"
+    ],
+    "jurisdiction": "not_applicable",
+    "applicable_date": "2026-08-27",
+    "audience": "Người dùng/maintainer",
+    "sensitivity": "internal; synthetic fixtures only",
+    "release": "1.1.0-rc.2",
+    "product_status": "Testing",
+    "readiness_ceiling": "READY_FOR_HUMAN_REVIEW",
+    "constraints": [
+      "No original-file mutation",
+      "No install/sync/API/OCR/RAG upload",
+      "No stable version promotion/commit/tag/push"
+    ],
+    "external_sources": "Only official public Claude CLI documentation for ZIP/directory input clarification."
+  },
+  "tasks": [
+    {
+      "task_id": "P3-T01",
+      "owner": "codex-root / thien-skill-qa-methodology",
+      "objective": "Freeze baseline and define authorized contract",
+      "depends_on": [],
+      "execution_mode": "serial",
+      "entry": "User Phase3 request",
+      "success": "Intake, inventory, plan and baseline recorded",
+      "stop": "Authority or artifact identity unclear",
+      "failure": "Cannot read required baseline",
+      "qa_gate": "scope_identity",
+      "human_gate": "No further authority needed for package-only QA",
+      "attempts": 1,
+      "status": "complete"
+    },
+    {
+      "task_id": "P3-T02",
+      "owner": "phase3_scope_review / thien-skill-qa-methodology",
+      "objective": "Read-only requirement/coverage review",
+      "depends_on": [
+        "P3-T01"
+      ],
+      "execution_mode": "parallel",
+      "entry": "Frozen RC2 artifacts readable",
+      "success": "Traceable profile/fixture/live coverage findings",
+      "stop": "Needs external runtime or original-file edits",
+      "failure": "Cannot establish review basis",
+      "qa_gate": "claim_scope",
+      "human_gate": "No release approval",
+      "attempts": 1,
+      "status": "complete"
+    },
+    {
+      "task_id": "P3-T03",
+      "owner": "phase3_packaged_tests / engineering test author",
+      "objective": "Add isolated acceptance tests against three existing ZIPs",
+      "depends_on": [
+        "P3-T01"
+      ],
+      "execution_mode": "parallel",
+      "entry": "Frozen archives pass integrity",
+      "success": "Assertions pass without source fallback",
+      "stop": "Source defect needs RC2 mutation",
+      "failure": "New test demonstrates product blocker",
+      "qa_gate": "packaged_workflows",
+      "human_gate": "No installation",
+      "attempts": 1,
+      "status": "complete"
+    },
+    {
+      "task_id": "P3-T04",
+      "owner": "codex-root / thien-skill-qa-methodology; phase3_scope_review peer",
+      "objective": "Run regression and close findings on evidence",
+      "depends_on": [
+        "P3-T02",
+        "P3-T03"
+      ],
+      "execution_mode": "serial_then_peer",
+      "entry": "New tests complete",
+      "success": "Executed results linked and peer closure recorded",
+      "stop": "Critical/high blocker or false scope claim",
+      "failure": "Inconsistent results or unresolved blocker",
+      "qa_gate": "retest_and_peer",
+      "human_gate": "Remains pending_human_approval",
+      "attempts": 1,
+      "status": "complete"
+    },
+    {
+      "task_id": "P3-T05",
+      "owner": "codex-root / thien-skill-master-orchestrator",
+      "objective": "Issue additive Phase3 report and exact package links",
+      "depends_on": [
+        "P3-T04"
+      ],
+      "execution_mode": "serial",
+      "entry": "Final evidence consolidated",
+      "success": "Dossier valid, originals unchanged, checksum handover complete",
+      "stop": "Baseline mismatch",
+      "failure": "Artifact mutation or evidence mismatch",
+      "qa_gate": "handover_integrity",
+      "human_gate": "No stable/production approval",
+      "attempts": 1,
+      "status": "complete"
+    }
+  ],
+  "handoffs": [
+    {
+      "handoff_id": "P3-H01",
+      "task_id": "P3-T02",
+      "from": "codex-root",
+      "to": "phase3_scope_review",
+      "status": "complete",
+      "output": "qa/phase3-rc2/peer-review-initial.json",
+      "scope": "Read-only documents, fixtures and assertions"
+    },
+    {
+      "handoff_id": "P3-H02",
+      "task_id": "P3-T03",
+      "from": "codex-root",
+      "to": "phase3_packaged_tests",
+      "status": "complete",
+      "output": "tests/test_phase3_packaged_workflows.py",
+      "scope": "Additive isolated package tests only"
+    },
+    {
+      "handoff_id": "P3-H03",
+      "task_id": "P3-T04",
+      "from": "codex-root",
+      "to": "phase3_scope_review",
+      "status": "complete",
+      "output": "qa/phase3-rc2/peer-review-final.json",
+      "scope": "Review final evidence and F02 retest"
+    }
+  ],
+  "missing_information": [
+    {
+      "item": "Live host behavior and raw-source minimum corpus",
+      "classification": "important_non_blocking",
+      "owner": "user-requester / future authorized test owner",
+      "safe_assumption": "Not tested; outside package-only scope",
+      "impact": "No platform/OCR/source-fidelity/production certification"
+    },
+    {
+      "item": "Authorized human release approval",
+      "classification": "important_non_blocking",
+      "owner": "user-requester",
+      "safe_assumption": "pending_human_approval",
+      "impact": "Technical handover only"
+    },
+    {
+      "item": "PyYAML for optional validators",
+      "classification": "important_non_blocking",
+      "owner": "future test-environment owner",
+      "safe_assumption": "Unavailable; do not install without request",
+      "impact": "Record dependency limitation rather than PASS"
+    }
+  ],
+  "scope_amendments": [
+    {
+      "amendment_id": "P3-AMEND-001",
+      "recorded_at": "2026-08-27T04:43:20.785Z",
+      "change": "Permit read-only official Claude CLI docs lookup to resolve ZIP vs directory observation.",
+      "authority": "Read-only check relevant to authorized QA; no runtime, upload or mutation.",
+      "outcome": "Both directory and ZIP documented; no product/doc change required.",
+      "evidence": "qa/phase3-rc2/sources.json"
+    }
+  ],
+  "approval": {
+    "status": "pending_human_approval",
+    "approval_ids": []
+  },
+  "follow_up_policy": {
+    "monitoring": "not_requested",
+    "resume_when": [
+      "User requests live platform acceptance or production/stable promotion.",
+      "User supplies authorized raw corpus or target RAG environment."
+    ]
+  },
+  "deliverable": {
+    "type": "Markdown acceptance report plus JSON evidence dossier",
+    "audience": "user-requester",
+    "owner": "codex-root",
+    "content_version": "RC2 package-only technical review",
+    "source_objects": [
+      "P3-INVENTORY-001",
+      "P3-PLAN-001"
+    ],
+    "review_gate": "final peer review and baseline preservation",
+    "issuance": "Local repository; immutable RC2 ZIPs linked, no publication."
+  },
+  "final_summary": {
+    "tests_run": 119,
+    "tests_passed": 118,
+    "optional_tests_skipped": 1,
+    "new_packaged_methods": 22,
+    "new_packaged_subtests": 69,
+    "qa_checks_pass": 17,
+    "qa_checks_inconclusive": 1,
+    "open_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 1,
+      "low": 1
+    },
+    "original_files_preserved": 152,
+    "qa_disposition": "ready_with_conditions",
+    "human_approval": "pending_human_approval"
+  }
+}

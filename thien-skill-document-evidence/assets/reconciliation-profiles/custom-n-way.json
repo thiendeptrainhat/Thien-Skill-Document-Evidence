@@ -1,0 +1,29 @@
+{
+  "$schema": "../../schemas/common/matching-profile.schema.json",
+  "schema_version": "1.0.0",
+  "profile_id": "CUSTOM_N_WAY",
+  "profile_version": "1.0.0",
+  "profile_kind": "CUSTOM_N_WAY",
+  "title": "Custom deterministic N-way template",
+  "description": "A safe two-role starting template to copy and extend with explicit roles, fields, rules, cardinality and approval sources.",
+  "mode": "CUSTOM_DETERMINISTIC",
+  "grain": "DOCUMENT",
+  "roles": [
+    {"role_id": "ROLE_A", "label": "Custom source role A", "source_kind": "DOCUMENT", "document_types": ["CUSTOM_SOURCE_A"], "role_aliases": [], "required": true, "field_mappings": {"reference_id": "reference_id", "amount": "amount", "currency": "currency"}, "output_sheet": "ROLE_A"},
+    {"role_id": "ROLE_B", "label": "Custom source role B", "source_kind": "DOCUMENT", "document_types": ["CUSTOM_SOURCE_B"], "role_aliases": [], "required": true, "field_mappings": {"reference_id": "reference_id", "amount": "amount", "currency": "currency"}, "output_sheet": "ROLE_B"}
+  ],
+  "match_rules": [
+    {"rule_id": "role-a-to-role-b", "left_role": "ROLE_A", "right_role": "ROLE_B", "cardinality": "ONE_TO_ONE", "components": [
+      {"component_id": "reference-id", "left_field": "reference_id", "right_field": "reference_id", "comparator": "IDENTIFIER_EXACT", "normalizers": ["IDENTIFIER_PRESERVE"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}},
+      {"component_id": "amount", "left_field": "amount", "right_field": "amount", "comparator": "DECIMAL_ABSOLUTE", "normalizers": ["DECIMAL_CANONICAL_STRING"], "required": false, "candidate_only": false, "tolerance_source": {"mode": "RUN_REQUEST", "unit": "ABSOLUTE_AMOUNT", "approval_reference_required": true}},
+      {"component_id": "currency", "left_field": "currency", "right_field": "currency", "comparator": "EXACT_TEXT", "normalizers": ["NONE"], "required": false, "candidate_only": false, "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}}
+    ], "partial_handling": {"mode": "HUMAN_REVIEW_REQUIRED", "allowed_relation": "NOT_APPLICABLE", "policy_source": "NOT_APPLICABLE"}, "missing_field_policy": "HUMAN_REVIEW_REQUIRED", "multiple_candidate_policy": "AMBIGUOUS_MATCH", "explicit_bridge": null}
+  ],
+  "aggregation_rules": [],
+  "comparison_basis": {"date": {"input_representation": "ISO_8601", "role_date_fields": {}, "ambiguous_date_policy": "HUMAN_REVIEW_REQUIRED", "window_source": "NOT_APPLICABLE"}, "currency": {"comparison_mode": "EXACT_CURRENCY_ONLY", "role_currency_fields": {"ROLE_A": "currency", "ROLE_B": "currency"}, "cross_currency_policy": "REQUIRE_APPROVED_ADAPTER", "exchange_rate_source": "REQUIRE_APPROVED_RUN_INPUT"}},
+  "policy_sources": {"tolerance_values": "REQUIRE_APPROVED_RUN_INPUT", "partial_matching": "REQUIRE_APPROVED_RUN_INPUT_WHEN_ALLOWED", "currency_conversion": "EXACT_CURRENCY_UNLESS_APPROVED_ADAPTER", "materiality_use": "NOT_USED_AS_MATCH_TOLERANCE"},
+  "exception_policy": {"partial_match": "HUMAN_REVIEW_REQUIRED", "many_to_many": "REQUIRE_EXPLICIT_BRIDGE_AND_ALLOCATION", "duplicate": "FLAG_AND_REQUIRE_HUMAN_REVIEW", "missing_required_role": "FLAG_AND_REQUIRE_HUMAN_REVIEW", "missing_required_field": "HUMAN_REVIEW_REQUIRED", "ambiguous_candidate": "AMBIGUOUS_MATCH"},
+  "review_rule": {"review_required_for": ["PARTIAL_MATCH", "AMBIGUOUS_MATCH", "CONFLICTING_MATCH", "UNMATCHED", "MISSING_REQUIRED_ROLE", "MISSING_REQUIRED_FIELD", "DUPLICATE_CONTENT", "UNCLASSIFIED_DOCUMENT", "PER_FILE_FAILURE"], "automatic_business_decision": false, "release_gate": "ACCOUNTABLE_HUMAN_REVIEW"},
+  "workbook_contract": {"role_sheets": "ONLY_ROLES_WITH_RECORDS", "source_index": "ACCESSIBLE_INPUTS_ONLY", "run_log": "ACTUAL_EXECUTION_ONLY", "empty_sheet_policy": "DO_NOT_CREATE", "identifier_policy": "PRESERVE_AS_TEXT", "value_policy": "PRESERVE_RAW_AND_NORMALIZED", "provenance_policy": "FIELD_AND_SOURCE_REFERENCE", "formula_policy": "UNTRUSTED_TEXT_NEVER_FORMULA"},
+  "limitations": ["This is a template, not an approved business policy; role types, mappings, keys, grain and review rules must be tailored before operational use.", "Many-to-many matching is invalid unless an explicit bridge role and allocation keys are declared."]
+}

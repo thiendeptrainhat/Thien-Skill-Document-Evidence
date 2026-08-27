@@ -1,0 +1,71 @@
+{
+  "$schema": "../common/document-profile.schema.json",
+  "schema_id": "profile.bank-statement",
+  "schema_name": "Bank statement extraction profile",
+  "document_type": "BANK_STATEMENT",
+  "version": "1.0.0",
+  "jurisdictions": ["JURISDICTION_NEUTRAL"],
+  "effective_date": null,
+  "extends": "profile.generic-document",
+  "required_fields": ["statement_reference", "account_number", "account_holder_name", "statement_start_date", "statement_end_date", "statement_currency"],
+  "optional_fields": ["bank_name", "bank_branch", "iban", "swift_code", "statement_generated_date", "opening_balance", "closing_balance", "total_debits", "total_credits", "available_balance", "account_type", "page_count"],
+  "field_definitions": [
+    {"field_name": "statement_reference", "field_label": "Statement reference", "field_group": "header", "data_type": "IDENTIFIER", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT", "TRIM_OUTER_WHITESPACE"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "account_number", "field_label": "Statement account number", "field_group": "account", "data_type": "BANK_ACCOUNT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT", "TRIM_OUTER_WHITESPACE"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "account_holder_name", "field_label": "Account holder name", "field_group": "account", "data_type": "TEXT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC", "TRIM_OUTER_WHITESPACE"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "statement_start_date", "field_label": "Statement period start date", "field_group": "date", "data_type": "DATE", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "ISO_DATE_WHEN_UNAMBIGUOUS"], "sensitivity": "STANDARD"},
+    {"field_name": "statement_end_date", "field_label": "Statement period end date", "field_group": "date", "data_type": "DATE", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "ISO_DATE_WHEN_UNAMBIGUOUS"], "sensitivity": "STANDARD"},
+    {"field_name": "statement_currency", "field_label": "Statement currency", "field_group": "amount", "data_type": "TEXT", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "ISO_CURRENCY_CODE_WHEN_EXPLICIT"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "bank_name", "field_label": "Bank name", "field_group": "bank", "data_type": "TEXT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "bank_branch", "field_label": "Bank branch", "field_group": "bank", "data_type": "TEXT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "iban", "field_label": "IBAN when stated", "field_group": "account", "data_type": "BANK_ACCOUNT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT", "TRIM_OUTER_WHITESPACE"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "swift_code", "field_label": "SWIFT or BIC code", "field_group": "bank", "data_type": "IDENTIFIER", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UPPERCASE_CODE_WHEN_SOURCE_CASE_NOT_MEANINGFUL"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "statement_generated_date", "field_label": "Statement generation date", "field_group": "date", "data_type": "DATE", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "ISO_DATE_WHEN_UNAMBIGUOUS"], "sensitivity": "STANDARD"},
+    {"field_name": "opening_balance", "field_label": "Opening balance", "field_group": "amount", "data_type": "CURRENCY_AMOUNT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "closing_balance", "field_label": "Closing balance", "field_group": "amount", "data_type": "CURRENCY_AMOUNT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "total_debits", "field_label": "Total debits", "field_group": "amount", "data_type": "CURRENCY_AMOUNT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "total_credits", "field_label": "Total credits", "field_group": "amount", "data_type": "CURRENCY_AMOUNT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "available_balance", "field_label": "Available balance", "field_group": "amount", "data_type": "CURRENCY_AMOUNT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "account_type", "field_label": "Account type", "field_group": "account", "data_type": "TEXT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "page_count", "field_label": "Stated or observed page count", "field_group": "integrity", "data_type": "INTEGER", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "STANDARD"}
+  ],
+  "line_item_definitions": [
+    {"field_name": "transaction_line", "field_label": "Statement transaction line", "field_group": "line", "data_type": "IDENTIFIER", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "booking_date", "field_label": "Booking or posting date", "field_group": "line", "data_type": "DATE", "required": true, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "ISO_DATE_WHEN_UNAMBIGUOUS"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "value_date", "field_label": "Value date", "field_group": "line", "data_type": "DATE", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "ISO_DATE_WHEN_UNAMBIGUOUS"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "bank_transaction_id", "field_label": "Bank transaction identifier", "field_group": "line", "data_type": "IDENTIFIER", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "transaction_reference", "field_label": "Transaction reference", "field_group": "line", "data_type": "IDENTIFIER", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "description", "field_label": "Transaction description", "field_group": "line", "data_type": "TEXT", "required": true, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "counterparty_name", "field_label": "Counterparty name", "field_group": "line", "data_type": "TEXT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "counterparty_account", "field_label": "Counterparty account", "field_group": "line", "data_type": "BANK_ACCOUNT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT", "TRIM_OUTER_WHITESPACE"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "counterparty_bank", "field_label": "Counterparty bank", "field_group": "line", "data_type": "TEXT", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "UNICODE_NFC"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "debit_amount", "field_label": "Debit amount", "field_group": "line", "data_type": "CURRENCY_AMOUNT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "credit_amount", "field_label": "Credit amount", "field_group": "line", "data_type": "CURRENCY_AMOUNT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "signed_amount", "field_label": "Signed transaction amount", "field_group": "line", "data_type": "CURRENCY_AMOUNT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "transaction_currency", "field_label": "Transaction currency", "field_group": "line", "data_type": "TEXT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "ISO_CURRENCY_CODE_WHEN_EXPLICIT"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "exchange_rate", "field_label": "Transaction exchange rate", "field_group": "line", "data_type": "DECIMAL", "required": false, "critical": false, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "running_balance", "field_label": "Running balance", "field_group": "line", "data_type": "CURRENCY_AMOUNT", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "DECIMAL_CANONICAL_STRING"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "payment_request_number", "field_label": "Payment request reference", "field_group": "line", "data_type": "IDENTIFIER", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "FINANCIAL_SENSITIVE"},
+    {"field_name": "invoice_number", "field_label": "Invoice reference", "field_group": "line", "data_type": "IDENTIFIER", "required": false, "critical": true, "multiple": false, "normalization": ["PRESERVE_RAW", "IDENTIFIER_AS_TEXT"], "sensitivity": "FINANCIAL_SENSITIVE"}
+  ],
+  "validation_rules": [
+    {"rule_id": "bank-statement.required-status", "rule_type": "REQUIRED_STATUS", "fields": ["statement_reference", "account_number", "account_holder_name", "statement_start_date", "statement_end_date", "statement_currency"], "severity": "CRITICAL", "description": "Critical bank-statement fields require explicit records and statuses."},
+    {"rule_id": "bank-statement.identifier-text", "rule_type": "IDENTIFIER_AS_TEXT", "fields": ["statement_reference", "account_number", "iban", "swift_code", "bank_transaction_id", "transaction_reference", "counterparty_account", "payment_request_number", "invoice_number"], "severity": "HIGH", "description": "Account, transaction and supporting-document identifiers remain text and preserve leading zeros."},
+    {"rule_id": "bank-statement.period-order", "rule_type": "DATE_ORDER", "fields": ["statement_start_date", "statement_end_date", "statement_generated_date"], "severity": "CRITICAL", "description": "Statement-period and generation dates remain distinct and are compared when unambiguous."},
+    {"rule_id": "bank-statement.amount-representation", "rule_type": "CROSS_FIELD_CONSISTENCY", "fields": ["debit_amount", "credit_amount", "signed_amount", "transaction_currency"], "severity": "CRITICAL", "description": "Each transaction retains the source debit-credit or signed-amount representation without inventing a sign convention."},
+    {"rule_id": "bank-statement.balance", "rule_type": "ARITHMETIC_SUM", "fields": ["opening_balance", "total_debits", "total_credits", "closing_balance", "running_balance"], "severity": "CRITICAL", "description": "Opening balance, transactions and closing balance are compared using the statement's explicit debit-credit convention."}
+  ],
+  "reconciliation_keys": [
+    {"key_id": "bank-statement.transaction-id", "fields": ["account_number", "bank_transaction_id"], "strength": "PRIMARY", "candidate_only": false},
+    {"key_id": "bank-statement.reference-amount", "fields": ["transaction_reference", "debit_amount", "credit_amount", "signed_amount", "transaction_currency"], "strength": "SECONDARY", "candidate_only": true},
+    {"key_id": "bank-statement.supporting-reference", "fields": ["payment_request_number", "invoice_number", "booking_date"], "strength": "SECONDARY", "candidate_only": true},
+    {"key_id": "bank-statement.counterparty-candidate", "fields": ["counterparty_name", "counterparty_account", "booking_date", "signed_amount"], "strength": "SUPPORTING", "candidate_only": true}
+  ],
+  "human_review_rules": [
+    {"condition": "CRITICAL_FIELD_LOW_OR_UNKNOWN_CONFIDENCE", "field_scope": ["account_number", "statement_start_date", "statement_end_date", "statement_currency", "booking_date", "debit_amount", "credit_amount", "signed_amount"], "action": "HUMAN_REVIEW_REQUIRED"},
+    {"condition": "AMBIGUOUS_DATE_OR_LOCALE", "field_scope": ["statement_start_date", "statement_end_date", "statement_generated_date", "booking_date", "value_date"], "action": "HUMAN_REVIEW_REQUIRED"},
+    {"condition": "INCOMPLETE_TABLE", "field_scope": ["opening_balance", "closing_balance", "total_debits", "total_credits"], "action": "HUMAN_REVIEW_REQUIRED"},
+    {"condition": "UNMATCHED_MATERIAL_AMOUNT", "field_scope": ["debit_amount", "credit_amount", "signed_amount", "payment_request_number", "invoice_number"], "action": "HUMAN_REVIEW_REQUIRED"}
+  ],
+  "claim_boundaries": ["NO_AUTHENTICITY_CONCLUSION", "NO_SIGNATURE_AUTHENTICATION", "NO_LEGAL_OPINION", "NO_FRAUD_CONCLUSION", "NO_CONTROL_EFFECTIVENESS_CONCLUSION"]
+}

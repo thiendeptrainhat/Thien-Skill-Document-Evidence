@@ -1,0 +1,590 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "task-request.schema.json",
+  "title": "Document evidence task request",
+  "description": "Additive routing contract for conversion, RAG-source preparation, and extensible document-set reconciliation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "skill_id",
+    "skill_release_version",
+    "request_id",
+    "task_profile",
+    "source_document_ids",
+    "conversion",
+    "rag",
+    "reconciliation",
+    "requested_by",
+    "assumptions",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "skill_id": {
+      "const": "thien-skill-document-evidence"
+    },
+    "skill_release_version": {
+      "$ref": "#/$defs/semanticVersion"
+    },
+    "request_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "task_profile": {
+      "enum": [
+        "CONVERT_DOCUMENT",
+        "PREPARE_RAG_SOURCE",
+        "RECONCILE_DOCUMENT_SET"
+      ]
+    },
+    "source_document_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "shared-definitions.schema.json#/$defs/identifier"
+      }
+    },
+    "conversion": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/conversionRequest"
+        }
+      ]
+    },
+    "rag": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/ragRequest"
+        }
+      ]
+    },
+    "reconciliation": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/reconciliationRequest"
+        }
+      ]
+    },
+    "requested_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "task_profile": {
+            "const": "CONVERT_DOCUMENT"
+          }
+        },
+        "required": [
+          "task_profile"
+        ]
+      },
+      "then": {
+        "properties": {
+          "conversion": {
+            "$ref": "#/$defs/conversionRequest"
+          },
+          "rag": {
+            "type": "null"
+          },
+          "reconciliation": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task_profile": {
+            "const": "PREPARE_RAG_SOURCE"
+          }
+        },
+        "required": [
+          "task_profile"
+        ]
+      },
+      "then": {
+        "properties": {
+          "conversion": {
+            "type": "null"
+          },
+          "rag": {
+            "$ref": "#/$defs/ragRequest"
+          },
+          "reconciliation": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task_profile": {
+            "const": "RECONCILE_DOCUMENT_SET"
+          }
+        },
+        "required": [
+          "task_profile"
+        ]
+      },
+      "then": {
+        "properties": {
+          "conversion": {
+            "type": "null"
+          },
+          "rag": {
+            "type": "null"
+          },
+          "reconciliation": {
+            "$ref": "#/$defs/reconciliationRequest"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "conversionRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "output_format",
+        "output_profile",
+        "presentation_intent",
+        "ambiguity_status"
+      ],
+      "properties": {
+        "output_format": {
+          "enum": [
+            "DOCX",
+            "XLSX",
+            "PPTX"
+          ]
+        },
+        "output_profile": {
+          "oneOf": [
+            {
+              "enum": [
+                "SEMANTIC_EDITABLE",
+                "STRUCTURED_DATA",
+                "EDITABLE_PRESENTATION",
+                "PAGE_AS_SLIDE",
+                "VISUAL_FIDELITY_BEST_EFFORT"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "presentation_intent": {
+          "enum": [
+            "NOT_APPLICABLE",
+            "PRESENTATION",
+            "FAITHFUL_PAGE_CONVERSION",
+            "VISUAL_FIDELITY",
+            "AMBIGUOUS"
+          ]
+        },
+        "ambiguity_status": {
+          "enum": [
+            "NOT_AMBIGUOUS",
+            "CLARIFICATION_REQUIRED",
+            "RESOLVED_BY_USER"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "output_format": {
+                "const": "DOCX"
+              }
+            },
+            "required": [
+              "output_format"
+            ]
+          },
+          "then": {
+            "properties": {
+              "output_profile": {
+                "enum": [
+                  "SEMANTIC_EDITABLE",
+                  "VISUAL_FIDELITY_BEST_EFFORT"
+                ]
+              },
+              "presentation_intent": {
+                "const": "NOT_APPLICABLE"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "output_format": {
+                "const": "XLSX"
+              }
+            },
+            "required": [
+              "output_format"
+            ]
+          },
+          "then": {
+            "properties": {
+              "output_profile": {
+                "enum": [
+                  "STRUCTURED_DATA",
+                  "VISUAL_FIDELITY_BEST_EFFORT"
+                ]
+              },
+              "presentation_intent": {
+                "const": "NOT_APPLICABLE"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "output_format": {
+                "const": "PPTX"
+              }
+            },
+            "required": [
+              "output_format"
+            ]
+          },
+          "then": {
+            "properties": {
+              "output_profile": {
+                "oneOf": [
+                  {
+                    "enum": [
+                      "EDITABLE_PRESENTATION",
+                      "PAGE_AS_SLIDE",
+                      "VISUAL_FIDELITY_BEST_EFFORT"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "presentation_intent": {
+                "enum": [
+                  "PRESENTATION",
+                  "FAITHFUL_PAGE_CONVERSION",
+                  "VISUAL_FIDELITY",
+                  "AMBIGUOUS"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "presentation_intent": {
+                "const": "AMBIGUOUS"
+              }
+            },
+            "required": [
+              "presentation_intent"
+            ]
+          },
+          "then": {
+            "properties": {
+              "output_profile": {
+                "type": "null"
+              },
+              "ambiguity_status": {
+                "const": "CLARIFICATION_REQUIRED"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "presentation_intent": {
+                "const": "PRESENTATION"
+              }
+            },
+            "required": [
+              "presentation_intent"
+            ]
+          },
+          "then": {
+            "properties": {
+              "output_format": {
+                "const": "PPTX"
+              },
+              "output_profile": {
+                "const": "EDITABLE_PRESENTATION"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "presentation_intent": {
+                "const": "FAITHFUL_PAGE_CONVERSION"
+              }
+            },
+            "required": [
+              "presentation_intent"
+            ]
+          },
+          "then": {
+            "properties": {
+              "output_format": {
+                "const": "PPTX"
+              },
+              "output_profile": {
+                "const": "PAGE_AS_SLIDE"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "presentation_intent": {
+                "const": "VISUAL_FIDELITY"
+              }
+            },
+            "required": [
+              "presentation_intent"
+            ]
+          },
+          "then": {
+            "properties": {
+              "output_format": {
+                "const": "PPTX"
+              },
+              "output_profile": {
+                "const": "VISUAL_FIDELITY_BEST_EFFORT"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "output_profile": {
+                "type": "null"
+              }
+            },
+            "required": [
+              "output_profile"
+            ]
+          },
+          "then": {
+            "properties": {
+              "output_format": {
+                "const": "PPTX"
+              },
+              "presentation_intent": {
+                "const": "AMBIGUOUS"
+              },
+              "ambiguity_status": {
+                "const": "CLARIFICATION_REQUIRED"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ragRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package_kind",
+        "target_id",
+        "include_assets",
+        "chunking"
+      ],
+      "properties": {
+        "package_kind": {
+          "enum": [
+            "DOCUMENT",
+            "COLLECTION"
+          ]
+        },
+        "target_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "include_assets": {
+          "type": "boolean"
+        },
+        "chunking": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "enabled",
+            "config_reference"
+          ],
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "config_reference": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "enabled": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "enabled"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "config_reference": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "config_reference": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "chunking": {
+                "properties": {
+                  "enabled": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "enabled"
+                ]
+              }
+            },
+            "required": [
+              "chunking"
+            ]
+          },
+          "then": {
+            "properties": {
+              "target_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "reconciliationRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "matching_profile_id",
+        "document_roles",
+        "role_registry_reference",
+        "config_reference"
+      ],
+      "properties": {
+        "matching_profile_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "document_roles": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "document_id",
+              "role_id"
+            ],
+            "properties": {
+              "document_id": {
+                "$ref": "shared-definitions.schema.json#/$defs/identifier"
+              },
+              "role_id": {
+                "type": "string",
+                "pattern": "^[A-Z][A-Z0-9_]*$"
+              }
+            }
+          }
+        },
+        "role_registry_reference": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "config_reference": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "semanticVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    }
+  }
+}

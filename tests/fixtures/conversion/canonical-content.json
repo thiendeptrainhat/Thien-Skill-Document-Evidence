@@ -1,0 +1,110 @@
+{
+  "schema_version": "1.0.0",
+  "skill_id": "thien-skill-document-evidence",
+  "skill_release_version": "1.1.0-rc.1",
+  "content_id": "content-conversion-001",
+  "document_id": "document-conversion-001",
+  "source_content_id": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "source_hash_status": "COMPUTED_ORIGINAL_BYTES",
+  "fidelity_mode": "SEMANTIC",
+  "reading_order_status": "VERIFIED",
+  "structural_validation_status": "PASS",
+  "blocks": [
+    {
+      "block_id": "block-heading-001",
+      "block_type": "HEADING",
+      "reading_order": 1,
+      "parent_block_id": null,
+      "text": "Quarterly Evidence Summary",
+      "level": 1,
+      "provenance": {
+        "source_page": 1,
+        "source_region": "page-1/title",
+        "source_snippet": "Quarterly Evidence Summary",
+        "geometry_status": "NOT_AVAILABLE",
+        "bounding_box": null
+      }
+    },
+    {
+      "block_id": "block-paragraph-001",
+      "block_type": "PARAGRAPH",
+      "reading_order": 2,
+      "parent_block_id": "block-heading-001",
+      "text": "Identifiers remain text: PO-0007 and INV-0042.",
+      "provenance": {
+        "source_page": 1,
+        "source_region": "page-1/body-1",
+        "source_snippet": "Identifiers remain text: PO-0007 and INV-0042.",
+        "geometry_status": "NOT_AVAILABLE",
+        "bounding_box": null
+      }
+    },
+    {
+      "block_id": "block-table-001",
+      "block_type": "TABLE",
+      "reading_order": 3,
+      "parent_block_id": "block-heading-001",
+      "columns": [
+        "Reference",
+        "Amount"
+      ],
+      "rows": [
+        [
+          "PO-0007",
+          "1250.00"
+        ],
+        [
+          "INV-0042",
+          null
+        ]
+      ],
+      "provenance": {
+        "source_page": 1,
+        "source_region": "page-1/table-1",
+        "source_snippet": "Reference | Amount",
+        "geometry_status": "NOT_AVAILABLE",
+        "bounding_box": null
+      }
+    },
+    {
+      "block_id": "block-image-001",
+      "block_type": "IMAGE",
+      "reading_order": 4,
+      "parent_block_id": "block-heading-001",
+      "asset_reference": "page-1.png",
+      "media_type": "image/png",
+      "asset_checksum": {
+        "algorithm": "SHA-256",
+        "digest": "431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460",
+        "computed_at": "UNKNOWN",
+        "object_role": "DERIVATIVE"
+      },
+      "alt_text": "One-pixel synthetic fixture",
+      "provenance": {
+        "source_page": 1,
+        "source_region": "page-1/image-1",
+        "source_snippet": null,
+        "geometry_status": "NOT_AVAILABLE",
+        "bounding_box": null
+      }
+    },
+    {
+      "block_id": "block-caption-001",
+      "block_type": "CAPTION",
+      "reading_order": 5,
+      "parent_block_id": "block-image-001",
+      "text": "Synthetic image used only for structural conversion QA.",
+      "target_block_id": "block-image-001",
+      "provenance": {
+        "source_page": 1,
+        "source_region": "page-1/caption-1",
+        "source_snippet": "Synthetic image used only for structural conversion QA.",
+        "geometry_status": "NOT_AVAILABLE",
+        "bounding_box": null
+      }
+    }
+  ],
+  "limitations": [
+    "Synthetic fixture; not source evidence."
+  ]
+}

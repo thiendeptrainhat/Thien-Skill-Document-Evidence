@@ -1,0 +1,32 @@
+{
+  "$schema": "../../schemas/common/matching-profile.schema.json",
+  "schema_version": "1.0.0",
+  "profile_id": "INVENTORY_COUNT_BOOK_STOCK",
+  "profile_version": "1.0.0",
+  "profile_kind": "INVENTORY_COUNT_BOOK_STOCK",
+  "title": "Physical inventory count to book stock",
+  "description": "Location-and-item-grain comparison between a physical count record and an authorized book-stock export.",
+  "mode": "TWO_WAY",
+  "grain": "LINE_ITEM",
+  "roles": [
+    {"role_id": "INVENTORY_COUNT", "label": "Physical inventory count", "source_kind": "DOCUMENT", "document_types": ["INVENTORY_COUNT", "PHYSICAL_COUNT_SHEET"], "role_aliases": ["STOCKTAKE"], "required": true, "field_mappings": {"count_date": "count_date", "location_code": "location_code", "item_code": "item_code", "lot_number": "lot_number", "quantity": "counted_quantity", "unit": "unit"}, "output_sheet": "INVENTORY_COUNTS"},
+    {"role_id": "BOOK_STOCK", "label": "Book stock", "source_kind": "SYSTEM_RECORD", "document_types": ["BOOK_STOCK", "INVENTORY_LEDGER_BALANCE"], "role_aliases": ["SYSTEM_STOCK"], "required": true, "field_mappings": {"count_date": "as_of_date", "location_code": "location_code", "item_code": "item_code", "lot_number": "lot_number", "quantity": "book_quantity", "unit": "unit"}, "output_sheet": "BOOK_STOCK"}
+  ],
+  "match_rules": [
+    {"rule_id": "count-to-book-stock", "left_role": "INVENTORY_COUNT", "right_role": "BOOK_STOCK", "cardinality": "ONE_TO_ONE", "components": [
+      {"component_id": "count-date", "left_field": "count_date", "right_field": "count_date", "comparator": "DATE_WINDOW", "normalizers": ["NONE"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "RUN_REQUEST", "unit": "CALENDAR_DAYS", "approval_reference_required": true}},
+      {"component_id": "location-code", "left_field": "location_code", "right_field": "location_code", "comparator": "IDENTIFIER_EXACT", "normalizers": ["IDENTIFIER_PRESERVE"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}},
+      {"component_id": "item-code", "left_field": "item_code", "right_field": "item_code", "comparator": "IDENTIFIER_EXACT", "normalizers": ["IDENTIFIER_PRESERVE"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}},
+      {"component_id": "lot-number", "left_field": "lot_number", "right_field": "lot_number", "comparator": "IDENTIFIER_EXACT", "normalizers": ["IDENTIFIER_PRESERVE"], "required": false, "candidate_only": false, "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}},
+      {"component_id": "quantity", "left_field": "quantity", "right_field": "quantity", "comparator": "DECIMAL_ABSOLUTE", "normalizers": ["DECIMAL_CANONICAL_STRING"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "RUN_REQUEST", "unit": "QUANTITY", "approval_reference_required": true}},
+      {"component_id": "unit", "left_field": "unit", "right_field": "unit", "comparator": "EXACT_TEXT", "normalizers": ["TRIM_OUTER_WHITESPACE", "UNICODE_NFKC", "CASEFOLD"], "required": true, "candidate_only": false, "tolerance_source": {"mode": "NOT_APPLICABLE", "unit": "NOT_APPLICABLE", "approval_reference_required": false}}
+    ], "partial_handling": {"mode": "DISALLOW", "allowed_relation": "NOT_APPLICABLE", "policy_source": "NOT_APPLICABLE"}, "missing_field_policy": "HUMAN_REVIEW_REQUIRED", "multiple_candidate_policy": "AMBIGUOUS_MATCH", "explicit_bridge": null}
+  ],
+  "aggregation_rules": [],
+  "comparison_basis": {"date": {"input_representation": "ISO_8601", "role_date_fields": {"INVENTORY_COUNT": "count_date", "BOOK_STOCK": "count_date"}, "ambiguous_date_policy": "HUMAN_REVIEW_REQUIRED", "window_source": "REQUIRE_APPROVED_RUN_INPUT"}, "currency": {"comparison_mode": "EXACT_CURRENCY_ONLY", "role_currency_fields": {}, "cross_currency_policy": "REQUIRE_APPROVED_ADAPTER", "exchange_rate_source": "REQUIRE_APPROVED_RUN_INPUT"}},
+  "policy_sources": {"tolerance_values": "REQUIRE_APPROVED_RUN_INPUT", "partial_matching": "REQUIRE_APPROVED_RUN_INPUT_WHEN_ALLOWED", "currency_conversion": "EXACT_CURRENCY_UNLESS_APPROVED_ADAPTER", "materiality_use": "NOT_USED_AS_MATCH_TOLERANCE"},
+  "exception_policy": {"partial_match": "DISALLOW", "many_to_many": "REQUIRE_EXPLICIT_BRIDGE_AND_ALLOCATION", "duplicate": "FLAG_AND_REQUIRE_HUMAN_REVIEW", "missing_required_role": "FLAG_AND_REQUIRE_HUMAN_REVIEW", "missing_required_field": "HUMAN_REVIEW_REQUIRED", "ambiguous_candidate": "AMBIGUOUS_MATCH"},
+  "review_rule": {"review_required_for": ["AMBIGUOUS_MATCH", "CONFLICTING_MATCH", "UNMATCHED", "MISSING_REQUIRED_ROLE", "MISSING_REQUIRED_FIELD", "DUPLICATE_CONTENT", "UNCLASSIFIED_DOCUMENT", "PER_FILE_FAILURE"], "automatic_business_decision": false, "release_gate": "ACCOUNTABLE_HUMAN_REVIEW"},
+  "workbook_contract": {"role_sheets": "ONLY_ROLES_WITH_RECORDS", "source_index": "ACCESSIBLE_INPUTS_ONLY", "run_log": "ACTUAL_EXECUTION_ONLY", "empty_sheet_policy": "DO_NOT_CREATE", "identifier_policy": "PRESERVE_AS_TEXT", "value_policy": "PRESERVE_RAW_AND_NORMALIZED", "provenance_policy": "FIELD_AND_SOURCE_REFERENCE", "formula_policy": "UNTRUSTED_TEXT_NEVER_FORMULA"},
+  "limitations": ["Cut-off, unit conversion, location hierarchy, lot handling, and count tolerance must be supplied or approved for the specific run.", "A quantity difference is an observed exception and is not an automatic loss, adjustment, or control-effectiveness conclusion."]
+}

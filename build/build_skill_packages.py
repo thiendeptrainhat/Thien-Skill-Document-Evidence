@@ -119,7 +119,7 @@ def load_config(project_root: Path = ROOT) -> dict[str, object]:
     ):
         _require_string(config, key)
     if config["status"] != "Testing":
-        raise PackagingError("this 1.0.0 release must retain status Testing")
+        raise PackagingError("pre-production releases must retain status Testing")
     if config["repository_status"] != "private":
         raise PackagingError("repository_status must be private")
     repository = config.get("repository")
@@ -194,6 +194,19 @@ def load_config(project_root: Path = ROOT) -> dict[str, object]:
         if artifact_names.get(platform) != expected_name:
             raise PackagingError(f"artifact_names.{platform} must be exactly {expected_name!r}")
         _safe_filename(expected_name, f"artifact_names.{platform}")
+
+    preserved_versions = config.get("preserved_dist_versions", [])
+    if not isinstance(preserved_versions, list):
+        raise PackagingError("preserved_dist_versions must be an array")
+    if any(not isinstance(value, str) for value in preserved_versions):
+        raise PackagingError("every preserved_dist_versions entry must be a string")
+    if any(not SEMVER_RE.fullmatch(value) for value in preserved_versions):
+        raise PackagingError("preserved_dist_versions entries must be valid SemVer")
+    if len(set(preserved_versions)) != len(preserved_versions):
+        raise PackagingError("preserved_dist_versions entries must be unique")
+    if str(config["version"]) in preserved_versions:
+        raise PackagingError("preserved_dist_versions must not include the current version")
+    config["preserved_dist_versions"] = preserved_versions
 
     for key, default in (
         ("max_member_bytes", 16_777_216),
@@ -710,6 +723,121 @@ def inspect_archive(
     return {"files": files, "manifest": manifest, "core": core}
 
 
+def _release_paths_for_version(
+    config: Mapping[str, object], version: str
+) -> dict[str, str]:
+    basename = str(config["artifact_basename"])
+    paths = {
+        platform: f"{platform}/{basename}-{PLATFORM_LABELS[platform]}-v{version}.zip"
+        for platform in PLATFORMS
+    }
+    paths.update(
+        {
+            "parity": f"PARITY-v{version}.json",
+            "manifest": f"release-manifest-v{version}.json",
+            "checksums": f"SHA256SUMS-v{version}.txt",
+        }
+    )
+    return paths
+
+
+def _validate_preserved_dist(
+    dist: Path, config: Mapping[str, object]
+) -> set[str]:
+    """Validate any configured historical release without rewriting it."""
+
+    validated: set[str] = set()
+    for version in config.get("preserved_dist_versions", []):
+        paths = _release_paths_for_version(config, str(version))
+        expected = set(paths.values())
+        present = {relative for relative in expected if (dist / relative).is_file()}
+        if not present:
+            continue
+        missing = sorted(expected - present)
+        if missing:
+            raise PackagingError(
+                f"preserved release v{version} is incomplete: {', '.join(missing)}"
+            )
+
+        checksum_path = dist / paths["checksums"]
+        declarations: dict[str, str] = {}
+        try:
+            checksum_lines = checksum_path.read_text(encoding="utf-8").splitlines()
+        except (OSError, UnicodeDecodeError) as exc:
+            raise PackagingError(
+                f"cannot read preserved release checksums for v{version}: {exc}"
+            ) from exc
+        for line in checksum_lines:
+            match = re.fullmatch(r"([0-9a-f]{64})  (.+)", line)
+            if not match:
+                raise PackagingError(f"invalid preserved checksum line for v{version}: {line!r}")
+            relative = _safe_relative(match.group(2), "preserved checksum path").as_posix()
+            if relative in declarations:
+                raise PackagingError(f"duplicate preserved checksum path: {relative}")
+            declarations[relative] = match.group(1)
+        checksum_targets = expected - {paths["checksums"]}
+        if set(declarations) != checksum_targets:
+            raise PackagingError(f"preserved checksum inventory mismatch for v{version}")
+        for relative, declared in declarations.items():
+            actual = sha256_bytes((dist / relative).read_bytes())
+            if actual != declared:
+                raise PackagingError(f"preserved release checksum mismatch: {relative}")
+
+        try:
+            release_manifest = json.loads((dist / paths["manifest"]).read_text(encoding="utf-8"))
+            parity = json.loads((dist / paths["parity"]).read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise PackagingError(f"invalid preserved release metadata for v{version}: {exc}") from exc
+        if not isinstance(release_manifest, dict) or release_manifest.get("version") != version:
+            raise PackagingError(f"preserved release manifest version mismatch for v{version}")
+        if not isinstance(parity, dict) or parity.get("version") != version:
+            raise PackagingError(f"preserved parity version mismatch for v{version}")
+        historical_release_date = release_manifest.get("release_date")
+        if not isinstance(historical_release_date, str):
+            raise PackagingError(f"preserved release date is missing for v{version}")
+        try:
+            date.fromisoformat(historical_release_date)
+        except ValueError as exc:
+            raise PackagingError(f"preserved release date is invalid for v{version}") from exc
+
+        historical_config = dict(config)
+        historical_config["version"] = version
+        historical_config["release_date"] = historical_release_date
+        for historical_key, config_key in (
+            ("display_name", "display_name"),
+            ("license", "license_name"),
+            ("repository_status", "repository_status"),
+            ("status", "status"),
+        ):
+            historical_value = release_manifest.get(historical_key)
+            if not isinstance(historical_value, str) or not historical_value.strip():
+                raise PackagingError(
+                    f"preserved release {historical_key} is missing for v{version}"
+                )
+            historical_config[config_key] = historical_value
+        historical_repository = release_manifest.get("repository")
+        if historical_repository is None:
+            historical_config.pop("repository", None)
+        elif isinstance(historical_repository, str) and historical_repository.strip():
+            historical_config["repository"] = historical_repository
+        else:
+            raise PackagingError(f"preserved repository metadata is invalid for v{version}")
+        historical_config["artifact_names"] = {
+            platform: PurePosixPath(paths[platform]).name for platform in PLATFORMS
+        }
+        historical_distribution = parity.get("distribution_files")
+        if isinstance(historical_distribution, list) and all(
+            isinstance(item, str) for item in historical_distribution
+        ):
+            historical_config["distribution_files"] = historical_distribution
+        for platform in PLATFORMS:
+            inspect_archive(
+                (dist / paths[platform]).read_bytes(), historical_config, platform
+            )
+        validated.update(expected)
+    return validated
+
+
 def render_release(project_root: Path = ROOT) -> dict[str, bytes]:
     project_root = Path(project_root)
     config = load_config(project_root)
@@ -810,11 +938,13 @@ def _atomic_write(path: Path, data: bytes) -> None:
 
 
 def build_release(project_root: Path = ROOT, *, check: bool = False) -> dict[str, bytes]:
-    """Render a release and atomically write it, or compare all managed dist files."""
+    """Render current artifacts while preserving configured historical releases."""
 
     project_root = Path(project_root)
+    config = load_config(project_root)
     outputs = render_release(project_root)
     dist = project_root / "dist"
+    preserved = _validate_preserved_dist(dist, config) if dist.is_dir() else set()
     if check:
         mismatches: list[str] = []
         for relative, expected in outputs.items():
@@ -825,9 +955,13 @@ def build_release(project_root: Path = ROOT, *, check: bool = False) -> dict[str
                 mismatches.append(f"content mismatch {relative}")
         existing = {
             path.relative_to(dist).as_posix()
-            for path in dist.rglob("*") if path.is_file()
+            for path in dist.rglob("*")
+            if (path.is_file() or path.is_symlink())
+            # Finder metadata is not a release artifact. Do not ignore a
+            # symlink with that name or any other unexpected file.
+            and not (path.name == ".DS_Store" and not path.is_symlink())
         } if dist.is_dir() else set()
-        unexpected = sorted(existing - set(outputs))
+        unexpected = sorted(existing - set(outputs) - preserved)
         if unexpected:
             mismatches.append("unexpected " + ", ".join(unexpected))
         if mismatches:

@@ -1,0 +1,7 @@
+{
+  "artifact_name": "manifest.json",
+  "checksum_scope": "PAYLOAD_FILES_EXCLUDING_THIS_MANIFEST_AND_RAG_PACKAGE_CONTROL",
+  "manifest_version": "1.0.0",
+  "qa_scope": "STRUCTURAL_PACKAGE_BUILD_ONLY",
+  "template_version": "1.0.0"
+}

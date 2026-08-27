@@ -6,8 +6,8 @@ THÔNG BÁO / NOTICE
 
 Bản quyền © 2026 Tran Ngoc Thien. Bảo lưu mọi quyền.
 
-Skill `thien-skill-document-evidence`, phiên bản `1.0.0`, ngày áp dụng
-`23 August 2026`, thuộc nhãn `Tran Ngoc Thien's Skill`. Repository và các bản
+Skill `thien-skill-document-evidence`, phiên bản `1.1.0`, ngày áp dụng
+`27 August 2026`, thuộc nhãn `Tran Ngoc Thien's Skill`. Repository và các bản
 phân phối có tình trạng `PRIVATE`. Nền tảng dự kiến: OpenAI, Anthropic Claude và
 Universal.
 
@@ -23,8 +23,9 @@ skill/package cùng `LICENSE-APPLICATION.md`. Bản tiếng Việt ưu tiên áp
 tự ưu tiên tài liệu do Giấy phép chung quy định. Liên hệ cấp quyền:
 Tran Ngoc Thien, `thien.8888@gmail.com`, Ho Chi Minh, Vietnam.
 
-Skill hỗ trợ trích xuất, provenance, liên kết hồ sơ, đối soát, exception/review
-queue và controlled handoff. Skill không xác thực tài liệu, không quyết định giá
+Skill hỗ trợ chuyển đổi artifact theo capability, chuẩn bị nguồn RAG, trích xuất,
+provenance, liên kết hồ sơ, đối soát cấu hình theo vai trò, exception/review queue
+và controlled handoff. Skill không xác thực tài liệu, không quyết định giá
 trị chứng cứ, không đưa ý kiến pháp lý/kiểm toán, không chứng nhận assurance hay
 tuân thủ, không kết luận gian lận/điều tra và không phê duyệt production. Output
 trọng yếu phải được con người có thẩm quyền kiểm tra và phê duyệt.
@@ -45,8 +46,8 @@ canonical skill/package hoặc
 
 Copyright © 2026 Tran Ngoc Thien. All rights reserved.
 
-Skill `thien-skill-document-evidence`, version `1.0.0`, application date
-`23 August 2026`, is issued under the `Tran Ngoc Thien's Skill` label. The
+Skill `thien-skill-document-evidence`, version `1.1.0`, application date
+`27 August 2026`, is issued under the `Tran Ngoc Thien's Skill` label. The
 repository and distributions are `PRIVATE`. Intended platforms: OpenAI,
 Anthropic Claude, and Universal.
 
@@ -63,7 +64,8 @@ together with `LICENSE-APPLICATION.md`. The Vietnamese version prevails, and
 the Master License controls document priority. Licensing contact: Tran Ngoc
 Thien, `thien.8888@gmail.com`, Ho Chi Minh, Vietnam.
 
-The Skill supports extraction, provenance, package linking, reconciliation,
+The Skill supports capability-aware artifact conversion, RAG source preparation,
+extraction, provenance, package linking, role-configured reconciliation,
 exception/review queues, and controlled handoff. It does not authenticate
 documents, determine evidentiary weight, provide legal/audit opinions, certify
 assurance or compliance, make fraud/investigative findings, or grant production

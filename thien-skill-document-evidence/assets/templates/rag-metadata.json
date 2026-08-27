@@ -1,0 +1,13 @@
+{
+  "artifact_name": "metadata.json",
+  "defaults": {
+    "classification": [
+      "UNKNOWN"
+    ],
+    "document_type": "UNKNOWN",
+    "extraction_method": "UNKNOWN",
+    "language": "UNKNOWN"
+  },
+  "qa_scope": "STRUCTURAL_PACKAGE_BUILD_ONLY",
+  "template_version": "1.0.0"
+}

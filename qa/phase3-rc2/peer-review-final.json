@@ -1,0 +1,58 @@
+{
+  "peer_record_id": "P3-PEER-FINAL",
+  "engagement_id": "DE-PHASE3-RC2-20260827",
+  "handoff_id": "P3-H03",
+  "task_id": "P3-T04",
+  "recorded_at": "2026-08-27T05:00:59.443Z",
+  "record_author": "codex-root; consolidation of phase3_scope_review final PASS_WITH_LIMITATIONS handoff",
+  "reviewer": "phase3_scope_review",
+  "review_relationship": "peer_review",
+  "technical_closure_status": "PASS_WITH_LIMITATIONS",
+  "final_dossier_consistency": "PASS_WITH_LIMITATIONS",
+  "method": "Read-only full test source and saved root execution results; no runtime claimed by peer.",
+  "findings": [
+    {
+      "finding_id": "P3-SCOPE-F02",
+      "reviewer_decision": "closed",
+      "retest_status": "pass",
+      "evidence": [
+        "tests/test_phase3_packaged_workflows.py#exact_profile",
+        "tests/test_phase3_packaged_workflows.py#assert_workbook_safety",
+        "qa/phase3-rc2/executions.json#P3-EXEC-FULL-REGRESSION"
+      ],
+      "rationale": "New tests assert missing profiles/default branch, exact rules/statuses/mappings, source-to-worksheet fields, counts, formula/identifier safety and identical bytes across three extracted layouts."
+    },
+    {
+      "finding_id": "P3-SCOPE-F01",
+      "reviewer_decision": "open",
+      "severity": "medium",
+      "readiness_impact": "non_blocking for PACKAGE_ONLY",
+      "rationale": "Structured 1PO+2GRN+2invoice flow added; raw receipt/multipage scan/blur/full-statement balances still not tested. Not full remediation or risk acceptance."
+    }
+  ],
+  "checked_counts": {
+    "original_files_hash_size_match": 152,
+    "initial_artifact_ids_consistent": 12,
+    "unique_planned_checks": 18,
+    "new_methods_pass_in_root_log": 22,
+    "packaged_profiles": 7,
+    "source_only_profiles": 2,
+    "live_cells_NOT_TESTED": 27,
+    "final_inventory_artifacts": 21,
+    "final_evidence_locators": 60,
+    "report_links_at_peer_review": 20
+  },
+  "evidence_metadata_observation": {
+    "issue": "tool-reported wait values were labelled wall_time_seconds and could be mistaken for process runtime",
+    "root_action": "Rename to tool_call_wait_seconds; label dispatch/capture timestamps; retain raw harness runtime separately.",
+    "status": "verified_corrected_by_peer"
+  },
+  "test_file_sha256": "792e09b943cd2b672d1065d27f0e6d221c09c8dfc307f6fd5d5cd8d3fac5af3d",
+  "approval_status": "pending_human_approval",
+  "limitations": [
+    "Peer agent not human independent assurance.",
+    "Peer read test/logs and independently recalculated hashes/counts/links; did not rerun product suite, install or access network.",
+    "Final status-only updates and checksum issuance performed by root after peer review."
+  ],
+  "final_review_summary": "Read-only final report/record consistency confirmed: no new PACKAGE_ONLY blocker; 119=118PASS+1SKIP, 7 packaged profiles, 2 source-only and27 NOT_TESTED cells; root to finalize status fields and rerun checks."
+}

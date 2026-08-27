@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0.0",
+  "approval": {
+    "status": "APPROVED",
+    "owner": "Synthetic fixture policy owner",
+    "approval_reference": "APPROVAL-TEST-001"
+  },
+  "tolerances": {},
+  "partial_policies": {
+    "po-to-grn": {
+      "mode": "ALLOW_WHEN_DOCUMENTED",
+      "allowed_relation": "RIGHT_LESS_THAN_OR_EQUAL_LEFT",
+      "aggregation_id": null,
+      "basis": "Synthetic approved partial-delivery fixture",
+      "owner": "Synthetic fixture policy owner",
+      "approval_reference": "APPROVAL-TEST-001",
+      "approval_status": "APPROVED"
+    },
+    "po-to-invoice": {
+      "mode": "ALLOW_WHEN_DOCUMENTED",
+      "allowed_relation": "RIGHT_LESS_THAN_OR_EQUAL_LEFT",
+      "aggregation_id": null,
+      "basis": "Synthetic approved partial-invoice fixture",
+      "owner": "Synthetic fixture policy owner",
+      "approval_reference": "APPROVAL-TEST-001",
+      "approval_status": "APPROVED"
+    }
+  }
+}

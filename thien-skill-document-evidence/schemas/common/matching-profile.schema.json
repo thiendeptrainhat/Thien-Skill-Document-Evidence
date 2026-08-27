@@ -1,0 +1,648 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "matching-profile.schema.json",
+  "title": "Extensible deterministic document matching profile",
+  "description": "Declares roles and safe deterministic comparison policy without embedding business tolerance or materiality values.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "profile_id",
+    "profile_version",
+    "profile_kind",
+    "title",
+    "description",
+    "mode",
+    "grain",
+    "roles",
+    "match_rules",
+    "aggregation_rules",
+    "comparison_basis",
+    "policy_sources",
+    "exception_policy",
+    "review_rule",
+    "workbook_contract",
+    "limitations"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "../../schemas/common/matching-profile.schema.json"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "profile_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "profile_kind": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]*$",
+      "examples": [
+        "PR_PO",
+        "PO_GRN_INVOICE",
+        "PR_PO_GRN_INVOICE",
+        "CONTRACT_ACCEPTANCE_INVOICE_PAYMENT_REQUEST",
+        "INVOICE_PAYMENT_BANK_SETTLEMENT",
+        "CONTRACT_PO_GRN_INVOICE_BANK_PAYMENT",
+        "OUTBOUND_INVOICE_GOODS_ISSUE_CUSTOMER_RECEIPT",
+        "INVENTORY_COUNT_BOOK_STOCK",
+        "CUSTOM_N_WAY"
+      ]
+    },
+    "title": {
+      "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+    },
+    "description": {
+      "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+    },
+    "mode": {
+      "enum": [
+        "TWO_WAY",
+        "THREE_WAY",
+        "FOUR_WAY",
+        "ERP_DOCUMENT",
+        "CUSTOM_DETERMINISTIC"
+      ]
+    },
+    "grain": {
+      "enum": [
+        "DOCUMENT",
+        "LINE_ITEM",
+        "PAYMENT_ALLOCATION",
+        "MIXED_WITH_EXPLICIT_ROLLUP"
+      ]
+    },
+    "roles": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "role_id",
+          "label",
+          "source_kind",
+          "document_types",
+          "role_aliases",
+          "required",
+          "field_mappings",
+          "output_sheet"
+        ],
+        "properties": {
+          "role_id": {
+            "$ref": "shared-definitions.schema.json#/$defs/identifier"
+          },
+          "label": {
+            "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+          },
+          "source_kind": {
+            "enum": [
+              "DOCUMENT",
+              "SYSTEM_RECORD"
+            ]
+          },
+          "document_types": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Z][A-Z0-9_]*$"
+            }
+          },
+          "role_aliases": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Z][A-Z0-9_]*$"
+            }
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "field_mappings": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+            }
+          },
+          "field_mapping_variants": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "output_sheet": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 31,
+            "pattern": "^[A-Z][A-Z0-9_]*$"
+          }
+        }
+      }
+    },
+    "match_rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/matchRule"
+      }
+    },
+    "aggregation_rules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/aggregationRule"
+      }
+    },
+    "comparison_basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "date",
+        "currency"
+      ],
+      "properties": {
+        "date": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "input_representation",
+            "role_date_fields",
+            "ambiguous_date_policy",
+            "window_source"
+          ],
+          "properties": {
+            "input_representation": {"const": "ISO_8601"},
+            "role_date_fields": {
+              "type": "object",
+              "additionalProperties": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}
+            },
+            "ambiguous_date_policy": {"const": "HUMAN_REVIEW_REQUIRED"},
+            "window_source": {"enum": ["NOT_APPLICABLE", "REQUIRE_APPROVED_RUN_INPUT"]}
+          }
+        },
+        "currency": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "comparison_mode",
+            "role_currency_fields",
+            "cross_currency_policy",
+            "exchange_rate_source"
+          ],
+          "properties": {
+            "comparison_mode": {"const": "EXACT_CURRENCY_ONLY"},
+            "role_currency_fields": {
+              "type": "object",
+              "additionalProperties": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}
+            },
+            "cross_currency_policy": {"const": "REQUIRE_APPROVED_ADAPTER"},
+            "exchange_rate_source": {"const": "REQUIRE_APPROVED_RUN_INPUT"}
+          }
+        }
+      }
+    },
+    "policy_sources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tolerance_values",
+        "partial_matching",
+        "currency_conversion",
+        "materiality_use"
+      ],
+      "properties": {
+        "tolerance_values": {
+          "const": "REQUIRE_APPROVED_RUN_INPUT"
+        },
+        "partial_matching": {
+          "const": "REQUIRE_APPROVED_RUN_INPUT_WHEN_ALLOWED"
+        },
+        "currency_conversion": {
+          "const": "EXACT_CURRENCY_UNLESS_APPROVED_ADAPTER"
+        },
+        "materiality_use": {
+          "const": "NOT_USED_AS_MATCH_TOLERANCE"
+        }
+      }
+    },
+    "exception_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "partial_match",
+        "many_to_many",
+        "duplicate",
+        "missing_required_role",
+        "missing_required_field",
+        "ambiguous_candidate"
+      ],
+      "properties": {
+        "partial_match": {
+          "enum": [
+            "DISALLOW",
+            "REQUIRE_APPROVED_RUN_POLICY",
+            "HUMAN_REVIEW_REQUIRED"
+          ]
+        },
+        "many_to_many": {
+          "const": "REQUIRE_EXPLICIT_BRIDGE_AND_ALLOCATION"
+        },
+        "duplicate": {
+          "enum": [
+            "FLAG_AND_REQUIRE_HUMAN_REVIEW",
+            "RETAIN_AND_REQUIRE_HUMAN_REVIEW",
+            "BLOCK_DUPLICATE_RECORD_ID"
+          ]
+        },
+        "missing_required_role": {
+          "const": "FLAG_AND_REQUIRE_HUMAN_REVIEW"
+        },
+        "missing_required_field": {
+          "enum": [
+            "UNMATCHED",
+            "BLOCK_RULE",
+            "HUMAN_REVIEW_REQUIRED"
+          ]
+        },
+        "ambiguous_candidate": {
+          "const": "AMBIGUOUS_MATCH"
+        }
+      }
+    },
+    "review_rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "review_required_for",
+        "automatic_business_decision",
+        "release_gate"
+      ],
+      "properties": {
+        "review_required_for": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "PARTIAL_MATCH",
+              "AMBIGUOUS_MATCH",
+              "CONFLICTING_MATCH",
+              "UNMATCHED",
+              "MISSING_REQUIRED_ROLE",
+              "MISSING_REQUIRED_FIELD",
+              "DUPLICATE_CONTENT",
+              "UNCLASSIFIED_DOCUMENT",
+              "PER_FILE_FAILURE"
+            ]
+          }
+        },
+        "automatic_business_decision": {
+          "const": false
+        },
+        "release_gate": {
+          "const": "ACCOUNTABLE_HUMAN_REVIEW"
+        }
+      }
+    },
+    "workbook_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role_sheets",
+        "source_index",
+        "run_log",
+        "empty_sheet_policy",
+        "identifier_policy",
+        "value_policy",
+        "provenance_policy",
+        "formula_policy"
+      ],
+      "properties": {
+        "role_sheets": {
+          "const": "ONLY_ROLES_WITH_RECORDS"
+        },
+        "source_index": {
+          "const": "ACCESSIBLE_INPUTS_ONLY"
+        },
+        "run_log": {
+          "const": "ACTUAL_EXECUTION_ONLY"
+        },
+        "empty_sheet_policy": {
+          "const": "DO_NOT_CREATE"
+        },
+        "identifier_policy": {
+          "const": "PRESERVE_AS_TEXT"
+        },
+        "value_policy": {
+          "const": "PRESERVE_RAW_AND_NORMALIZED"
+        },
+        "provenance_policy": {
+          "const": "FIELD_AND_SOURCE_REFERENCE"
+        },
+        "formula_policy": {
+          "const": "UNTRUSTED_TEXT_NEVER_FORMULA"
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+      }
+    }
+  },
+  "$defs": {
+    "matchRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule_id",
+        "left_role",
+        "right_role",
+        "cardinality",
+        "components",
+        "partial_handling",
+        "missing_field_policy",
+        "multiple_candidate_policy",
+        "explicit_bridge"
+      ],
+      "properties": {
+        "rule_id": {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        "left_role": {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        "right_role": {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        "cardinality": {
+          "enum": [
+            "ONE_TO_ONE",
+            "ONE_TO_MANY",
+            "MANY_TO_ONE",
+            "MANY_TO_MANY_WITH_EXPLICIT_BRIDGE"
+          ]
+        },
+        "components": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/matchComponent"
+          }
+        },
+        "partial_handling": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "allowed_relation",
+            "policy_source"
+          ],
+          "properties": {
+            "mode": {
+              "enum": [
+                "DISALLOW",
+                "REQUIRE_APPROVED_RUN_POLICY",
+                "HUMAN_REVIEW_REQUIRED"
+              ]
+            },
+            "allowed_relation": {
+              "enum": [
+                "LEFT_LESS_THAN_OR_EQUAL_RIGHT",
+                "RIGHT_LESS_THAN_OR_EQUAL_LEFT",
+                "AGGREGATED_PARTIAL_WITHIN_BASE",
+                "NOT_APPLICABLE"
+              ]
+            },
+            "policy_source": {
+              "enum": [
+                "NOT_APPLICABLE",
+                "RUN_REQUEST",
+                "APPROVED_PROCESS_POLICY",
+                "APPROVED_CONTRACT_TERM",
+                "APPROVED_SYSTEM_CONFIGURATION"
+              ]
+            }
+          }
+        },
+        "missing_field_policy": {
+          "enum": [
+            "UNMATCHED",
+            "BLOCK_RULE",
+            "HUMAN_REVIEW_REQUIRED"
+          ]
+        },
+        "multiple_candidate_policy": {
+          "const": "AMBIGUOUS_MATCH"
+        },
+        "explicit_bridge": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "bridge_role",
+                "allocation_key_fields"
+              ],
+              "properties": {
+                "bridge_role": {
+                  "$ref": "shared-definitions.schema.json#/$defs/identifier"
+                },
+                "allocation_key_fields": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*$"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "cardinality": {
+                "const": "MANY_TO_MANY_WITH_EXPLICIT_BRIDGE"
+              }
+            },
+            "required": [
+              "cardinality"
+            ]
+          },
+          "then": {
+            "properties": {
+              "explicit_bridge": {
+                "type": "object"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "explicit_bridge": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "matchComponent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "component_id",
+        "left_field",
+        "right_field",
+        "comparator",
+        "normalizers",
+        "required",
+        "candidate_only",
+        "tolerance_source"
+      ],
+      "properties": {
+        "component_id": {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        "left_field": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "right_field": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "comparator": {
+          "$ref": "reconciliation-config.schema.json#/$defs/comparator"
+        },
+        "normalizers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "reconciliation-config.schema.json#/$defs/normalizer"
+          }
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "candidate_only": {
+          "type": "boolean"
+        },
+        "tolerance_source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "unit",
+            "approval_reference_required"
+          ],
+          "properties": {
+            "mode": {
+              "enum": [
+                "NOT_APPLICABLE",
+                "RUN_REQUEST",
+                "APPROVED_PROCESS_POLICY",
+                "APPROVED_CONTRACT_TERM",
+                "APPROVED_SYSTEM_CONFIGURATION"
+              ]
+            },
+            "unit": {
+              "enum": [
+                "ABSOLUTE_AMOUNT",
+                "RELATIVE_PERCENT",
+                "QUANTITY",
+                "CALENDAR_DAYS",
+                "NOT_APPLICABLE"
+              ]
+            },
+            "approval_reference_required": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "aggregationRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aggregation_id",
+        "role_id",
+        "group_by_fields",
+        "value_field",
+        "operation",
+        "result_field"
+      ],
+      "properties": {
+        "aggregation_id": {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        "role_id": {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        "group_by_fields": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          }
+        },
+        "value_field": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "operation": {
+          "enum": [
+            "SUM_DECIMAL",
+            "COUNT_RECORDS",
+            "MIN_DECIMAL",
+            "MAX_DECIMAL"
+          ]
+        },
+        "result_field": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        }
+      }
+    }
+  }
+}

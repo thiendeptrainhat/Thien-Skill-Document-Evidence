@@ -1,0 +1,16 @@
+{
+  "config_version": "1.0.0",
+  "heading_handling": "TRACK_HEADING_PATH",
+  "language_basis": "CANONICAL_METADATA_OR_UNKNOWN",
+  "max_blocks_per_chunk": 2,
+  "overlap_blocks": 0,
+  "required_metadata_fields": [
+    "document_id",
+    "block_ids",
+    "source_locators"
+  ],
+  "strategy": "CANONICAL_BLOCK_GROUPS",
+  "table_handling": "KEEP_BLOCK_WHOLE",
+  "tokenizer_basis": "NOT_APPLICABLE",
+  "unit": "BLOCK"
+}

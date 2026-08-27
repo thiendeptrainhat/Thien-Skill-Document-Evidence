@@ -1,7 +1,7 @@
 {
   "name": "thien-skill-document-evidence",
-  "version": "1.0.0",
-  "description": "Extract, verify, reconcile, and package document evidence with traceable provenance and controlled human review.",
+  "version": "1.1.0",
+  "description": "Convert, structure, prepare for RAG, reconcile, and package document evidence with traceable provenance and controlled human review.",
   "author": {
     "name": "Tran Ngoc Thien",
     "email": "thien.8888@gmail.com"
@@ -9,6 +9,8 @@
   "license": "Tran Ngoc Thien's Skills Commercial Source-Available License 2.0",
   "keywords": [
     "document-intelligence",
+    "document-conversion",
+    "rag",
     "evidence",
     "reconciliation",
     "provenance",
@@ -17,8 +19,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Thien Skill — Document Intelligence, Evidence & Reconciliation",
-    "shortDescription": "Extract and reconcile traceable document evidence",
-    "longDescription": "A traceable document-intelligence skill for extraction, page-level evidence, reconciliation, exception handling, controlled review, and reusable evidence packages.",
+    "shortDescription": "Convert and reconcile traceable document evidence",
+    "longDescription": "A traceable document-intelligence skill for conversion, RAG source preparation, extraction, page-level evidence, extensible reconciliation, exception handling, and controlled review.",
     "developerName": "Tran Ngoc Thien",
     "category": "Productivity",
     "capabilities": [
@@ -26,9 +28,9 @@
       "Write"
     ],
     "defaultPrompt": [
-      "Build an evidence register from these documents.",
-      "Extract fields and cite page-level evidence.",
-      "Reconcile this document package and flag exceptions."
+      "Convert or prepare a traceable RAG package from these documents.",
+      "Extract fields and build a page-level evidence register.",
+      "Reconcile these document roles and flag exceptions."
     ],
     "brandColor": "#001838",
     "composerIcon": "./assets/icon.png",

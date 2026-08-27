@@ -1,0 +1,141 @@
+{
+  "schema_version": "1.0.0",
+  "engagement_id": "DE-PHASE3-RC2-20260827",
+  "requested_at": "2026-08-27T04:34:04.227935+00:00",
+  "requester": {
+    "actor_id": "user-requester",
+    "display_name": "Người dùng hiện tại",
+    "role": "requester"
+  },
+  "user_language": "vi",
+  "request_summary": "Triển khai Phase 3 theo xác nhận ngay trước đó: nghiệm thu cuối và chốt bàn giao gói, không cài thử. requested_at là thời điểm ghi nhận intake; không giả định timestamp của message.",
+  "artifacts": [
+    {
+      "artifact_id": "P3-OPENAI-ZIP",
+      "locator": "dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0-rc.2.zip",
+      "version_label": "1.1.0-rc.2",
+      "sha256": "bc4e26afeace3633fd8f8ab7def510d532cc700dd63ed3dbbf4f8bdcb7a1a514"
+    },
+    {
+      "artifact_id": "P3-CLAUDE-ZIP",
+      "locator": "dist/claude/Thien-Skill-Document-Evidence-Claude-v1.1.0-rc.2.zip",
+      "version_label": "1.1.0-rc.2",
+      "sha256": "ff2e3d17ebb24ca193d35fa49c10b655dd26335eabcf7f1c9414f914d0bfb748"
+    },
+    {
+      "artifact_id": "P3-UNIVERSAL-ZIP",
+      "locator": "dist/universal/Thien-Skill-Document-Evidence-Universal-v1.1.0-rc.2.zip",
+      "version_label": "1.1.0-rc.2",
+      "sha256": "6d13e21fe7fd177da0da96a06cfb9afedbf2fb848eebf546015c3da0e9b3bc7d"
+    },
+    {
+      "artifact_id": "P3-RELEASE-MANIFEST",
+      "locator": "dist/release-manifest-v1.1.0-rc.2.json",
+      "version_label": "1.1.0-rc.2",
+      "sha256": "ffe007866c49b1445f487208aa9da65c0acf23c81d370e2f9a7e92f71e39296e"
+    },
+    {
+      "artifact_id": "P3-PARITY",
+      "locator": "dist/PARITY-v1.1.0-rc.2.json",
+      "version_label": "1.1.0-rc.2",
+      "sha256": "d0d5c68f7e010b19259d1132ddaddaffd182310ee84a5b46da66c03cebada127"
+    },
+    {
+      "artifact_id": "P3-SHA256",
+      "locator": "dist/SHA256SUMS-v1.1.0-rc.2.txt",
+      "version_label": "1.1.0-rc.2",
+      "sha256": "9f5c2622e1be05c856e74271cd0a8138773125c156e21a19321a2a20d49d07d4"
+    },
+    {
+      "artifact_id": "P3-HANDOFF-ORIGINAL",
+      "locator": "HANDOFF.md",
+      "version_label": "historical-draft",
+      "sha256": "3d1c4c360d1f69d3fc23c3b830a28c6f79286f6460dbaa15ddb05fe19b14dd55"
+    },
+    {
+      "artifact_id": "P3-PHASE2-REPORT",
+      "locator": "ACCEPTANCE-REPORT-v1.1.0-rc.2.md",
+      "version_label": "1.1.0-rc.2",
+      "sha256": "31540df04a955794cc0ef83fb6e9d2b682e0f54b21c066e7b2ea65b201ad698e"
+    },
+    {
+      "artifact_id": "P3-README",
+      "locator": "README.md",
+      "version_label": "1.1.0-rc.2",
+      "sha256": "07db64185fe84b8f56ccbc57a978afe97a49d57075161ab7faa557485f6d9e0d"
+    },
+    {
+      "artifact_id": "P3-INSTALLATION",
+      "locator": "INSTALLATION.md",
+      "version_label": "1.1.0-rc.2",
+      "sha256": "5623e5bdeda302f2267001b219ffd0857940f7b30013dcfde4488403ed878b85"
+    },
+    {
+      "artifact_id": "P3-BUILD-CONFIG",
+      "locator": "build/config.json",
+      "version_label": "1.1.0-rc.2",
+      "sha256": "df59dcc3f7302357c2d8c4cd8a70196e2b19214101ab0d88eecd1ca0394b61b7"
+    },
+    {
+      "artifact_id": "P3-SKILL",
+      "locator": "thien-skill-document-evidence/SKILL.md",
+      "version_label": "1.1.0-rc.2",
+      "sha256": "55b34f798e3c08bff72c448c1d9d0fa90ba70bfee6bc08b059764e5420aace05"
+    }
+  ],
+  "requested_profiles": [
+    "evidence_traceability",
+    "report_language_cross_artifact",
+    "code_automation",
+    "findings_actions_closure"
+  ],
+  "requested_overlays": [
+    "security_privacy_confidentiality"
+  ],
+  "review_relationship": "self_check",
+  "independence_basis": {
+    "status": "same_maker",
+    "rationale": "Primary đã triển khai Phase 1/2. Hai agent riêng làm peer review/packaged acceptance; không phải human independent assurance."
+  },
+  "review_depth": "L2_full",
+  "rapid_review": false,
+  "review_phase": "closure",
+  "requested_actions": [
+    "review",
+    "reperform",
+    "retest",
+    "assess_closure"
+  ],
+  "authorization": {
+    "may_modify_artifacts": false,
+    "may_execute_artifact_code": true,
+    "may_access_external_sources": true,
+    "prohibited_actions": [
+      "Không cài/sync skill vào host hoặc thư mục discovery.",
+      "Không gọi API/OCR/RAG ngoài host hoặc gửi tài liệu/dữ liệu ra ngoài; chỉ cho phép đọc tài liệu công khai chính thức cho điểm hướng dẫn được chỉ định.",
+      "Không sửa hoặc ghi đè ZIP/nguồn RC2, HANDOFF và báo cáo lịch sử.",
+      "Không tự nâng 1.1.0 stable; không commit/tag/push.",
+      "Không chạy macro, credential hoặc dữ liệu thật."
+    ],
+    "external_source_constraints": [
+      "Chỉ đọc tài liệu chính thức của nhà phát hành đã được README/INSTALLATION tham chiếu để kiểm tra hướng dẫn Claude --plugin-dir; không upload dữ liệu, không dùng credential, không cài/chạy host."
+    ]
+  },
+  "constraints": [
+    "Được tạo test và hồ sơ QA mới trong repository; output thực thi chỉ ở temporary working copies.",
+    "Nếu phát hiện lỗi source cần sửa, báo root và lập baseline/version mới trước khi remediating; không coi scope adjustment là fix của thiếu sót.",
+    "Không suy platform PASS từ offline CLI/ZIP validation.",
+    "Bổ sung nguồn đọc-only: official Claude plugin documentation cho mâu thuẫn ZIP-versus-directory; không mở rộng live testing hoặc source mutation."
+  ],
+  "current_source_requirement": "verify_current_official_sources",
+  "human_approval_requirement": "required_before_final_use",
+  "output_preferences": {
+    "report_language_policy": "follow_user_language",
+    "formats": [
+      "markdown",
+      "json"
+    ],
+    "include_executive_summary": true,
+    "include_machine_readable_record": true
+  }
+}

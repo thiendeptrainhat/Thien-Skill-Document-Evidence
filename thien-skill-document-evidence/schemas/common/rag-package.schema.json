@@ -1,0 +1,524 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rag-package.schema.json",
+  "title": "RAG source package manifest",
+  "description": "Deterministic document or collection manifest for retrieval-oriented source packages; chunk output remains target- and configuration-dependent.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "skill_id",
+    "skill_release_version",
+    "package_id",
+    "package_kind",
+    "status",
+    "documents",
+    "collection_manifest",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "skill_id": {
+      "const": "thien-skill-document-evidence"
+    },
+    "skill_release_version": {
+      "$ref": "#/$defs/semanticVersion"
+    },
+    "package_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "package_kind": {
+      "enum": [
+        "DOCUMENT",
+        "COLLECTION"
+      ]
+    },
+    "status": {
+      "$ref": "shared-definitions.schema.json#/$defs/qualityStatus"
+    },
+    "documents": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/documentPackage"
+      }
+    },
+    "collection_manifest": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/collectionManifest"
+        }
+      ]
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "package_kind": {
+            "const": "DOCUMENT"
+          }
+        },
+        "required": [
+          "package_kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "documents": {
+            "maxItems": 1
+          },
+          "collection_manifest": {
+            "type": "null"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "collection_manifest": {
+            "$ref": "#/$defs/collectionManifest"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "PASS"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "documents": {
+            "items": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/documentPackage"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "status"
+                  ],
+                  "properties": {
+                    "status": {
+                      "const": "PASS"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "package_kind": {
+            "const": "COLLECTION"
+          },
+          "status": {
+            "const": "PASS"
+          }
+        },
+        "required": [
+          "package_kind",
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "collection_manifest": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/collectionManifest"
+              },
+              {
+                "$ref": "#/$defs/passedDescriptor"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "documentPackage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "document_id",
+        "directory",
+        "status",
+        "document_markdown",
+        "metadata",
+        "manifest",
+        "assets",
+        "chunks",
+        "limitations"
+      ],
+      "properties": {
+        "document_id": {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        "directory": {
+          "$ref": "#/$defs/safeRelativePath"
+        },
+        "status": {
+          "$ref": "shared-definitions.schema.json#/$defs/qualityStatus"
+        },
+        "document_markdown": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/fileDescriptor"
+            },
+            {
+              "properties": {
+                "path": {
+                  "const": "document.md"
+                },
+                "media_type": {
+                  "const": "text/markdown"
+                }
+              }
+            }
+          ]
+        },
+        "metadata": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/fileDescriptor"
+            },
+            {
+              "properties": {
+                "path": {
+                  "const": "metadata.json"
+                },
+                "media_type": {
+                  "const": "application/json"
+                }
+              }
+            }
+          ]
+        },
+        "manifest": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/fileDescriptor"
+            },
+            {
+              "properties": {
+                "path": {
+                  "const": "manifest.json"
+                },
+                "media_type": {
+                  "const": "application/json"
+                }
+              }
+            }
+          ]
+        },
+        "assets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fileDescriptor"
+          }
+        },
+        "chunks": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/chunkDescriptor"
+            }
+          ]
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "PASS"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "document_markdown": {
+                "$ref": "#/$defs/passedDescriptor"
+              },
+              "metadata": {
+                "$ref": "#/$defs/passedDescriptor"
+              },
+              "manifest": {
+                "$ref": "#/$defs/passedDescriptor"
+              },
+              "assets": {
+                "items": {
+                  "$ref": "#/$defs/passedDescriptor"
+                }
+              },
+              "chunks": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/$defs/chunkDescriptor"
+                      },
+                      {
+                        "$ref": "#/$defs/passedDescriptor"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "fileDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "media_type",
+        "creation_status",
+        "qa_status",
+        "checksum",
+        "limitations"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/safeRelativePath"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "creation_status": {
+          "enum": [
+            "CREATED",
+            "NOT_CREATED",
+            "BLOCKED"
+          ]
+        },
+        "qa_status": {
+          "$ref": "shared-definitions.schema.json#/$defs/validationStatus"
+        },
+        "checksum": {
+          "oneOf": [
+            {
+              "$ref": "shared-definitions.schema.json#/$defs/checksum"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "creation_status": {
+                "const": "CREATED"
+              }
+            },
+            "required": [
+              "creation_status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "checksum": {
+                "$ref": "shared-definitions.schema.json#/$defs/checksum"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "checksum": {
+                "type": "null"
+              },
+              "qa_status": {
+                "enum": [
+                  "NOT_TESTED",
+                  "NOT_APPLICABLE"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "chunkDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "media_type",
+        "creation_status",
+        "qa_status",
+        "checksum",
+        "target_id",
+        "chunking_config_checksum",
+        "limitations"
+      ],
+      "properties": {
+        "path": {
+          "const": "chunks.jsonl"
+        },
+        "media_type": {
+          "const": "application/x-ndjson"
+        },
+        "creation_status": {
+          "enum": [
+            "CREATED",
+            "NOT_CREATED",
+            "BLOCKED"
+          ]
+        },
+        "qa_status": {
+          "$ref": "shared-definitions.schema.json#/$defs/validationStatus"
+        },
+        "checksum": {
+          "oneOf": [
+            {
+              "$ref": "shared-definitions.schema.json#/$defs/checksum"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "target_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "chunking_config_checksum": {
+          "type": "string",
+          "pattern": "^[A-Fa-f0-9]{64}$"
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "creation_status": {
+                "const": "CREATED"
+              }
+            },
+            "required": [
+              "creation_status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "checksum": {
+                "$ref": "shared-definitions.schema.json#/$defs/checksum"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "checksum": {
+                "type": "null"
+              },
+              "qa_status": {
+                "enum": [
+                  "NOT_TESTED",
+                  "NOT_APPLICABLE"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "passedDescriptor": {
+      "type": "object",
+      "required": [
+        "creation_status",
+        "qa_status"
+      ],
+      "properties": {
+        "creation_status": {
+          "const": "CREATED"
+        },
+        "qa_status": {
+          "const": "PASS"
+        }
+      }
+    },
+    "collectionManifest": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/fileDescriptor"
+        },
+        {
+          "properties": {
+            "path": {
+              "const": "collection-manifest.json"
+            },
+            "media_type": {
+              "const": "application/json"
+            }
+          }
+        }
+      ]
+    },
+    "safeRelativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?![A-Za-z]:)(?!/)(?!(?:\\.{1,2})(?:/|$))(?!(?:(?:[Cc][Oo][Nn]|[Pp][Rr][Nn]|[Aa][Uu][Xx]|[Nn][Uu][Ll]|[Cc][Oo][Mm][1-9]|[Ll][Pp][Tt][1-9]))(?:\\.[^/]*|/|$))(?=[^/]*[^. /](?:/|$))[^<>:\"/\\\\|?*\\u0000-\\u001F]+(?:/(?!(?:\\.{1,2})(?:/|$))(?!(?:(?:[Cc][Oo][Nn]|[Pp][Rr][Nn]|[Aa][Uu][Xx]|[Nn][Uu][Ll]|[Cc][Oo][Mm][1-9]|[Ll][Pp][Tt][1-9]))(?:\\.[^/]*|/|$))(?=[^/]*[^. /](?:/|$))[^<>:\"/\\\\|?*\\u0000-\\u001F]+)*$"
+    },
+    "semanticVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    }
+  }
+}

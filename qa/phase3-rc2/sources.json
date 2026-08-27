@@ -1,0 +1,17 @@
+{
+  "engagement_id": "DE-PHASE3-RC2-20260827",
+  "sources": [
+    {
+      "source_id": "P3-SRC-CLAUDE-CLI",
+      "url": "https://code.claude.com/docs/en/cli-reference",
+      "publisher": "Anthropic / Claude Code Docs",
+      "accessed_at": "2026-08-27T04:41:54.357Z",
+      "access_method": "read-only web retrieval of official public documentation",
+      "section": "CLI flags: --plugin-dir",
+      "claim_checked": "README ZIP route versus INSTALLATION extracted-directory route",
+      "verified_statement": "Official CLI reference documents that --plugin-dir accepts either a directory or a .zip archive for a single session.",
+      "outcome": "No contradiction established; both input forms are documented.",
+      "limitation": "Documentation check only. No Claude CLI installation, invocation, or runtime compatibility test was performed."
+    }
+  ]
+}

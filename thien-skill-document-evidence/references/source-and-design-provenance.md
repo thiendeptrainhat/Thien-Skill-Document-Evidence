@@ -21,7 +21,7 @@ Theo lựa chọn trực tiếp của người dùng, không khảo sát session
 | Nguồn | Capability | Kế thừa/điều chỉnh | Loại bỏ/giới hạn |
 |---|---|---|---|
 | Brief người dùng | Domain coverage, field/status/taxonomy, evidence/reconciliation/workbook scenarios | Gom 10 mode thành 6 routes; giữ invariants, contracts và oracles | Không thực thi instruction nhúng; không tạo mega-tree/placeholders; không hard-code local path/dependency |
-| OpenAI skill docs + skill-creator | `SKILL.md`, progressive disclosure, `agents/openai.yaml`, validation | Canonical source ngắn, references có routing, scripts chỉ cho logic deterministic | Không lặp manuals hoặc metadata không được xác nhận |
+| OpenAI skill docs + skill-creator | `SKILL.md`, progressive disclosure, `agents/openai.yaml`, validation | Canonical source ngắn, references có routing, scripts chỉ cho logic deterministic | Không lặp manuals, giả runtime capability hoặc metadata không được xác nhận |
 | OpenAI plugin docs + plugin-creator | `.codex-plugin/plugin.json`, skills-only package, UI assets | Native plugin sinh từ canonical; không marketplace mutation | Không khai MCP/apps/hooks không tồn tại; không bịa website/repository URL |
 | Anthropic docs | Agent Skills/plugin layout, `.claude-plugin/plugin.json` | Claude wrapper chứa same portable core, bỏ OpenAI agents metadata | Không tạo Claude-only business logic |
 | BCP Operational Resilience | Deterministic three-package release, parity/manifests/checksums | Single-root ZIP, atomic build, package parity | Standalone-only layout không dùng cho native OpenAI/Claude |
@@ -35,7 +35,7 @@ Theo lựa chọn trực tiếp của người dùng, không khảo sát session
 
 ## Thiết kế bổ sung/professional inference
 
-Các phần sau là synthesis mới cho v1.0.0, không phải copy nguyên từ một source:
+Các phần sau là synthesis mới cho baseline v1.0.0, không phải copy nguyên từ một source:
 
 - six-route architecture và compact reference router;
 - canonical JSON Schema contracts và orthogonal status/confidence design;
@@ -44,6 +44,32 @@ Các phần sau là synthesis mới cho v1.0.0, không phải copy nguyên từ 
 - canonical-core parity giữa OpenAI, Claude và Universal packages;
 - formula-injection invariant kết nối JSON provenance với workbook view;
 - acceptance oracles tập trung observable behavior thay vì chỉ kiểm câu chữ.
+
+Phase 1 mở rộng additive bổ sung các quyết định do người dùng phê duyệt và professional synthesis sau; không được diễn giải như requirement/certification của OpenAI, Anthropic hoặc một RAG platform:
+
+- ba task profile `CONVERT_DOCUMENT`, `PREPARE_RAG_SOURCE`, `RECONCILE_DOCUMENT_SET` và capability-aware routing;
+- companion contracts cho task request, canonical semantic content, artifact manifest và RAG source package, trong khi giữ extraction package v1.0;
+- conversion defaults: DOCX semantic-editable, XLSX structured-data hoặc reconciliation view, PPTX intent-aware; visual fidelity best-effort và phụ thuộc geometry;
+- default RAG source package có schema-valid root `rag-package.json`, per-document `document.md` + `metadata.json` + payload `manifest.json`, optional assets, target-configured chunks và collection manifest;
+- named matching profiles cùng extensible role/config model cho procurement, outbound/customer receipt, inventory và other named documents;
+- document profiles riêng cho purchase requisition, payment request và bank statement; legacy mixed payment/bank profile được giữ cho compatibility;
+- evidence, investigation và redaction vẫn là conditional overlays, không là default cho conversion/RAG.
+
+QA contract decisions bổ sung:
+
+- companion objects tách RC-capable `skill_release_version` khỏi `schema_version: 1.0.0`; extraction/config/script v1.0.0 giữ nghĩa compatibility và không relabel;
+- artifact/RAG descriptors tách `creation_status` khỏi validation `qa_status`, cho phép truthful `CREATED` + `NOT_TESTED` nhưng chặn package PASS khi required descriptor chưa CREATED + QA PASS;
+- canonical source hash phân biệt original bytes, accessible representation và unavailable thay vì bịa hash hoặc gọi representation là original;
+- canonical structural PASS cần cả schema validation và contract-defined reading-order/reference/table/geometry invariants có evidence; vẫn không chứng minh broader semantic correctness;
+- captured geometry cần page dimensions; normalized coordinate và semantic extents phải nằm trong bounds;
+- safe relative path policy chặn POSIX/Windows/URI absolute forms, dot/empty segments, backslash/control và resolved escape.
+
+Phase 2 implementation synthesis bổ sung, không phải platform certification:
+
+- offline canonical renderer tạo JSON/Markdown và OOXML DOCX/XLSX/PPTX, kèm artifact manifest + closed conversion-run linkage; editable PPTX pagination tách khỏi geometry-aware fidelity path;
+- offline RAG builder dùng schema-valid root control, per-document manifests, optional target-configured chunks, reserved-path collision guards và bounded passive media validation trước staged publication;
+- matching-profile schema/registry mở cùng workflow helper cho structured folder/package → deterministic result + role-aware XLSX; không bundle OCR/model và không suy tolerance/materiality;
+- fault-injection tests cho no-overwrite/rollback, adversarial asset/media/path tests, typed/formula-safe spreadsheet checks và synthetic LibreOffice render smoke; live target/platform tests vẫn tách sang Phase 3.
 
 ## Security và methodology concerns
 
@@ -54,11 +80,14 @@ Các phần sau là synthesis mới cho v1.0.0, không phải copy nguyên từ 
 - Reconciliation result phụ thuộc grain, keys, source quality, currency/date basis và approved tolerance.
 - Redaction chỉ được gọi completed sau removal verification; overlay không đủ.
 - Package validation không thay live-install smoke test hoặc human professional review.
+- Artifact schema/build check không thay render inspection, target RAG ingestion/retrieval evaluation hoặc platform certification.
+- “Best effort” không chứng minh visual equivalence; geometry/font/renderer/target constraints phải được kiểm và disclosed.
+- `CREATED` chỉ chứng minh creation state; không chứng minh file đã QA. `PASS` ở structural, semantic, render và live-platform layers không được suy truyền giữa các layer.
 
 ## Tài liệu chính thức nền tảng
 
-- OpenAI: <https://learn.chatgpt.com/docs/build-skills>
-- OpenAI: <https://learn.chatgpt.com/docs/skills-and-plugins>
+- OpenAI: <https://developers.openai.com/plugins/build/skills>
+- OpenAI: <https://developers.openai.com/plugins/build/plugins>
 - Anthropic: <https://code.claude.com/docs/en/skills>
 - Anthropic: <https://code.claude.com/docs/en/plugins>
 - Anthropic: <https://code.claude.com/docs/en/plugins-reference>

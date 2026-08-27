@@ -1,0 +1,897 @@
+{
+  "schema_version": "1.0.0",
+  "review_record_id": "P3-REVIEW-001",
+  "engagement_id": "DE-PHASE3-RC2-20260827",
+  "plan_id": "P3-PLAN-001",
+  "created_at": "2026-08-27T04:54:26.347Z",
+  "updated_at": "2026-08-27T05:00:59.443Z",
+  "reviewer": {
+    "actor_id": "codex-root",
+    "display_name": "Codex — primary self-check reviewer",
+    "role": "reviewer"
+  },
+  "review_relationship": "self_check",
+  "artifact_ids_reviewed": [
+    "P3-OPENAI-ZIP",
+    "P3-CLAUDE-ZIP",
+    "P3-UNIVERSAL-ZIP",
+    "P3-RELEASE-MANIFEST",
+    "P3-PARITY",
+    "P3-SHA256",
+    "P3-HANDOFF-ORIGINAL",
+    "P3-PHASE2-REPORT",
+    "P3-README",
+    "P3-INSTALLATION",
+    "P3-BUILD-CONFIG",
+    "P3-SKILL",
+    "P3-TESTS",
+    "P3-COVERAGE",
+    "P3-EXECUTIONS",
+    "P3-REPORT"
+  ],
+  "check_results": [
+    {
+      "result_id": "P3-CHECK-01",
+      "check_id": "QA-SHARED-SCOPE",
+      "status": "pass",
+      "performed_at": "2026-08-27T04:54:26.347Z",
+      "performed_by": {
+        "actor_id": "codex-root",
+        "display_name": "Codex — primary self-check reviewer",
+        "role": "reviewer"
+      },
+      "procedure_summary": "Đối chiếu yêu cầu chỉ-gói/không-cài với intake, exclusions và ba ZIP.",
+      "evidence": [
+        {
+          "evidence_id": "P3-E-SCOPE",
+          "artifact_id": "P3-INTAKE",
+          "locator": "qa/phase3-rc2/qa-intake.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "User-authorized package-only/no-install scope, role and source constraints."
+        },
+        {
+          "evidence_id": "P3-E-COVERAGE",
+          "artifact_id": "P3-COVERAGE",
+          "locator": "qa/phase3-rc2/coverage.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Seven packaged E2E profiles, two source-only, 27 live NOT_TESTED cells and raw corpus limits."
+        }
+      ]
+    },
+    {
+      "result_id": "P3-CHECK-02",
+      "check_id": "QA-SHARED-INVENTORY",
+      "status": "pass",
+      "performed_at": "2026-08-27T04:54:26.347Z",
+      "performed_by": {
+        "actor_id": "codex-root",
+        "display_name": "Codex — primary self-check reviewer",
+        "role": "reviewer"
+      },
+      "procedure_summary": "Đối chiếu exact artifacts và original152 bằng baseline + peer hash/size check.",
+      "evidence": [
+        {
+          "evidence_id": "P3-E-BASELINE",
+          "artifact_id": "P3-BASELINE",
+          "locator": "qa/phase3-rc2/BASELINE.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Hash/size snapshot of 152 original working-tree files."
+        },
+        {
+          "evidence_id": "P3-E-PEER",
+          "artifact_id": "P3-PEER-FINAL",
+          "locator": "qa/phase3-rc2/peer-review-final.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Peer technical closure and limitations; final dossier consistency tracked separately."
+        }
+      ]
+    },
+    {
+      "result_id": "P3-CHECK-03",
+      "check_id": "QA-SHARED-INDEPENDENCE",
+      "status": "pass",
+      "performed_at": "2026-08-27T04:54:26.347Z",
+      "performed_by": {
+        "actor_id": "codex-root",
+        "display_name": "Codex — primary self-check reviewer",
+        "role": "reviewer"
+      },
+      "procedure_summary": "Công bố same-maker self_check, agent peer_review và pending human approval.",
+      "evidence": [
+        {
+          "evidence_id": "P3-E-CONTROL",
+          "artifact_id": "P3-CONTROL",
+          "locator": "qa/phase3-rc2/CONTROL.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Six role disclosures, task ownership, human gate and runtime-verified skill routing."
+        },
+        {
+          "evidence_id": "P3-E-PEER",
+          "artifact_id": "P3-PEER-FINAL",
+          "locator": "qa/phase3-rc2/peer-review-final.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Peer technical closure and limitations; final dossier consistency tracked separately."
+        }
+      ]
+    },
+    {
+      "result_id": "P3-CHECK-04",
+      "check_id": "QA-SHARED-VERSION",
+      "status": "pass",
+      "performed_at": "2026-08-27T04:54:26.347Z",
+      "performed_by": {
+        "actor_id": "codex-root",
+        "display_name": "Codex — primary self-check reviewer",
+        "role": "reviewer"
+      },
+      "procedure_summary": "Tái chạy exact builder check và kiểm embedded versions/core hashes từ ZIP.",
+      "evidence": [
+        {
+          "evidence_id": "P3-E-EXACT",
+          "artifact_id": "P3-EXECUTIONS",
+          "locator": "qa/phase3-rc2/executions.json#P3-EXEC-FINAL-CHECK",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Six exact RC2 release outputs verified without rebuild."
+        },
+        {
+          "evidence_id": "P3-E-TESTS",
+          "artifact_id": "P3-TESTS",
+          "locator": "tests/test_phase3_packaged_workflows.py",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Frozen test code, explicit expected rules/fields/statuses and isolated ZIP execution."
+        }
+      ]
+    },
+    {
+      "result_id": "P3-CHECK-05",
+      "check_id": "QA-SHARED-TRACE",
+      "status": "pass",
+      "performed_at": "2026-08-27T04:54:26.347Z",
+      "performed_by": {
+        "actor_id": "codex-root",
+        "display_name": "Codex — primary self-check reviewer",
+        "role": "reviewer"
+      },
+      "procedure_summary": "Đã kiểm strict JSON và cross-record artifact/check/finding/live-state invariants; supporting locators tồn tại.",
+      "evidence": [
+        {
+          "evidence_id": "P3-E-FULL",
+          "artifact_id": "P3-EXECUTIONS",
+          "locator": "qa/phase3-rc2/executions.json#P3-EXEC-FULL-REGRESSION",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Root direct execution: 119 methods, 118 PASS, 1 optional SKIP; 17.254s harness runtime."
+        },
+        {
+          "evidence_id": "P3-E-COVERAGE",
+          "artifact_id": "P3-COVERAGE",
+          "locator": "qa/phase3-rc2/coverage.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Seven packaged E2E profiles, two source-only, 27 live NOT_TESTED cells and raw corpus limits."
+        },
+        {
+          "evidence_id": "P3-E-DOSSIER",
+          "artifact_id": "P3-EXECUTIONS",
+          "locator": "qa/phase3-rc2/executions.json#P3-EXEC-DOSSIER-PRELIM",
+          "observed_at": "2026-08-27T04:55:36.037Z",
+          "notes": "Initial complete dossier verifier PASS:21 artifacts,18 checks,152 original files and27 NOT_TESTED cells reconcile."
+        }
+      ]
+    },
+    {
+      "result_id": "P3-CHECK-06",
+      "check_id": "QA-SHARED-LIMITS",
+      "status": "pass",
+      "performed_at": "2026-08-27T04:54:26.347Z",
+      "performed_by": {
+        "actor_id": "codex-root",
+        "display_name": "Codex — primary self-check reviewer",
+        "role": "reviewer"
+      },
+      "procedure_summary": "Kiểm raw/source/live/render scope không bị nâng thành PASS.",
+      "evidence": [
+        {
+          "evidence_id": "P3-E-COVERAGE",
+          "artifact_id": "P3-COVERAGE",
+          "locator": "qa/phase3-rc2/coverage.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Seven packaged E2E profiles, two source-only, 27 live NOT_TESTED cells and raw corpus limits."
+        },
+        {
+          "evidence_id": "P3-E-REPORT",
+          "artifact_id": "P3-REPORT",
+          "locator": "PHASE3-ACCEPTANCE-v1.1.0-rc.2.md",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Vietnamese package-only report with original live gates preserved."
+        }
+      ]
+    },
+    {
+      "result_id": "P3-CHECK-07",
+      "check_id": "QA-SHARED-LANGUAGE",
+      "status": "pass",
+      "performed_at": "2026-08-27T04:54:26.347Z",
+      "performed_by": {
+        "actor_id": "codex-root",
+        "display_name": "Codex — primary self-check reviewer",
+        "role": "reviewer"
+      },
+      "procedure_summary": "Báo cáo theo tiếng Việt; identifiers canonical giữ nguyên.",
+      "evidence": [
+        {
+          "evidence_id": "P3-E-REPORT",
+          "artifact_id": "P3-REPORT",
+          "locator": "PHASE3-ACCEPTANCE-v1.1.0-rc.2.md",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Vietnamese package-only report with original live gates preserved."
+        }
+      ]
+    },
+    {
+      "result_id": "P3-CHECK-08",
+      "check_id": "QA-SHARED-DISPOSITION",
+      "status": "pass",
+      "performed_at": "2026-08-27T05:00:59.443Z",
+      "performed_by": {
+        "actor_id": "codex-root",
+        "display_name": "Codex — primary self-check reviewer",
+        "role": "reviewer"
+      },
+      "procedure_summary": "Final peer consistency PASS_WITH_LIMITATIONS; giữ ready_with_conditions, no Critical/High/blockers và pending_human_approval. Root chốt report/status fields rồi tái kiểm dossier.",
+      "evidence": [
+        {
+          "evidence_id": "P3-E-REPORT",
+          "artifact_id": "P3-REPORT",
+          "locator": "PHASE3-ACCEPTANCE-v1.1.0-rc.2.md",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Vietnamese package-only report with original live gates preserved."
+        },
+        {
+          "evidence_id": "P3-E-CONTROL",
+          "artifact_id": "P3-CONTROL",
+          "locator": "qa/phase3-rc2/CONTROL.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Six role disclosures, task ownership, human gate and runtime-verified skill routing."
+        },
+        {
+          "evidence_id": "P3-E-FINAL-PEER",
+          "artifact_id": "P3-PEER-FINAL",
+          "locator": "qa/phase3-rc2/peer-review-final.json",
+          "observed_at": "2026-08-27T05:00:59.443Z",
+          "notes": "Separate-agent final review complete; F02 closed, F01/F03 open and nonblocking only for PACKAGE_ONLY."
+        }
+      ]
+    },
+    {
+      "result_id": "P3-CHECK-09",
+      "check_id": "QA-SHARED-CRITICAL",
+      "status": "pass",
+      "performed_at": "2026-08-27T04:54:26.347Z",
+      "performed_by": {
+        "actor_id": "codex-root",
+        "display_name": "Codex — primary self-check reviewer",
+        "role": "reviewer"
+      },
+      "procedure_summary": "Tổng hợp findings trong package-only scope, không có Critical/High hoặc blocker.",
+      "evidence": [
+        {
+          "evidence_id": "P3-E-PEER",
+          "artifact_id": "P3-PEER-FINAL",
+          "locator": "qa/phase3-rc2/peer-review-final.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Peer technical closure and limitations; final dossier consistency tracked separately."
+        },
+        {
+          "evidence_id": "P3-E-INITIAL",
+          "artifact_id": "P3-PEER-INITIAL",
+          "locator": "qa/phase3-rc2/peer-review-initial.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Initial static requirement/fixture/coverage findings and local-path checks."
+        }
+      ]
+    },
+    {
+      "result_id": "P3-CHECK-10",
+      "check_id": "QA-CODE-REQ",
+      "status": "pass",
+      "performed_at": "2026-08-27T04:54:26.347Z",
+      "performed_by": {
+        "actor_id": "codex-root",
+        "display_name": "Codex — primary self-check reviewer",
+        "role": "reviewer"
+      },
+      "procedure_summary": "Map ba workflow và profiles sang assertions/explicit scope limitations.",
+      "evidence": [
+        {
+          "evidence_id": "P3-E-TESTS",
+          "artifact_id": "P3-TESTS",
+          "locator": "tests/test_phase3_packaged_workflows.py",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Frozen test code, explicit expected rules/fields/statuses and isolated ZIP execution."
+        },
+        {
+          "evidence_id": "P3-E-COVERAGE",
+          "artifact_id": "P3-COVERAGE",
+          "locator": "qa/phase3-rc2/coverage.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Seven packaged E2E profiles, two source-only, 27 live NOT_TESTED cells and raw corpus limits."
+        }
+      ]
+    },
+    {
+      "result_id": "P3-CHECK-11",
+      "check_id": "QA-CODE-TEST",
+      "status": "pass",
+      "performed_at": "2026-08-27T04:54:26.347Z",
+      "performed_by": {
+        "actor_id": "codex-root",
+        "display_name": "Codex — primary self-check reviewer",
+        "role": "reviewer"
+      },
+      "procedure_summary": "Tái thực hiện baseline/full regression và đối chiếu targeted packaged tests.",
+      "evidence": [
+        {
+          "evidence_id": "P3-E-FULL",
+          "artifact_id": "P3-EXECUTIONS",
+          "locator": "qa/phase3-rc2/executions.json#P3-EXEC-FULL-REGRESSION",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Root direct execution: 119 methods, 118 PASS, 1 optional SKIP; 17.254s harness runtime."
+        },
+        {
+          "evidence_id": "P3-E-TESTS",
+          "artifact_id": "P3-TESTS",
+          "locator": "tests/test_phase3_packaged_workflows.py",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Frozen test code, explicit expected rules/fields/statuses and isolated ZIP execution."
+        }
+      ]
+    },
+    {
+      "result_id": "P3-CHECK-12",
+      "check_id": "QA-CODE-DEPS",
+      "status": "inconclusive",
+      "performed_at": "2026-08-27T04:54:26.347Z",
+      "performed_by": {
+        "actor_id": "codex-root",
+        "display_name": "Codex — primary self-check reviewer",
+        "role": "reviewer"
+      },
+      "procedure_summary": "Chạy được dependency-free helpers; validator tùy chọn thiếu PyYAML.",
+      "evidence": [
+        {
+          "evidence_id": "P3-E-DEPS",
+          "artifact_id": "P3-EXECUTIONS",
+          "locator": "qa/phase3-rc2/executions.json#P3-EXEC-QUICK-VALIDATE",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Direct ModuleNotFoundError for PyYAML; no PASS or dependency install claimed."
+        },
+        {
+          "evidence_id": "P3-E-FULL",
+          "artifact_id": "P3-EXECUTIONS",
+          "locator": "qa/phase3-rc2/executions.json#P3-EXEC-FULL-REGRESSION",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Root direct execution: 119 methods, 118 PASS, 1 optional SKIP; 17.254s harness runtime."
+        }
+      ],
+      "limitation": "quick_validate.py failed to start; optional plugin-creator validator skipped. Full independent JSON Schema runtime also unavailable; do not infer its PASS."
+    },
+    {
+      "result_id": "P3-CHECK-13",
+      "check_id": "QA-CODE-EXEC",
+      "status": "pass",
+      "performed_at": "2026-08-27T04:54:26.347Z",
+      "performed_by": {
+        "actor_id": "codex-root",
+        "display_name": "Codex — primary self-check reviewer",
+        "role": "reviewer"
+      },
+      "procedure_summary": "Rà soát isolation/preflight và chạy helpers từ ZIP trong temp với bounded subprocess timeouts.",
+      "evidence": [
+        {
+          "evidence_id": "P3-E-TESTS",
+          "artifact_id": "P3-TESTS",
+          "locator": "tests/test_phase3_packaged_workflows.py",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Frozen test code, explicit expected rules/fields/statuses and isolated ZIP execution."
+        },
+        {
+          "evidence_id": "P3-E-FULL",
+          "artifact_id": "P3-EXECUTIONS",
+          "locator": "qa/phase3-rc2/executions.json#P3-EXEC-FULL-REGRESSION",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Root direct execution: 119 methods, 118 PASS, 1 optional SKIP; 17.254s harness runtime."
+        }
+      ]
+    },
+    {
+      "result_id": "P3-CHECK-14",
+      "check_id": "QA-XART-ID",
+      "status": "pass",
+      "performed_at": "2026-08-27T04:54:26.347Z",
+      "performed_by": {
+        "actor_id": "codex-root",
+        "display_name": "Codex — primary self-check reviewer",
+        "role": "reviewer"
+      },
+      "procedure_summary": "Đối chiếu release identity, runtime/source provenance, manifests và output checksums.",
+      "evidence": [
+        {
+          "evidence_id": "P3-E-EXACT",
+          "artifact_id": "P3-EXECUTIONS",
+          "locator": "qa/phase3-rc2/executions.json#P3-EXEC-FINAL-CHECK",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Six exact RC2 release outputs verified without rebuild."
+        },
+        {
+          "evidence_id": "P3-E-TESTS",
+          "artifact_id": "P3-TESTS",
+          "locator": "tests/test_phase3_packaged_workflows.py",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Frozen test code, explicit expected rules/fields/statuses and isolated ZIP execution."
+        }
+      ]
+    },
+    {
+      "result_id": "P3-CHECK-15",
+      "check_id": "QA-XART-COVERAGE",
+      "status": "pass",
+      "performed_at": "2026-08-27T04:54:26.347Z",
+      "performed_by": {
+        "actor_id": "codex-root",
+        "display_name": "Codex — primary self-check reviewer",
+        "role": "reviewer"
+      },
+      "procedure_summary": "Tách 9 registry profiles, 7 packaged runs, 2 source-only families và raw/live exclusions.",
+      "evidence": [
+        {
+          "evidence_id": "P3-E-COVERAGE",
+          "artifact_id": "P3-COVERAGE",
+          "locator": "qa/phase3-rc2/coverage.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Seven packaged E2E profiles, two source-only, 27 live NOT_TESTED cells and raw corpus limits."
+        },
+        {
+          "evidence_id": "P3-E-PEER",
+          "artifact_id": "P3-PEER-FINAL",
+          "locator": "qa/phase3-rc2/peer-review-final.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Peer technical closure and limitations; final dossier consistency tracked separately."
+        }
+      ]
+    },
+    {
+      "result_id": "P3-CHECK-16",
+      "check_id": "QA-EVD-PROVENANCE",
+      "status": "pass",
+      "performed_at": "2026-08-27T04:54:26.347Z",
+      "performed_by": {
+        "actor_id": "codex-root",
+        "display_name": "Codex — primary self-check reviewer",
+        "role": "reviewer"
+      },
+      "procedure_summary": "Kiểm sidecars, canonical payload, raw-field worksheet linkage và unchanged source hashes.",
+      "evidence": [
+        {
+          "evidence_id": "P3-E-TESTS",
+          "artifact_id": "P3-TESTS",
+          "locator": "tests/test_phase3_packaged_workflows.py",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Frozen test code, explicit expected rules/fields/statuses and isolated ZIP execution."
+        },
+        {
+          "evidence_id": "P3-E-FULL",
+          "artifact_id": "P3-EXECUTIONS",
+          "locator": "qa/phase3-rc2/executions.json#P3-EXEC-FULL-REGRESSION",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Root direct execution: 119 methods, 118 PASS, 1 optional SKIP; 17.254s harness runtime."
+        },
+        {
+          "evidence_id": "P3-E-BASELINE",
+          "artifact_id": "P3-BASELINE",
+          "locator": "qa/phase3-rc2/BASELINE.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Hash/size snapshot of 152 original working-tree files."
+        }
+      ]
+    },
+    {
+      "result_id": "P3-CHECK-17",
+      "check_id": "QA-FND-ELEMENTS",
+      "status": "pass",
+      "performed_at": "2026-08-27T04:54:26.347Z",
+      "performed_by": {
+        "actor_id": "codex-root",
+        "display_name": "Codex — primary self-check reviewer",
+        "role": "reviewer"
+      },
+      "procedure_summary": "Ghi criteria, condition, impact, severity, action, lifecycle và release boundary cho từng finding.",
+      "evidence": [
+        {
+          "evidence_id": "P3-E-INITIAL",
+          "artifact_id": "P3-PEER-INITIAL",
+          "locator": "qa/phase3-rc2/peer-review-initial.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Initial static requirement/fixture/coverage findings and local-path checks."
+        },
+        {
+          "evidence_id": "P3-E-PEER",
+          "artifact_id": "P3-PEER-FINAL",
+          "locator": "qa/phase3-rc2/peer-review-final.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Peer technical closure and limitations; final dossier consistency tracked separately."
+        }
+      ]
+    },
+    {
+      "result_id": "P3-CHECK-18",
+      "check_id": "QA-FND-RETEST",
+      "status": "pass",
+      "performed_at": "2026-08-27T04:54:26.347Z",
+      "performed_by": {
+        "actor_id": "codex-root",
+        "display_name": "Codex — primary self-check reviewer",
+        "role": "reviewer"
+      },
+      "procedure_summary": "F02 đóng bằng root direct test run và separate-agent assertion review; F01 còn mở đúng scope.",
+      "evidence": [
+        {
+          "evidence_id": "P3-E-FULL",
+          "artifact_id": "P3-EXECUTIONS",
+          "locator": "qa/phase3-rc2/executions.json#P3-EXEC-FULL-REGRESSION",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Root direct execution: 119 methods, 118 PASS, 1 optional SKIP; 17.254s harness runtime."
+        },
+        {
+          "evidence_id": "P3-E-PEER",
+          "artifact_id": "P3-PEER-FINAL",
+          "locator": "qa/phase3-rc2/peer-review-final.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Peer technical closure and limitations; final dossier consistency tracked separately."
+        },
+        {
+          "evidence_id": "P3-E-TESTS",
+          "artifact_id": "P3-TESTS",
+          "locator": "tests/test_phase3_packaged_workflows.py",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Frozen test code, explicit expected rules/fields/statuses and isolated ZIP execution."
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "P3-SCOPE-F01",
+      "finding_type": "methodology_limitation",
+      "profile": "evidence_traceability",
+      "category": "completeness",
+      "title": "Raw-source minimum acceptance corpus còn thiếu",
+      "statement": "Structured partial-flow coverage được bổ sung nhưng chưa có bằng chứng raw OCR/source-fidelity đầy đủ.",
+      "criteria": "HANDOFF §6.13 yêu cầu receipt, bank statement, partial documents và uncertain field; §6.12 yêu cầu live platform scenarios.",
+      "condition": "Không chạy receipt image extraction, multipage scanned PDF/blur OCR hoặc full bank statement opening/closing balances. Tests mới chỉ thêm structured 1PO+2GRN+2invoices.",
+      "cause": {
+        "status": "confirmed",
+        "narrative": "Phase3 scope được giới hạn package-only/no-install và dùng synthetic structured inputs."
+      },
+      "consequence": "Không được kết luận full raw-source/cross-platform acceptance.",
+      "severity": "medium",
+      "severity_rationale": "Material đối với claim OCR/source fidelity nhưng không chặn exact ZIP technical handover đã giới hạn.",
+      "readiness_impact": "non_blocking",
+      "affected_artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP"
+      ],
+      "evidence": [
+        {
+          "evidence_id": "P3-E-ORIGINAL",
+          "artifact_id": "P3-HANDOFF-ORIGINAL",
+          "locator": "HANDOFF.md#6.13",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Original minimum fixture and cross-platform requirements preserved as historical evidence."
+        },
+        {
+          "evidence_id": "P3-E-INITIAL",
+          "artifact_id": "P3-PEER-INITIAL",
+          "locator": "qa/phase3-rc2/peer-review-initial.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Initial static requirement/fixture/coverage findings and local-path checks."
+        },
+        {
+          "evidence_id": "P3-E-COVERAGE",
+          "artifact_id": "P3-COVERAGE",
+          "locator": "qa/phase3-rc2/coverage.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Seven packaged E2E profiles, two source-only, 27 live NOT_TESTED cells and raw corpus limits."
+        },
+        {
+          "evidence_id": "P3-E-PEER",
+          "artifact_id": "P3-PEER-FINAL",
+          "locator": "qa/phase3-rc2/peer-review-final.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Peer technical closure and limitations; final dossier consistency tracked separately."
+        }
+      ],
+      "recommended_action": "Giữ PARTIAL_COVERAGE/NOT_TESTED trong bàn giao; nếu người dùng mở scope raw/live, chọn corpus/host/owner và thực hiện acceptance riêng.",
+      "action_owner": null,
+      "current_state": "open",
+      "lifecycle_events": [
+        {
+          "event_id": "P3-F01-OPEN",
+          "state": "open",
+          "changed_at": "2026-08-27T04:54:26.347Z",
+          "changed_by": {
+            "actor_id": "phase3-scope-review",
+            "display_name": "phase3_scope_review — separate agent",
+            "role": "reviewer"
+          },
+          "rationale": "Initial gap identified; peer retest confirms partial structured addition does not close residual raw-source gap.",
+          "evidence": [
+            {
+              "evidence_id": "P3-E-INITIAL",
+              "artifact_id": "P3-PEER-INITIAL",
+              "locator": "qa/phase3-rc2/peer-review-initial.json",
+              "observed_at": "2026-08-27T04:54:26.347Z",
+              "notes": "Initial static requirement/fixture/coverage findings and local-path checks."
+            },
+            {
+              "evidence_id": "P3-E-PEER",
+              "artifact_id": "P3-PEER-FINAL",
+              "locator": "qa/phase3-rc2/peer-review-final.json",
+              "observed_at": "2026-08-27T04:54:26.347Z",
+              "notes": "Peer technical closure and limitations; final dossier consistency tracked separately."
+            }
+          ]
+        }
+      ],
+      "remediation": {
+        "status": "in_progress",
+        "description": "Structured 2GRN/2invoice portion completed; residual raw-source remains unperformed/out of current scope. No ongoing or scheduled raw-source work."
+      },
+      "retest": {
+        "status": "not_requested"
+      }
+    },
+    {
+      "finding_id": "P3-SCOPE-F02",
+      "finding_type": "methodology_limitation",
+      "profile": "code_automation",
+      "category": "code_quality",
+      "title": "Profile integration coverage trước Phase3 chưa đủ",
+      "statement": "Initial missing-profile/default-branch integration gap đã được bổ sung tests và xác minh.",
+      "criteria": "Profile support claims phải có assertions cho mappings/rules/statuses, không chỉ schema/materialization.",
+      "condition": "Initial suite thiếu PR_PO_GRN_INVOICE, outbound, inventory và default contract+dedicated acceptance integration assertions.",
+      "cause": {
+        "status": "probable",
+        "narrative": "Static Phase2 tests focus on representative vertical slices; inferred coverage-design cause, not a separately verified causal interview."
+      },
+      "consequence": "Trước remediation có thể bỏ sót mapping/grain regression; hiện gap được nêu đã có targeted evidence.",
+      "severity": "medium",
+      "severity_rationale": "Thiếu integration evidence cho named workflows; không ghi nhận product failure.",
+      "readiness_impact": "non_blocking",
+      "affected_artifact_ids": [
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP",
+        "P3-TESTS"
+      ],
+      "evidence": [
+        {
+          "evidence_id": "P3-E-INITIAL",
+          "artifact_id": "P3-PEER-INITIAL",
+          "locator": "qa/phase3-rc2/peer-review-initial.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Initial static requirement/fixture/coverage findings and local-path checks."
+        },
+        {
+          "evidence_id": "P3-E-TESTS",
+          "artifact_id": "P3-TESTS",
+          "locator": "tests/test_phase3_packaged_workflows.py",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Frozen test code, explicit expected rules/fields/statuses and isolated ZIP execution."
+        },
+        {
+          "evidence_id": "P3-E-FULL",
+          "artifact_id": "P3-EXECUTIONS",
+          "locator": "qa/phase3-rc2/executions.json#P3-EXEC-FULL-REGRESSION",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Root direct execution: 119 methods, 118 PASS, 1 optional SKIP; 17.254s harness runtime."
+        },
+        {
+          "evidence_id": "P3-E-PEER",
+          "artifact_id": "P3-PEER-FINAL",
+          "locator": "qa/phase3-rc2/peer-review-final.json",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Peer technical closure and limitations; final dossier consistency tracked separately."
+        }
+      ],
+      "recommended_action": "Duy trì tests hash-pinned RC2 và giữ coverage matrix giới hạn rõ; không tuyên bố mọi variant hoặc all-nine packaged E2E.",
+      "action_owner": {
+        "actor_id": "codex-root",
+        "role": "maker"
+      },
+      "current_state": "closed",
+      "lifecycle_events": [
+        {
+          "event_id": "P3-F02-OPEN",
+          "state": "open",
+          "changed_at": "2026-08-27T04:43:20.785Z",
+          "changed_by": {
+            "actor_id": "phase3-scope-review",
+            "display_name": "phase3_scope_review — separate agent",
+            "role": "reviewer"
+          },
+          "rationale": "Static peer review identified missing integration assertions.",
+          "evidence": [
+            {
+              "evidence_id": "P3-E-INITIAL",
+              "artifact_id": "P3-PEER-INITIAL",
+              "locator": "qa/phase3-rc2/peer-review-initial.json",
+              "observed_at": "2026-08-27T04:54:26.347Z",
+              "notes": "Initial static requirement/fixture/coverage findings and local-path checks."
+            }
+          ]
+        },
+        {
+          "event_id": "P3-F02-RETEST",
+          "state": "ready_for_retest",
+          "changed_at": "2026-08-27T04:54:26.347Z",
+          "changed_by": {
+            "actor_id": "phase3-packaged-tests",
+            "role": "maker"
+          },
+          "rationale": "New isolated ZIP tests added; no frozen source changes.",
+          "evidence": [
+            {
+              "evidence_id": "P3-E-TESTS",
+              "artifact_id": "P3-TESTS",
+              "locator": "tests/test_phase3_packaged_workflows.py",
+              "observed_at": "2026-08-27T04:54:26.347Z",
+              "notes": "Frozen test code, explicit expected rules/fields/statuses and isolated ZIP execution."
+            }
+          ]
+        },
+        {
+          "event_id": "P3-F02-CLOSED",
+          "state": "closed",
+          "changed_at": "2026-08-27T04:54:26.347Z",
+          "changed_by": {
+            "actor_id": "phase3-scope-review",
+            "display_name": "phase3_scope_review — separate agent",
+            "role": "reviewer"
+          },
+          "rationale": "Root direct full regression PASS and separate-agent review confirm specified missing-profile gap closed. Does not close F01 or human/live gates.",
+          "evidence": [
+            {
+              "evidence_id": "P3-E-FULL",
+              "artifact_id": "P3-EXECUTIONS",
+              "locator": "qa/phase3-rc2/executions.json#P3-EXEC-FULL-REGRESSION",
+              "observed_at": "2026-08-27T04:54:26.347Z",
+              "notes": "Root direct execution: 119 methods, 118 PASS, 1 optional SKIP; 17.254s harness runtime."
+            },
+            {
+              "evidence_id": "P3-E-PEER",
+              "artifact_id": "P3-PEER-FINAL",
+              "locator": "qa/phase3-rc2/peer-review-final.json",
+              "observed_at": "2026-08-27T04:54:26.347Z",
+              "notes": "Peer technical closure and limitations; final dossier consistency tracked separately."
+            }
+          ]
+        }
+      ],
+      "remediation": {
+        "status": "implemented",
+        "description": "Added tests/test_phase3_packaged_workflows.py; 22 methods/69 subtests; seven profiles across three frozen layouts."
+      },
+      "retest": {
+        "status": "pass",
+        "performed_at": "2026-08-27T04:54:26.347Z",
+        "performed_by": {
+          "actor_id": "phase3-scope-review",
+          "display_name": "phase3_scope_review — separate agent",
+          "role": "reviewer"
+        },
+        "procedure": "Peer inspected full frozen test source and root direct119-method execution log; confirmed explicit assertions for formerly missing profiles/default branch. Peer did not execute tests itself.",
+        "evidence": [
+          {
+            "evidence_id": "P3-E-FULL",
+            "artifact_id": "P3-EXECUTIONS",
+            "locator": "qa/phase3-rc2/executions.json#P3-EXEC-FULL-REGRESSION",
+            "observed_at": "2026-08-27T04:54:26.347Z",
+            "notes": "Root direct execution: 119 methods, 118 PASS, 1 optional SKIP; 17.254s harness runtime."
+          },
+          {
+            "evidence_id": "P3-E-TESTS",
+            "artifact_id": "P3-TESTS",
+            "locator": "tests/test_phase3_packaged_workflows.py",
+            "observed_at": "2026-08-27T04:54:26.347Z",
+            "notes": "Frozen test code, explicit expected rules/fields/statuses and isolated ZIP execution."
+          },
+          {
+            "evidence_id": "P3-E-PEER",
+            "artifact_id": "P3-PEER-FINAL",
+            "locator": "qa/phase3-rc2/peer-review-final.json",
+            "observed_at": "2026-08-27T04:54:26.347Z",
+            "notes": "Peer technical closure and limitations; final dossier consistency tracked separately."
+          }
+        ]
+      }
+    },
+    {
+      "finding_id": "P3-ENV-F03",
+      "finding_type": "methodology_limitation",
+      "profile": "code_automation",
+      "category": "methodology",
+      "title": "Validator tùy chọn thiếu dependency",
+      "statement": "quick_validate.py và optional plugin-creator validation không hoàn tất do thiếu PyYAML.",
+      "criteria": "HANDOFF §6.15 yêu cầu thử quick_validate; missing validation phải ghi rõ và không được suy PASS từ checks khác.",
+      "condition": "Direct quick_validate exit1 ModuleNotFoundError yaml; full suite119 có một optional SKIP. Không có PyYAML/jsonschema trong hai Python runtime được kiểm.",
+      "cause": {
+        "status": "confirmed",
+        "narrative": "Optional dependency not installed in available runtimes."
+      },
+      "consequence": "Không có kết luận từ validator chuẩn này; existing internal schema/contract tests chỉ là evidence bổ sung.",
+      "severity": "low",
+      "severity_rationale": "Non-blocking package-only vì exact integrity và functional tests chạy được; giảm breadth validation, không chứng minh defect.",
+      "readiness_impact": "non_blocking",
+      "affected_artifact_ids": [
+        "P3-SKILL",
+        "P3-OPENAI-ZIP",
+        "P3-CLAUDE-ZIP",
+        "P3-UNIVERSAL-ZIP"
+      ],
+      "evidence": [
+        {
+          "evidence_id": "P3-E-DEPS",
+          "artifact_id": "P3-EXECUTIONS",
+          "locator": "qa/phase3-rc2/executions.json#P3-EXEC-QUICK-VALIDATE",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Direct ModuleNotFoundError for PyYAML; no PASS or dependency install claimed."
+        },
+        {
+          "evidence_id": "P3-E-FULL",
+          "artifact_id": "P3-EXECUTIONS",
+          "locator": "qa/phase3-rc2/executions.json#P3-EXEC-FULL-REGRESSION",
+          "observed_at": "2026-08-27T04:54:26.347Z",
+          "notes": "Root direct execution: 119 methods, 118 PASS, 1 optional SKIP; 17.254s harness runtime."
+        }
+      ],
+      "recommended_action": "Giữ UNAVAILABLE/SKIP; nếu cần validation mở rộng, người dùng cho phép môi trường có dependency rồi chạy lại. Không cài tự động trong lượt này.",
+      "action_owner": null,
+      "current_state": "open",
+      "lifecycle_events": [
+        {
+          "event_id": "P3-F03-OPEN",
+          "state": "open",
+          "changed_at": "2026-08-27T04:54:26.347Z",
+          "changed_by": {
+            "actor_id": "codex-root",
+            "display_name": "Codex — primary self-check reviewer",
+            "role": "reviewer"
+          },
+          "rationale": "Dependency failure recorded, not converted into product PASS or remediated via unauthorized install.",
+          "evidence": [
+            {
+              "evidence_id": "P3-E-DEPS",
+              "artifact_id": "P3-EXECUTIONS",
+              "locator": "qa/phase3-rc2/executions.json#P3-EXEC-QUICK-VALIDATE",
+              "observed_at": "2026-08-27T04:54:26.347Z",
+              "notes": "Direct ModuleNotFoundError for PyYAML; no PASS or dependency install claimed."
+            }
+          ]
+        }
+      ],
+      "remediation": {
+        "status": "not_started"
+      },
+      "retest": {
+        "status": "not_requested"
+      }
+    }
+  ],
+  "record_limitations": [
+    "L2_full applies only to declared package-only technical scope, not whole original live acceptance.",
+    "Root prior maker; peer agents do not constitute human independent assurance.",
+    "Temporary workflow outputs cleaned; frozen tests/fixtures/commands allow reproduction.",
+    "Tool wait/capture timestamps are not exact subprocess elapsed time; unittest duration is recorded separately.",
+    "18 check results:17 pass,1 inconclusive (QA-CODE-DEPS). Conditional readiness does not mean all procedures performed."
+  ]
+}

@@ -1,6 +1,6 @@
 ---
 name: thien-skill-document-evidence
-description: Kiểm kê, phân loại, trích xuất và đối soát PDF, ảnh, hóa đơn, PO, GRN, chứng từ thanh toán, hợp đồng và bộ hồ sơ với provenance cấp trường/trang, evidence register, chain of custody, redaction log, Excel/JSON có cấu trúc và human-review queue. Dùng cho document-to-data, document-to-Excel, clause/obligation extraction, three/four-way matching hoặc review pipeline trích xuất; không dùng để xác thực chữ ký/tài liệu, kết luận pháp lý, fraud, audit opinion hay thay ETL quy mô lớn.
+description: Kiểm kê, phân loại, trích xuất, chuyển đổi và đối soát PDF, ảnh, hóa đơn, PO, GRN, chứng từ thanh toán, hợp đồng và bộ hồ sơ với provenance cấp trường/trang, canonical content blocks, evidence register, RAG-ready Markdown, JSON/CSV/XLSX và output DOCX/PPTX theo capability. Dùng cho document-to-data, editable conversion, RAG source preparation, clause/obligation extraction, matching cấu hình theo vai trò hoặc review pipeline; không dùng để xác thực chữ ký/tài liệu, kết luận pháp lý, fraud, audit opinion hay thay ETL quy mô lớn.
 license: LicenseRef-Tran-Ngoc-Thien-Skills-2.0; xem LICENSE.md
 ---
 
@@ -8,9 +8,9 @@ license: LicenseRef-Tran-Ngoc-Thien-Skills-2.0; xem LICENSE.md
 
 ## Sứ mệnh
 
-Chuyển tài liệu được phép xử lý thành dữ liệu và gói bằng chứng có thể truy nguyên, đối soát và tái thực hiện:
+Chuyển tài liệu được phép xử lý thành nội dung có cấu trúc, dữ liệu, artifact và gói bằng chứng có thể truy nguyên, đối soát và tái thực hiện:
 
-`Source document → Working representation → Extracted value → Validation → Reconciliation → Human review → Controlled handoff`
+`Source document → Working representation → Canonical content/data → Validation → Artifact/RAG/Reconciliation → Human review → Controlled handoff`
 
 Trả lời bằng ngôn ngữ của người dùng. Khi dùng tiếng Việt, giữ nguyên identifier, field name, mã, công thức, raw text và thuật ngữ kỹ thuật nếu dịch có thể đổi nghĩa.
 
@@ -29,7 +29,7 @@ Trả lời bằng ngôn ngữ của người dùng. Khi dùng tiếng Việt, g
 
 ## Khi kích hoạt và ranh giới
 
-Dùng skill khi cần đọc/phân loại tài liệu, OCR hoặc kiểm tra OCR, trích field/table/line item/clause/obligation, tạo evidence index, kiểm tra page/version, chuyển tài liệu thành Excel/JSON/CSV, liên kết bộ hồ sơ, đối chiếu invoice–PO–GRN–payment/ERP, chuẩn bị chain of custody/redacted review set, hoặc reperform pipeline trích xuất.
+Dùng skill khi cần đọc/phân loại tài liệu, OCR hoặc kiểm tra OCR, trích field/table/line item/clause/obligation, tạo evidence index, kiểm tra page/version, chuyển tài liệu thành Markdown/DOCX/XLSX/PPTX/JSON/CSV theo capability, chuẩn bị nguồn cho RAG, liên kết bộ hồ sơ, đối chiếu các vai trò chứng từ do người dùng cấu hình, chuẩn bị chain of custody/redacted review set, hoặc reperform pipeline trích xuất.
 
 Không dùng làm skill chính cho:
 
@@ -37,9 +37,20 @@ Không dùng làm skill chính cho:
 - population analytics, fraud-pattern detection hoặc predictive modeling;
 - audit conclusion, control-effectiveness assessment hoặc formal investigation;
 - legal interpretation, contract enforceability, signature/document authentication hay forensic imaging;
-- translation, dashboard, report hoặc document formatting thuần túy không cần extraction/evidence.
+- translation, dashboard hoặc creative document design không cần bảo toàn nội dung/cấu trúc/provenance từ nguồn;
+- ETL hoặc matching tùy ý không có grain, role, key, rule và review owner xác định.
 
-Hoàn thành phần document/evidence độc lập an toàn rồi bàn giao theo capability. Không phụ thuộc cứng vào tên skill khác. Đọc [architecture-boundaries-and-workflow.md](references/architecture-boundaries-and-workflow.md) khi scope giao thoa nhiều chuyên môn.
+Hoàn thành phần document/evidence độc lập an toàn rồi bàn giao theo capability. Không phụ thuộc cứng vào tên skill khác. Đọc [architecture-boundaries-and-workflow.md](references/architecture-boundaries-and-workflow.md) khi scope giao thoa nhiều chuyên môn và [platform-capability-routing.md](references/platform-capability-routing.md) trước khi hứa một artifact phụ thuộc host.
+
+## Chọn task profile trước route
+
+Chọn đúng một task profile chính; lifecycle route bên dưới mô tả giai đoạn đang thực hiện và có thể thay đổi trong cùng task.
+
+1. `CONVERT_DOCUMENT`: bảo toàn nội dung, cấu trúc, reading order và provenance rồi sinh artifact theo output profile. Mặc định DOCX là `SEMANTIC_EDITABLE`; XLSX là `STRUCTURED_DATA` trừ khi task là reconciliation; PPTX ghép cặp bắt buộc `PRESENTATION → EDITABLE_PRESENTATION`, `FAITHFUL_PAGE_CONVERSION → PAGE_AS_SLIDE`, hoặc `VISUAL_FIDELITY → VISUAL_FIDELITY_BEST_EFFORT`. Nếu ý định PPTX mơ hồ và lựa chọn làm đổi đáng kể kết quả, để `output_profile: null`, ghi `CLARIFICATION_REQUIRED` và hỏi trước.
+2. `PREPARE_RAG_SOURCE`: tạo root control `rag-package.json` và package per-document mặc định gồm `document.md`, `metadata.json` cùng payload `manifest.json`; `assets/` có điều kiện; chỉ tạo `chunks.jsonl` khi target và chunking config đều được nêu. Folder corpus có thêm collection manifest, không gộp provenance của nhiều tài liệu.
+3. `RECONCILE_DOCUMENT_SET`: khai báo role, grain, keys, direction, partial rules, tolerance và precedence rồi mới match. Role/profile là cấu hình mở, không bị khóa vào procurement.
+
+Task request dùng [task-request.schema.json](schemas/common/task-request.schema.json). Nội dung trung gian dùng [canonical-content.schema.json](schemas/common/canonical-content.schema.json); artifact, conversion run, RAG package và matching profile dùng các companion schema tương ứng. Các contract additive này có `schema_version` riêng và ghi provenance runtime bằng `skill_id` + `skill_release_version`, kể cả prerelease. Extraction package, reconciliation config và scripts `1.0.0` giữ nguyên version contract/tool để bảo toàn compatibility; không relabel chúng thành version release candidate.
 
 ## Chọn một route chính
 
@@ -50,7 +61,7 @@ Hoàn thành phần document/evidence độc lập an toàn rồi bàn giao theo
 5. `EVIDENCE_DISCLOSURE`: evidence register, reliability, chain of custody, restricted package, redaction working copy/log và controlled handoff; cần authorization tương xứng.
 6. `REVIEW_REPERFORM`: review source, OCR/layout, schema, normalization, workbook, reconciliation, provenance, security và unsupported conclusion; tái thực hiện trên fixture/working copy khi được phép.
 
-Bulk document-to-Excel là output profile của route 2–4, không phải một quy trình độc lập. Investigation support chỉ là biến thể bị giới hạn của route 5 và yêu cầu `case_id`, owner/mandate, approved scope/source, access authorization và data classification.
+Task profile và lifecycle route là hai trục độc lập. Bulk document-to-Excel thường là `CONVERT_DOCUMENT` đi qua route 2–4; reconciliation workbook là `RECONCILE_DOCUMENT_SET` đi qua route 2–6. Investigation support chỉ là biến thể bị giới hạn của route 5 và yêu cầu `case_id`, owner/mandate, approved scope/source, access authorization và data classification.
 
 ## Workflow lõi
 
@@ -64,7 +75,7 @@ Thiếu dữ kiện thay đổi đáng kể quyền truy cập, mục tiêu, rec
 
 ### 2. Inventory và source preservation
 
-Gán `document_id` ổn định theo manifest/run; không dùng filename làm khóa duy nhất. Gán `evidence_id` chỉ khi workflow evidence yêu cầu. Hash byte của original bằng SHA-256 khi phù hợp; ghi algorithm, timestamp và exact object hashed.
+Gán `document_id` ổn định theo manifest/run; không dùng filename làm khóa duy nhất. Gán `evidence_id` chỉ khi workflow evidence yêu cầu. Hash byte của original bằng SHA-256 khi phù hợp; ghi algorithm, timestamp và exact object hashed. Nếu host chỉ cho một representation ổn định thì ghi `COMPUTED_ACCESSIBLE_REPRESENTATION`; nếu không có byte representation ổn định thì để `source_content_id: null`, ghi `UNAVAILABLE` và limitation, không bịa hash.
 
 Kiểm tra extension so với signature/MIME, symlink/path escape, corruption/readability, password/encryption, macro/JavaScript/embedded files/external links, file/page count nếu runtime hỗ trợ, duplicate hash và processing eligibility. Không phá password hoặc thực thi active content.
 
@@ -92,11 +103,11 @@ Field status dùng vocabulary có kiểm soát: `PRESENT`, `NOT_PRESENT`, `NOT_A
 
 Validation status: `PASS`, `PASS_WITH_WARNING`, `FAIL`, `NOT_TESTED`, `NOT_APPLICABLE`, `HUMAN_REVIEW_REQUIRED`. Không để aggregate confidence che critical-field failure.
 
-Đọc [classification-and-schema-routing.md](references/classification-and-schema-routing.md) và [field-table-contract-extraction.md](references/field-table-contract-extraction.md). Các JSON Schema trong `schemas/` là machine-readable contract; templates trong `assets/templates/` là artifact trống, không phải evidence.
+Đọc [classification-and-schema-routing.md](references/classification-and-schema-routing.md) và [field-table-contract-extraction.md](references/field-table-contract-extraction.md). Với conversion hoặc RAG, đọc thêm [conversion-output-profiles.md](references/conversion-output-profiles.md) và [rag-source-package.md](references/rag-source-package.md). Các JSON Schema trong `schemas/` là machine-readable contract; templates trong `assets/templates/` là artifact trống, không phải evidence.
 
 ### 5. Package linking và reconciliation
 
-Định nghĩa grain, sides, keys, normalization, date/currency basis, partial-delivery/payment rules, approved absolute/relative tolerance và precedence trước khi match. Không tự coi difference là immaterial.
+Định nghĩa grain, role mapping, sides, keys, normalization, date/currency basis, partial-flow rules, approved absolute/relative tolerance và precedence trước khi match. Không tự coi difference là immaterial. Named profiles như `PR_PO_GRN_INVOICE`, `CONTRACT_ACCEPTANCE_INVOICE_PAYMENT_REQUEST` và `INVOICE_PAYMENT_BANK_SETTLEMENT` chỉ là cấu hình mẫu; cho phép các role nghiệp vụ khác như outbound invoice, goods issue, customer receipt/proof of delivery, inventory count, inventory ledger, system record hoặc custom document khi contract/key được khai báo.
 
 Tách `EXACT_MATCH`, `WITHIN_TOLERANCE`, `STRONG_CANDIDATE`, `PARTIAL_MATCH`, `AMBIGUOUS_MATCH`, `CONFLICTING_MATCH`, `UNMATCHED`, `NOT_APPLICABLE`, `HUMAN_REVIEW_REQUIRED`. Ghi document/system values, exact difference, tolerance, reason và source references.
 
@@ -110,7 +121,13 @@ Chọn output nhỏ nhất giải quyết quyết định. Với document-to-dat
 
 Mọi text chưa tin cậy bắt đầu bằng `=`, `+`, `-` hoặc `@` phải được ghi dưới dạng literal an toàn; đồng thời giữ raw value và formula-injection flag. Không âm thầm cắt row vượt giới hạn Excel: tạo control workbook và sidecar CSV/JSONL/Parquet phù hợp rồi bàn giao data-engineering capability.
 
-Đọc [output-redaction-and-handoff.md](references/output-redaction-and-handoff.md) và [evidence-provenance-confidence-and-review.md](references/evidence-provenance-confidence-and-review.md). Trước package export, chạy `scripts/validate_records.py` với bundled extraction-package schema và chuyển PASS report khớp package/schema hash vào `scripts/build_workbook.mjs`; builder từ chối shallow-only package, report cũ/sai hash và overwrite mặc định.
+Với conversion, tạo canonical content trước rồi mới render. `VISUAL_FIDELITY_BEST_EFFORT` chỉ hợp lệ khi mọi block cần thiết có page dimensions và bounding box đủ dùng; normalized geometry nằm trong `0..1`, còn containment phải qua semantic validation. Chỉ ghi `structural_validation_status: PASS` sau khi đã kiểm unique/monotonic order, link không dangling/cycle, table width, caption target và geometry containment; nếu chưa chạy thì giữ `NOT_TESTED`. Luôn ghi limitation, không hứa pixel-perfect. Với RAG, giữ stable document/section/block IDs, source locator và collection membership; chunking là lớp dẫn xuất, không được làm mất liên kết về block nguồn.
+
+Đọc [output-redaction-and-handoff.md](references/output-redaction-and-handoff.md), [conversion-output-profiles.md](references/conversion-output-profiles.md), [rag-source-package.md](references/rag-source-package.md) và [evidence-provenance-confidence-and-review.md](references/evidence-provenance-confidence-and-review.md). Trước package export, chạy `scripts/validate_records.py` với bundled extraction-package schema và chuyển PASS report khớp package/schema hash vào `scripts/build_workbook.mjs`; builder từ chối shallow-only package, report cũ/sai hash và overwrite mặc định.
+
+### 7. Platform capability gate
+
+Phát hiện capability trước khi chọn renderer. Hành vi routing/fallback là bắt buộc; artifact thực chỉ được yêu cầu khi host có tool/runtime phù hợp và authorization cho phép. Tách `creation_status` khỏi `qa_status`: file có thể là `CREATED` với checksum nhưng visual/business QA vẫn `NOT_TESTED`. Nếu thiếu capability, trả canonical Markdown/JSON hoặc artifact gần nhất giải quyết mục tiêu, ghi artifact `creation_status: NOT_CREATED`, `qa_status: NOT_TESTED`, workflow `NOT_EXECUTED` và limitation cùng nguyên nhân/hướng bàn giao; không đổi thiếu adapter thành `PASS`.
 
 ## Human review và approval
 
@@ -136,6 +153,9 @@ Trước bàn giao, kiểm tra:
 - line-item count/totals/currency/leading zeros/date ambiguity đúng;
 - match keys/tolerance/difference và contradictory evidence được giữ;
 - workbook mở được, không macro/formula injection/row loss;
+- canonical reading order/content blocks hợp lệ và semantic invariants đã được kiểm trước khi ghi structural `PASS`; artifact manifest khớp file, hash, profile, creation/QA state và limitation;
+- RAG package giữ stable IDs, source locator và collection boundary; package/document `PASS` chỉ khi descriptor bắt buộc là `CREATED` và QA `PASS`; chunking target-specific nếu có;
+- capability detection và fallback được ghi; artifact chưa chạy trên host giữ creation `NOT_CREATED`, QA `NOT_TESTED` và workflow `NOT_EXECUTED`;
 - security flags, redaction/custody events và authorization phản ánh sự kiện thực;
 - scripts/runs/config/output có thể tái thực hiện;
 - limitations, unresolved issues, owner, approval và handoff rõ.
@@ -149,9 +169,12 @@ Dùng [acceptance-scenarios.md](references/acceptance-scenarios.md) cho behavior
 | Route, boundary, lifecycle, handoff decision | [architecture-boundaries-and-workflow.md](references/architecture-boundaries-and-workflow.md) |
 | Authorization, file safety, prompt injection, page/version integrity | [intake-security-and-integrity.md](references/intake-security-and-integrity.md) |
 | Native/OCR/vision routing, preprocessing, locale, QR/signature/handwriting | [extraction-routing-and-preprocessing.md](references/extraction-routing-and-preprocessing.md) |
+| Capability discovery, renderer/fallback và platform-specific limitations | [platform-capability-routing.md](references/platform-capability-routing.md) |
 | Taxonomy, schema choice/version/drift và common contracts | [classification-and-schema-routing.md](references/classification-and-schema-routing.md) |
 | Field/table/line-item/invoice/PO/GRN/payment/contract extraction | [field-table-contract-extraction.md](references/field-table-contract-extraction.md) |
-| Package/version linking, three/four-way và ERP reconciliation | [reconciliation-and-package-linking.md](references/reconciliation-and-package-linking.md) |
+| Semantic-editable/structured-data/page-as-slide conversion profiles | [conversion-output-profiles.md](references/conversion-output-profiles.md) |
+| RAG-ready Markdown, metadata, manifests, assets và optional chunks | [rag-source-package.md](references/rag-source-package.md) |
+| Package/version linking, named role profiles và extensible reconciliation | [reconciliation-and-package-linking.md](references/reconciliation-and-package-linking.md) |
 | Evidence reliability, provenance, confidence, review và custody | [evidence-provenance-confidence-and-review.md](references/evidence-provenance-confidence-and-review.md) |
 | Excel/structured export, formula safety, redaction và handoff | [output-redaction-and-handoff.md](references/output-redaction-and-handoff.md) |
 | Behavioral/boundary/security/reproducibility QA | [acceptance-scenarios.md](references/acceptance-scenarios.md) |
@@ -160,5 +183,9 @@ Dùng [acceptance-scenarios.md](references/acceptance-scenarios.md) cho behavior
 ## Tài nguyên chạy kèm
 
 Các script trong `scripts/` không gọi mạng, không tự cài dependency, không sửa original và từ chối overwrite mặc định. Đọc `--help`, dùng working copy/synthetic fixture trước, xác nhận output path và kiểm tra run manifest. Script không thay OCR/vision adapter, legal review, auditor, investigator hoặc professional validation.
+
+`scripts/render_canonical_artifacts.py` validate canonical content rồi sinh JSON, Markdown hoặc OOXML DOCX/XLSX/PPTX bằng Python standard library. PPTX luôn cần intent/profile đã giải quyết; mỗi lần chạy liên kết artifact, artifact manifest và closed conversion-run sidecar. Office artifact mới sinh chỉ có structural package QA và phải giữ visual/import `NOT_TESTED` cho tới khi thực sự render/inspect. `scripts/build_rag_package.py` tạo offline DOCUMENT/COLLECTION package với root `rag-package.json`, per-document payload manifest, media-validated assets, optional configured chunks, checksum verification và staged directory publication. Hai script ghi runtime release từ `VERSION` nhưng giữ nguyên provenance release của canonical input trong payload liên kết.
+
+`scripts/prepare_reconciliation_workbook.py` nhận structured JSON/canonical extraction package trong authorized root, áp dụng named profile dưới `assets/reconciliation-profiles/` hoặc custom profile đã validate, gọi deterministic reconciler rồi sinh package và role-aware XLSX. Helper không tự đọc/OCR PDF hoặc ảnh thô; bước upstream phải tạo structured contract. Không có tolerance/materiality ngầm: partial, tolerance hoặc allocation chỉ đến từ approved run input. Output workbook/package là technical candidate/exception view, luôn giữ human-review boundary.
 
 Logo, workbook và templates trong `assets/` là tài nguyên phân phối. Đọc `assets/brand/PROVENANCE.md`, `THIRD-PARTY-NOTICES.md` và `LICENSE-APPLICATION.md` trước khi sao chép, sửa đổi, chia sẻ hoặc phân phối.

@@ -6,8 +6,10 @@ Không giả định engine, package, GPU, cloud, network hoặc cài đặt đ�
 
 - format/page count/encryption/readability;
 - native text và coordinate/layout availability;
+- native semantic structure như heading styles, lists, table cells, notes, captions, embedded assets và reading order;
 - scan/image quality, languages và handwriting;
 - table/form/key-value need;
+- intended output và mức editability/structure/page fidelity; visual-fidelity request cần page geometry, dimensions và render/inspection capability;
 - sensitivity, local/cloud policy, retention và approved providers;
 - runtime tools, versions, limits và output contract.
 
@@ -22,6 +24,8 @@ Nếu không có engine phù hợp, tạo manual-review contract và limitation;
 5. **Human review/transcription:** dùng cho critical illegible/ambiguous/disagreement hoặc không có adapter.
 
 Không dùng nhiều engine chỉ để tạo cảm giác chắc chắn. Chỉ rerun khi có failure hypothesis và thay đổi method/parameter thực chất.
+
+Với `CONVERT_DOCUMENT` hoặc `PREPARE_RAG_SOURCE`, route phải đồng thời bảo toàn semantic block identity và reading order. Native format adapter nên ưu tiên native headings/lists/tables/notes/assets; OCR/vision layout là fallback khi native structure không có hoặc không đáng tin. Không chọn raster/page-image route cho editable output chỉ vì nó giống source hơn.
 
 ## Adapter contract
 
@@ -49,6 +53,10 @@ completed_at: datetime | null
 
 Nếu adapter không cung cấp confidence, dùng `null`/`UNKNOWN`; không suy ra số. Coordinates phải ghi unit/system (pixel, point, normalized) và page dimensions.
 
+Canonical source hash không được tự suy từ document ID. Ghi `source_hash_status: COMPUTED_ORIGINAL_BYTES` chỉ khi hash tính trên exact original bytes; dùng `COMPUTED_ACCESSIBLE_REPRESENTATION` khi runtime chỉ truy cập một representation và ghi rõ representation/transformation trong limitations; dùng `UNAVAILABLE` với `source_content_id: null` và limitation khi không thể tính. Không dùng representation hash như original hash.
+
+Adapter có semantic structure nên bổ sung stable block IDs, supported block type, hierarchy/parent, sequence, asset/caption links và source region. Map allowlist `HEADING`/`PARAGRAPH`/`TABLE`/`IMAGE`/`CAPTION` sang `schemas/common/canonical-content.schema.json`; giữ styles/list/notes/cell-span semantics ngoài schema trong raw/linked extraction và limitations. Không làm biến mất raw adapter output hoặc giả rằng inferred heading/caption là source-native.
+
 ## Working-copy preprocessing
 
 Preprocessing không được sửa original. Mỗi transformation ghi:
@@ -68,6 +76,8 @@ performed_at: datetime
 ```
 
 Kiểm tra orientation 0/90/180/270, skew, perspective, multiple receipts, mixed page size, blur, glare, shadow, crop, folded edge, watermark, stamp/handwriting overlap và low contrast. Không dùng enhancement làm mất chữ hoặc thay đổi evidence meaning; giữ before/after references.
+
+Preprocessing cho page-fidelity conversion phải giữ page dimensions, crop/rotation transform và coordinate mapping. Mọi block `geometry_status: CAPTURED` cần bounding box, `page_width`, `page_height` và source page integer. `x/y >= 0`, `width/height > 0`; semantic validator kiểm box không vượt page bounds. Với `NORMALIZED_0_1`, page dimensions đều bằng `1`, coordinate/size phải trong `[0,1]` và `x + width`, `y + height` không vượt `1`. Thiếu geometry, dimensions hoặc bounds check làm visual fidelity thành best-effort với limitation; không tuyên bố pixel-perfect.
 
 ## Multilingual và locale
 
@@ -89,6 +99,12 @@ Hỗ trợ tiếng Việt/Anh và ngôn ngữ adapter hỗ trợ, nhưng ghi act
 - Tách subtotal/tax/discount/footnote/grand-total rows khỏi item rows bằng row type.
 - Không làm mất blank cell semantics, ditto mark, merged cell, wrapped text hoặc multiple currency/tax rate.
 - Handwritten correction giữ printed và handwritten candidate riêng; material correction cần human review.
+
+Với semantic conversion/RAG, repeated header/footer phải được phân biệt khỏi body; supported heading/paragraph/table/image/caption order cần stable block sequence. List/footnote hoặc table semantics ngoài companion schema phải giữ trong raw/linked extraction và limitation; không flatten im lặng nếu structure material cho target.
+
+## Structural và semantic validation
+
+`structural_validation_status` trên canonical content dùng shared `validationStatus`. Chỉ đặt `PASS` khi structural/schema check và các structural-semantic invariants đã thực sự chạy: unique/monotonic reading order, non-dangling/non-cyclic parent links, valid caption targets, table row width, asset-path containment và geometry/page bounds. Nếu invariant validator chưa chạy, ghi `NOT_TESTED`. PASS này không được trình bày như factual accuracy, source fidelity hoặc broader semantic correctness.
 
 ## Signature, stamp, barcode và QR
 

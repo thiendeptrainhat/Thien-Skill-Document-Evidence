@@ -1,0 +1,549 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "canonical-content.schema.json",
+  "title": "Canonical semantic document content",
+  "description": "Additive, reading-order-preserving content contract for document conversion and RAG-source preparation.",
+  "$comment": "A semantic validator must check unique block_id and reading_order values, strictly increasing reading order in array order, existing and acyclic parent_block_id links, existing caption target_block_id links, equal table column/row widths, and bounding-box containment before structural_validation_status can be PASS.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "skill_id",
+    "skill_release_version",
+    "content_id",
+    "document_id",
+    "source_content_id",
+    "source_hash_status",
+    "fidelity_mode",
+    "reading_order_status",
+    "structural_validation_status",
+    "blocks",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "skill_id": {
+      "const": "thien-skill-document-evidence"
+    },
+    "skill_release_version": {
+      "$ref": "#/$defs/semanticVersion"
+    },
+    "content_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "document_id": {
+      "$ref": "shared-definitions.schema.json#/$defs/identifier"
+    },
+    "source_content_id": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source_hash_status": {
+      "enum": [
+        "COMPUTED_ORIGINAL_BYTES",
+        "COMPUTED_ACCESSIBLE_REPRESENTATION",
+        "UNAVAILABLE"
+      ]
+    },
+    "fidelity_mode": {
+      "enum": [
+        "SEMANTIC",
+        "GEOMETRY_AWARE",
+        "PAGE_IMAGE"
+      ]
+    },
+    "reading_order_status": {
+      "enum": [
+        "VERIFIED",
+        "UNVERIFIED",
+        "HUMAN_REVIEW_REQUIRED"
+      ]
+    },
+    "structural_validation_status": {
+      "$ref": "shared-definitions.schema.json#/$defs/validationStatus"
+    },
+    "blocks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contentBlock"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "$ref": "shared-definitions.schema.json#/$defs/nonEmptyString"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "source_hash_status": {
+            "const": "UNAVAILABLE"
+          }
+        },
+        "required": [
+          "source_hash_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "source_content_id": {
+            "type": "null"
+          },
+          "limitations": {
+            "minItems": 1
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "source_content_id": {
+            "type": "string",
+            "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "source_hash_status": {
+            "const": "COMPUTED_ACCESSIBLE_REPRESENTATION"
+          }
+        },
+        "required": [
+          "source_hash_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "limitations": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "fidelity_mode": {
+            "const": "GEOMETRY_AWARE"
+          }
+        },
+        "required": [
+          "fidelity_mode"
+        ]
+      },
+      "then": {
+        "properties": {
+          "blocks": {
+            "items": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/contentBlock"
+                },
+                {
+                  "properties": {
+                    "provenance": {
+                      "properties": {
+                        "geometry_status": {
+                          "const": "CAPTURED"
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "contentBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "block_id",
+        "block_type",
+        "reading_order",
+        "parent_block_id",
+        "provenance"
+      ],
+      "properties": {
+        "block_id": {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        "block_type": {
+          "enum": [
+            "HEADING",
+            "PARAGRAPH",
+            "TABLE",
+            "IMAGE",
+            "CAPTION"
+          ]
+        },
+        "reading_order": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "parent_block_id": {
+          "oneOf": [
+            {
+              "$ref": "shared-definitions.schema.json#/$defs/identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 6
+        },
+        "columns": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "asset_reference": {
+          "$ref": "#/$defs/safeRelativePath"
+        },
+        "media_type": {
+          "enum": [
+            "image/png",
+            "image/jpeg",
+            "image/webp",
+            "image/svg+xml"
+          ]
+        },
+        "asset_checksum": {
+          "$ref": "shared-definitions.schema.json#/$defs/checksum"
+        },
+        "alt_text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "target_block_id": {
+          "$ref": "shared-definitions.schema.json#/$defs/identifier"
+        },
+        "provenance": {
+          "$ref": "#/$defs/blockProvenance"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "block_type": {
+                "const": "HEADING"
+              }
+            },
+            "required": [
+              "block_type"
+            ]
+          },
+          "then": {
+            "required": [
+              "text",
+              "level"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "block_type": {
+                "const": "PARAGRAPH"
+              }
+            },
+            "required": [
+              "block_type"
+            ]
+          },
+          "then": {
+            "required": [
+              "text"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "block_type": {
+                "const": "TABLE"
+              }
+            },
+            "required": [
+              "block_type"
+            ]
+          },
+          "then": {
+            "required": [
+              "columns",
+              "rows"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "block_type": {
+                "const": "IMAGE"
+              }
+            },
+            "required": [
+              "block_type"
+            ]
+          },
+          "then": {
+            "required": [
+              "asset_reference",
+              "media_type",
+              "asset_checksum",
+              "alt_text"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "block_type": {
+                "const": "CAPTION"
+              }
+            },
+            "required": [
+              "block_type"
+            ]
+          },
+          "then": {
+            "required": [
+              "text",
+              "target_block_id"
+            ]
+          }
+        }
+      ]
+    },
+    "blockProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_page",
+        "source_region",
+        "source_snippet",
+        "geometry_status",
+        "bounding_box"
+      ],
+      "properties": {
+        "source_page": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "enum": [
+                "UNKNOWN",
+                "NOT_APPLICABLE"
+              ]
+            }
+          ]
+        },
+        "source_region": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_snippet": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "geometry_status": {
+          "enum": [
+            "CAPTURED",
+            "NOT_AVAILABLE",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "bounding_box": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/boundingBox"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "geometry_status": {
+                "const": "CAPTURED"
+              }
+            },
+            "required": [
+              "geometry_status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "bounding_box": {
+                "$ref": "#/$defs/boundingBox"
+              },
+              "source_page": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "bounding_box": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "boundingBox": {
+      "type": "object",
+      "additionalProperties": false,
+      "$comment": "Semantic validation must additionally enforce x + width <= page_width and y + height <= page_height.",
+      "required": [
+        "coordinate_system",
+        "x",
+        "y",
+        "width",
+        "height",
+        "page_width",
+        "page_height"
+      ],
+      "properties": {
+        "coordinate_system": {
+          "enum": [
+            "PIXEL",
+            "PDF_POINT",
+            "NORMALIZED_0_1"
+          ]
+        },
+        "x": {
+          "type": "number",
+          "minimum": 0
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0
+        },
+        "width": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "height": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "page_width": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "page_height": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "coordinate_system": {
+                "const": "NORMALIZED_0_1"
+              }
+            },
+            "required": [
+              "coordinate_system"
+            ]
+          },
+          "then": {
+            "properties": {
+              "x": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "y": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "width": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 1
+              },
+              "height": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 1
+              },
+              "page_width": {
+                "const": 1
+              },
+              "page_height": {
+                "const": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "safeRelativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?![A-Za-z]:)(?!/)(?!(?:\\.{1,2})(?:/|$))(?!(?:(?:[Cc][Oo][Nn]|[Pp][Rr][Nn]|[Aa][Uu][Xx]|[Nn][Uu][Ll]|[Cc][Oo][Mm][1-9]|[Ll][Pp][Tt][1-9]))(?:\\.[^/]*|/|$))(?=[^/]*[^. /](?:/|$))[^<>:\"/\\\\|?*\\u0000-\\u001F]+(?:/(?!(?:\\.{1,2})(?:/|$))(?!(?:(?:[Cc][Oo][Nn]|[Pp][Rr][Nn]|[Aa][Uu][Xx]|[Nn][Uu][Ll]|[Cc][Oo][Mm][1-9]|[Ll][Pp][Tt][1-9]))(?:\\.[^/]*|/|$))(?=[^/]*[^. /](?:/|$))[^<>:\"/\\\\|?*\\u0000-\\u001F]+)*$"
+    },
+    "semanticVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    }
+  }
+}
