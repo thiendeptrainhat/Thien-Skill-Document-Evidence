@@ -4,24 +4,59 @@
 
 # Thien Skill — Document Intelligence, Evidence & Reconciliation
 
-Biến bộ tài liệu rời rạc thành dữ liệu có cấu trúc, tệp có thể sử dụng tiếp và kết quả đối soát có đường dẫn về nguồn. Khi được kích hoạt, skill hướng dẫn agent xử lý theo một quy trình nhất quán: kiểm kê → trích xuất → chuẩn hóa có kiểm soát → kiểm tra → xuất kết quả → bàn giao các điểm cần con người xem xét.
+## Giới thiệu skill
 
-**Phiên bản 1.2.0 — Final.** Đây là bản phát hành chính thức, không còn hậu tố RC, tập trung vào ba nhu cầu: **chuyển đổi tài liệu**, **chuẩn bị nguồn RAG** và **đối soát nhiều loại chứng từ**. Skill kết hợp hướng dẫn nghiệp vụ, schema dữ liệu, templates và script offline; không phải một OCR engine hay hệ thống phê duyệt tự động.
+Thien Skill — Document Intelligence, Evidence & Reconciliation giúp agent biến bộ tài liệu rời rạc thành dữ liệu có cấu trúc, tệp có thể sử dụng tiếp và kết quả đối soát có đường dẫn về nguồn. Skill hướng dẫn một quy trình nhất quán: **kiểm kê → trích xuất → chuẩn hóa có kiểm soát → kiểm tra → tạo đầu ra → bàn giao cho con người review**.
+
+Skill tập trung vào ba nhóm công việc:
+
+- **Chuyển đổi tài liệu:** tạo JSON, Markdown, DOCX, XLSX hoặc PPTX từ nội dung đã chuẩn hóa.
+- **Chuẩn bị nguồn RAG:** lập package có manifest, stable block ID, provenance và tùy chọn chunking được cấu hình rõ.
+- **Đối soát chứng từ:** liên kết nhiều vai trò chứng từ, phát hiện chênh lệch và tạo workbook phục vụ review.
+
+Đây là một skill gồm hướng dẫn nghiệp vụ, schema, template và helper offline. Skill không phải OCR engine độc lập, không tự kết nối hệ thống nghiệp vụ và không thay người phê duyệt.
+
+### Bản cập nhật 1.2.0
+
+| Thuộc tính | Thông tin |
+|---|---|
+| Phiên bản | `1.2.0` |
+| Trạng thái | **Final** — không còn hậu tố RC |
+| QA kỹ thuật | **188 tests: 187 PASS, 1 optional SKIP** |
+| Gói cài đặt | OpenAI, Claude và Universal |
+| Khả năng tương thích | Giữ extraction schema và tool contract `1.0.0` |
+| Readiness tự động tối đa | `READY_FOR_HUMAN_REVIEW` |
+
+Điểm mới chính của phiên bản 1.2.0:
+
+- Cung cấp ba helper offline hoàn chỉnh cho conversion artifact, RAG source package và reconciliation package/workbook.
+- Mở rộng lên **9 matching profiles** và hỗ trợ custom profile thay vì chỉ phục vụ một quy trình PO–GRN–invoice.
+- Gia cố atomic/no-overwrite, kiểm tra OOXML external relationship theo hướng fail-closed và tạo immutable source snapshot.
+- Chuẩn hóa trạng thái `BLOCKED` khi thiếu required role hoặc có lỗi/điểm chưa xác định quan trọng.
+- Cải thiện khả năng đọc workbook với wrap, column width và adaptive row height cho nội dung dài.
+- Bổ sung hygiene gate để hạn chế cache, file tạm, duplicate, file quá lớn và số lượng release lịch sử tích tụ trong repository.
+
+Ba gói ZIP hiện hành:
+
+- [OpenAI v1.2.0](./dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.2.0.zip)
+- [Claude v1.2.0](./dist/claude/Thien-Skill-Document-Evidence-Claude-v1.2.0.zip)
+- [Universal v1.2.0](./dist/universal/Thien-Skill-Document-Evidence-Universal-v1.2.0.zip)
 
 ## Đọc nhanh
 
-- [Vai trò của skill](#vai-tro)
-- [Lợi ích khi kích hoạt](#loi-ich)
+- [Vai trò và lợi ích](#vai-tro)
 - [Hướng dẫn sử dụng skill](#quy-trinh)
 - [Ví dụ yêu cầu có thể dùng ngay](#vi-du)
 - [Ba nhóm tính năng chính](#tinh-nang)
 - [Chín matching profiles và khả năng mở rộng](#matching)
-- [Thông tin bản phát hành Final và phạm vi kiểm thử](#kiem-thu)
+- [Chi tiết phát hành và phạm vi kiểm thử](#kiem-thu)
 - [Hướng dẫn cài đặt](#cai-dat)
 
 <a id="vai-tro"></a>
 
-## Vai trò của skill
+## Vai trò và lợi ích của skill
+
+### Vai trò
 
 Skill đóng vai trò **hướng dẫn agent xử lý tài liệu theo quy trình có kiểm soát**, nối tài liệu nguồn với dữ liệu, đầu ra và bước review:
 
@@ -34,7 +69,7 @@ Agent thực hiện công việc bằng những công cụ được phép trên 
 
 <a id="loi-ich"></a>
 
-## Skill mang lại lợi ích gì khi được kích hoạt?
+### Lợi ích khi kích hoạt
 
 Kích hoạt nghĩa là agent nạp hướng dẫn và tài nguyên của skill để thực hiện yêu cầu hiện tại. Việc này **không tự chạy quét toàn bộ máy, đọc mọi thư mục, kết nối ERP/ngân hàng hay tải tài liệu lên dịch vụ khác**. Nguồn được đọc, nơi ghi kết quả và công cụ được dùng vẫn phải nằm trong phạm vi được phép.
 
@@ -49,18 +84,6 @@ Kích hoạt nghĩa là agent nạp hướng dẫn và tài nguyên của skill 
 | Xử lý tài liệu có nội dung không đáng tin cậy | Giữ original read-only theo workflow; không làm theo lệnh nhúng; các script kiểm soát đường dẫn và mặc định không ghi đè | Hạn chế thao tác ngoài phạm vi và tránh biến nội dung chứng từ thành lệnh thực thi |
 
 Đây là lợi ích về quy trình và khả năng kiểm tra. Repository chưa công bố benchmark về thời gian tiết kiệm, độ chính xác OCR hoặc tỷ lệ phát hiện sai sót; không suy các chỉ số đó từ số lượng tests.
-
-### Điểm mới nổi bật của 1.2.0
-
-- Có ba helper offline cho **conversion artifact**, **RAG source package** và **reconciliation package/workbook**, không chỉ có hướng dẫn hoặc template đầu ra.
-- Bổ sung cấu trúc dữ liệu chung cho yêu cầu xử lý, nội dung theo block, artifact manifest, conversion run, RAG package và matching profile; giữ tương thích các contract/tool v1.0 hiện hữu.
-- Có **9 matching profiles** đi kèm và cơ chế custom profile cho quy trình khác; không khóa đối soát vào hóa đơn đầu vào–PO–GRN.
-- Tách rõ **tệp đã tạo**, **kiểm tra cấu trúc**, **kiểm tra hiển thị/nhập vào hệ thống đích** và **phê duyệt của con người**.
-- Phân phối cùng một portable core trong ba gói OpenAI, Claude và Universal; kiểm tra parity và checksum giúp xác định gói đang dùng.
-- Gia cố atomic/no-overwrite cho RAG, kiểm tra OOXML external relationships theo XML fail-closed và chụp immutable source snapshot trước khi lập inventory.
-- Mọi readiness tự động dừng tối đa ở `READY_FOR_HUMAN_REVIEW`; missing required role và trạng thái lỗi/không biết roll up thành `BLOCKED` nhất quán giữa manifest và package.
-- Workbook package export tái chạy bundled validator trên exact bytes bằng Python 3 được tin cậy; release provenance nằm trong contract mở sẵn mà không làm thay đổi closed extraction schema v1.0.0.
-- Bổ sung repository hygiene gate về file rác, duplicate, size/LOC budget và retention; cải thiện wrap, column width và adaptive row height cho XLSX dài.
 
 <a id="quy-trinh"></a>
 
@@ -330,7 +353,7 @@ Các script đi kèm không tự gọi mạng, không tự cài dependency và m
 
 <a id="kiem-thu"></a>
 
-## Thông tin bản phát hành 1.2.0 — Final
+## Chi tiết phát hành 1.2.0 — Final
 
 | Thuộc tính | Giá trị |
 |---|---|
