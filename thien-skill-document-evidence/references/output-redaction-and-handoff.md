@@ -18,6 +18,14 @@ Mỗi export set liên kết tới `schemas/common/artifact-manifest.schema.json
 
 Chi tiết tại `conversion-output-profiles.md` và `rag-source-package.md`. `VISUAL_FIDELITY_BEST_EFFORT` phụ thuộc geometry/render capability và không được gọi pixel-perfect.
 
+## Output lifecycle và size discipline
+
+- Chỉ persist artifact cuối người dùng yêu cầu và sidecar bắt buộc theo contract; không tạo bản sao dự phòng/preview/retry cạnh output chỉ để theo dõi tiến độ.
+- Staging, render preview, retry và intermediate output nằm trong temporary workspace ngoài source và package đích. Cleanup chạy cả success/failure; nếu cleanup không an toàn thì ghi exact recovery path, không xóa dữ liệu cũ để che lỗi.
+- Không sinh chuỗi tên `copy`, `final-v2`, `final-final`; version/variant chỉ tạo khi intended use khác hoặc người dùng yêu cầu rõ, và manifest phải phân biệt vai trò.
+- Trước write, ước lượng số file, rows và bytes. Khi volume vượt giới hạn format/host/destination, dùng một control artifact và linked sidecar theo mục Volume; không tự chia thành nhiều file không có manifest.
+- Dùng checksum để nhận duplicate candidate. Không copy byte-identical asset/output nếu có thể reuse một object được phép bằng stable reference; nếu retention/provenance cần hai occurrence thì ghi rõ lý do.
+
 ## Workbook standard
 
 Workbook `.xlsx` không macro, không external link không cần thiết, không embedded executable và không merged cells trong data sheets. Mỗi applicable data sheet dùng one-row-one-object grain, header/filter/freeze pane, typed number/date columns, identifier text, raw/normalized/status/provenance/review fields và unique table name.
@@ -145,4 +153,4 @@ Package export dùng gate hai bước, không bỏ qua full schema contract:
 1. chạy `validate_records.py PACKAGE.json --schema common/extraction-package.schema.json --schema-root SCHEMAS --output REPORT.json` dưới authorized root;
 2. chạy `build_workbook.mjs --package PACKAGE.json --schema-validation-report REPORT.json --output RESULT.xlsx`.
 
-Builder phải đối chiếu PASS status, zero errors, input SHA-256 và bundled schema SHA-256 trước write. Sau đó giữ stdout/dry-run khi phù hợp, atomic write, no-overwrite mặc định, deterministic sheet/row order, typed normalized amount/unambiguous ISO date, identifier text, formula-safe source text và row-count checks. Dependency thiếu phải fail rõ; không tự cài package hoặc tạo file giả. Vì XLSX exporter là runtime adapter, kiểm tra OOXML cuối phải xác nhận freeze pane, filter, no formula/macro/external relationship và visual readability. Nếu host exporter không giữ freeze/filter, chạy `python3 scripts/finalize_workbook.py --root AUTHORIZED_DIR --input INPUT.xlsx --output FINAL.xlsx`; adapter standard-library này luôn tạo output khác input, no-overwrite mặc định và từ chối package active/không an toàn. Nếu finalization hoặc visual QA không PASS thì `qa_status` phải phản ánh failure/`NOT_TESTED`; creation state của file vẫn ghi riêng. Các checks này không chứng minh live install hoặc platform acceptance.
+Builder phải đối chiếu PASS status, zero errors, input SHA-256 và bundled schema SHA-256, rồi tự tái chạy bundled `validate_records.py` trên exact package và yêu cầu supplied report khớp fresh validation evidence trước write. Sau đó giữ stdout/dry-run khi phù hợp, atomic write, no-overwrite mặc định, deterministic sheet/row order, typed normalized amount/unambiguous ISO date, identifier text, formula-safe source text và row-count checks. Dependency thiếu phải fail rõ; không tự cài package hoặc tạo file giả. Vì XLSX exporter là runtime adapter, kiểm tra OOXML cuối phải xác nhận freeze pane, filter, no formula/macro/external relationship và visual readability. Nếu host exporter không giữ freeze/filter, chạy `python3 scripts/finalize_workbook.py --root AUTHORIZED_DIR --input INPUT.xlsx --output FINAL.xlsx`; adapter standard-library này luôn tạo output khác input, no-overwrite mặc định và từ chối package active/không an toàn. Nếu finalization hoặc visual QA không PASS thì `qa_status` phải phản ánh failure/`NOT_TESTED`; creation state của file vẫn ghi riêng. Các checks này không chứng minh live install hoặc platform acceptance.

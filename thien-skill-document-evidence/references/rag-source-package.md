@@ -54,7 +54,7 @@ Sensitive signature, account, identity hoặc investigation image không đượ
 
 ## Chunking là target-specific
 
-Tạo `chunks.jsonl` chỉ khi target và chunking config được cung cấp cùng nhau. Config gồm tối thiểu strategy/version, unit, size/overlap semantics, heading/table handling, language/tokenizer basis và required metadata fields.
+Tạo `chunks.jsonl` chỉ khi target và chunking config được cung cấp cùng nhau. Config gồm tối thiểu strategy/version, unit, size/overlap semantics, heading/table handling, language/tokenizer basis và required metadata fields. Nếu request chỉ yêu cầu RAG source thì unchunked package là default. Nếu request yêu cầu rõ chunks nhưng thiếu target hoặc config, có thể hoàn thành read-only intake/canonicalization độc lập nhưng phải pause package publication và hỏi; không tự bàn giao unchunked package như thể đã đáp ứng yêu cầu chunks.
 
 Mỗi chunk cần stable `chunk_id`, document ID, ordered block/source references, text, heading path, sequence, character/token counts theo method đã khai báo, access/classification metadata và any split warnings.
 
@@ -65,7 +65,7 @@ Không:
 - gọi chunks là embeddings hoặc index;
 - tuyên bố retrieval-ready nếu target validator/ingestion test chưa chạy.
 
-Nếu target không được cung cấp, task request ghi `chunking.enabled: false`, `config_reference: null`; RAG package ghi `chunks: null` và không tạo `chunks.jsonl`. Nếu chunking được bật hoặc `chunks` được khai báo khác null, chunk descriptor trở thành bắt buộc cho declared profile và chỉ góp phần vào package PASS khi `creation_status: CREATED`, `qa_status: PASS`. Tương tự, mọi asset descriptor đã liệt kê phải CREATED + QA PASS trước document/package PASS; optional asset không áp dụng thì bỏ khỏi mảng thay vì tạo placeholder trong một PASS manifest.
+Khi request không đòi chunks và target không được cung cấp, task request ghi `chunking.enabled: false`, `config_reference: null`; RAG package ghi `chunks: null` và không tạo `chunks.jsonl`. Nếu chunking được bật hoặc `chunks` được khai báo khác null, chunk descriptor trở thành bắt buộc cho declared profile và chỉ góp phần vào package PASS khi `creation_status: CREATED`, `qa_status: PASS`. Tương tự, mọi asset descriptor đã liệt kê phải CREATED + QA PASS trước document/package PASS; optional asset không áp dụng thì bỏ khỏi mảng thay vì tạo placeholder trong một PASS manifest.
 
 ## Folder/collection package
 

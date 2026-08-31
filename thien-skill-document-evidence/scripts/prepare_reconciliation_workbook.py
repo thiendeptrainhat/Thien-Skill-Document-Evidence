@@ -101,6 +101,8 @@ def _load_sibling(name: str, filename: str):
 
 VALIDATE = _load_sibling("thien_phase2_validate_records", "validate_records.py")
 RECONCILE = _load_sibling("thien_phase2_reconcile_records", "reconcile_records.py")
+SKILL_ID = RECONCILE.SKILL_ID
+SKILL_RELEASE_VERSION = RECONCILE.SKILL_RELEASE_VERSION
 
 
 def canonical_json_bytes(value: object) -> bytes:
@@ -1687,7 +1689,7 @@ def build_workbook_package(
         {"step_id": "reconciliation-workbook-build", "status": "SUCCEEDED", "method_change": None, "timestamp": "UNKNOWN"},
     ]
     package["qa_status"] = "CONDITIONAL" if issues or result["status"] == "CONDITIONAL" else result["status"]
-    package["status"] = "READY_FOR_HUMAN_REVIEW"
+    package["status"] = workflow_readiness_status(result["status"], issues)
     package["human_approval_status"] = config["human_approval"]["status"]
     return package
 
@@ -1712,11 +1714,19 @@ def workflow_readiness_status(
     reconciliation_status: object,
     preparation_issues: Iterable[object],
 ) -> str:
-    """Fail closed: only clean PASS outcomes qualify for limited use."""
+    """Fail closed on blocking conditions; otherwise cap at human review."""
 
-    issues = list(preparation_issues)
-    if not issues and reconciliation_status in {"PASS", "PASS_WITH_WARNINGS"}:
-        return "READY_FOR_LIMITED_USE"
+    if str(reconciliation_status).upper() not in {
+        "PASS",
+        "PASS_WITH_WARNINGS",
+        "CONDITIONAL",
+    }:
+        return "BLOCKED"
+    for issue in preparation_issues:
+        if not isinstance(issue, Mapping):
+            return "BLOCKED"
+        if issue.get("issue_code") == "MISSING_REQUIRED_ROLE":
+            return "BLOCKED"
     return "READY_FOR_HUMAN_REVIEW"
 
 
@@ -1787,6 +1797,8 @@ def build_workflow(
     manifest = {
         "schema_version": "1.0.0",
         "manifest_type": "RECONCILIATION_WORKFLOW_PACKAGE",
+        "skill_id": SKILL_ID,
+        "skill_release_version": SKILL_RELEASE_VERSION,
         "tool": TOOL_NAME,
         "tool_version": TOOL_VERSION,
         "profile": {"profile_id": profile["profile_id"], "profile_version": profile["profile_version"], "sha256": sha256_bytes(profile_bytes)},

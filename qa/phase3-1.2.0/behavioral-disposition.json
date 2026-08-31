@@ -1,0 +1,672 @@
+{
+  "schema_version": "1.0.0",
+  "record_type": "BEHAVIORAL_SCENARIO_DISPOSITION",
+  "release_candidate": "1.2.0",
+  "recorded_on": "2026-09-01",
+  "catalog": {
+    "path": "tests/behavioral_cases.json",
+    "sha256": "9a036f226ef7f3f2a5ebbd575e71fee9bab76d1a1655ef72ae848ed19d13fe51",
+    "scenario_count": 64,
+    "catalog_status_at_review": "SPECIFICATION_ONLY",
+    "catalog_execution_status_at_review": {
+      "NOT_TESTED": 64
+    }
+  },
+  "method": {
+    "EXECUTED_PASS": "At least one concrete automated test, or a complementary set of automated tests, directly exercises every material invariant and forbidden outcome in the synthetic offline scenario.",
+    "PARTIAL": "Automated evidence directly exercises part of the scenario, but one or more material invariants, negative outcomes, candidate-package boundaries, or visual/live assertions remain untested.",
+    "NOT_EXECUTED": "No automated test directly executes the scenario's material behavior; schema presence, instruction text, or inference from implementation is not execution evidence.",
+    "frozen_package_rule": "A test that only executes frozen RC2 or 1.1.0 archives cannot by itself establish 1.2.0 candidate behavior.",
+    "review_posture": "Skeptical; specification-only cases are not promoted to PASS by inference."
+  },
+  "counts": {
+    "EXECUTED_PASS": 8,
+    "PARTIAL": 34,
+    "NOT_EXECUTED": 22,
+    "total": 64
+  },
+  "overall_claim": "PARTIAL_BEHAVIORAL_COVERAGE_ONLY; this record does not establish that all catalog objectives are met.",
+  "scenarios": [
+    {
+      "scenario_id": "DE-001",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No test supplies a native-text PDF and asserts NATIVE_TEXT routing, page provenance, and absence of an OCR adapter run.",
+      "owner": "release_owner",
+      "claim_limit": "No claim about native-text-versus-OCR routing."
+    },
+    {
+      "scenario_id": "DE-002",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No rotated-scan fixture exercises working-copy transformation records, original checksum preservation, and distinct derivative identity together.",
+      "owner": "release_owner",
+      "claim_limit": "No claim about rotation handling or scan working-copy provenance."
+    },
+    {
+      "scenario_id": "DE-003",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No multi-adapter blurred-amount test preserves both candidates and links a conflict review item to a source region.",
+      "owner": "release_owner",
+      "claim_limit": "No claim about conflict handling between extraction adapters."
+    },
+    {
+      "scenario_id": "DE-004",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_domain_scripts.py::InventoryTestCase.test_inventory_is_deterministic_read_only_and_links_duplicate_content",
+        "tests/test_domain_scripts.py::InventoryTestCase.test_ooxml_active_content_and_unsafe_member_are_flagged_without_extraction",
+        "tests/test_phase2_remediation_intake.py::InventorySnapshotAndRelationshipTests.test_external_relationship_parser_handles_whitespace_case_and_namespace"
+      ],
+      "reason_remaining_gap": "Encryption and active-content blocking are exercised, but no direct MIME-mismatch case and no password/locked-PDF authorization flow cover the full composite scenario.",
+      "owner": "release_owner",
+      "claim_limit": "Claim only active-content detection and fail-closed handling for the tested synthetic PDF/OOXML markers."
+    },
+    {
+      "scenario_id": "DE-005",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "Formula-safety and active-SVG tests are not a prompt-injection/QR scenario; no test asserts unchanged scope and zero URL opening or upload.",
+      "owner": "release_owner",
+      "claim_limit": "No claim about embedded instruction or QR prompt-injection resistance."
+    },
+    {
+      "scenario_id": "DE-006",
+      "disposition": "EXECUTED_PASS",
+      "evidence": [
+        "tests/test_domain_scripts.py::InventoryTestCase.test_symlink_and_path_escape_are_rejected",
+        "tests/test_domain_scripts.py::InventoryTestCase.test_ooxml_active_content_and_unsafe_member_are_flagged_without_extraction",
+        "tests/test_domain_scripts.py::InventoryTestCase.test_inventory_is_deterministic_read_only_and_links_duplicate_content",
+        "tests/test_conversion_artifacts.py::ConversionArtifactTests.test_collision_extension_escape_symlink_and_inode_alias_are_rejected",
+        "tests/test_rag_builder.py::RagBuilderTests.test_symlink_inputs_assets_and_outputs_are_rejected"
+      ],
+      "reason_remaining_gap": "The tests directly reject archive path escape and symlink traversal, retain approved-root inventory records, preserve outside targets, and prove the unsafe archive member was not extracted.",
+      "owner": "release_owner",
+      "claim_limit": "PASS applies to the tested local filesystem helpers and synthetic archive/path cases, not arbitrary host filesystem implementations."
+    },
+    {
+      "scenario_id": "DE-007",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No adapter output omitting confidence is executed and asserted to produce null score, UNKNOWN band, and UNKNOWN source.",
+      "owner": "release_owner",
+      "claim_limit": "No claim that missing adapter confidence is normalized correctly at runtime."
+    },
+    {
+      "scenario_id": "DE-008",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_phase3_packaged_workflows.py::Phase3PackagedWorkflowTests.test_python_process_isolation_and_no_inherited_pythonpath",
+        "tests/test_rag_builder.py::RagBuilderTests.test_cli_help_documents_offline_controls"
+      ],
+      "reason_remaining_gap": "Process isolation and offline CLI controls are exercised for frozen/package and RAG paths, but no unavailable OCR/vision runtime test asserts NOT_EXECUTED or BLOCKED plus an approved fallback, and no network monitor proves zero download attempts.",
+      "owner": "release_owner",
+      "claim_limit": "Do not claim general no-install behavior for unavailable OCR or model runtimes."
+    },
+    {
+      "scenario_id": "DE-009",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No multi-page table fixture contains repeated headers and page subtotals for logical line-item reconciliation.",
+      "owner": "release_owner",
+      "claim_limit": "No claim about repeated-header suppression or multi-page table continuation."
+    },
+    {
+      "scenario_id": "DE-010",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_domain_scripts.py::ValidatorTestCase.test_leading_zero_identifier_is_not_coerced_and_missing_field_is_clear",
+        "tests/test_domain_scripts.py::ReconciliationTestCase.test_leading_zero_mismatch_missing_field_and_ambiguity_are_not_confirmed",
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_workflow_package_is_byte_stable_role_conditional_and_formula_safe"
+      ],
+      "reason_remaining_gap": "Validation, normalized comparison, and package fields preserve leading zeros, but no test directly inspects the generated XLSX cell containing the identifier to assert text metadata and absence of scientific notation.",
+      "owner": "release_owner",
+      "claim_limit": "Claim leading-zero preservation in tested JSON/package paths only; XLSX identifier-cell preservation remains unverified."
+    },
+    {
+      "scenario_id": "DE-011",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No ambiguous locale-date fixture asserts preserved raw value, null normalized value, AMBIGUOUS status, and material human review.",
+      "owner": "release_owner",
+      "claim_limit": "No claim about ambiguous date normalization."
+    },
+    {
+      "scenario_id": "DE-012",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No image containing multiple receipts is segmented into three candidates with overlap uncertainty.",
+      "owner": "release_owner",
+      "claim_limit": "No claim about multi-receipt image segmentation."
+    },
+    {
+      "scenario_id": "DE-013",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No printed-plus-handwritten field test preserves separate candidates, source regions, and review state.",
+      "owner": "release_owner",
+      "claim_limit": "No claim about handwriting candidate handling or writer/signature boundaries."
+    },
+    {
+      "scenario_id": "DE-014",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No declared-versus-observed page-count fixture produces INCOMPLETE and constrains downstream completeness claims.",
+      "owner": "release_owner",
+      "claim_limit": "No claim about missing-page detection."
+    },
+    {
+      "scenario_id": "DE-015",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No unsigned-contract fixture records signature absence and page provenance while withholding validity/authentication conclusions.",
+      "owner": "release_owner",
+      "claim_limit": "No claim about unsigned-contract handling."
+    },
+    {
+      "scenario_id": "DE-016",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No base-contract/addendum execution asserts resolvable amended_by and supersedes links without overwriting base text.",
+      "owner": "release_owner",
+      "claim_limit": "No claim about addendum supersession behavior."
+    },
+    {
+      "scenario_id": "DE-017",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No clause-to-obligation extraction test covers party, action, trigger, recurrence, due rule, evidence requirement, source resolution, and absence of compliance conclusions.",
+      "owner": "release_owner",
+      "claim_limit": "No claim about executable obligation extraction."
+    },
+    {
+      "scenario_id": "DE-018",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_automated_reconciliation_never_exceeds_human_review_readiness",
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_approved_partial_is_preserved_and_cumulative_overallocation_is_blocked"
+      ],
+      "reason_remaining_gap": "Quantity mismatches and review roll-up are exercised, but not the specified three-way difference of 10 with QUANTITY_MISMATCH and all source record IDs asserted together.",
+      "owner": "release_owner",
+      "claim_limit": "Claim only generic quantity mismatch/review behavior, not DE-018's exact three-way oracle."
+    },
+    {
+      "scenario_id": "DE-019",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_domain_scripts.py::ReconciliationTestCase.test_partial_flow_and_allocation_are_explicit",
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_invoice_payment_request_bank_settlement_exact_and_approved_partial"
+      ],
+      "reason_remaining_gap": "Approved partial matching and allocation are executed, but the tests do not directly assert the scenario's remaining quantity of 50 together with basis, owner, approval reference, and direction in the emitted result.",
+      "owner": "release_owner",
+      "claim_limit": "Claim deterministic approved partial handling only for tested profiles and fields."
+    },
+    {
+      "scenario_id": "DE-020",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_domain_scripts.py::ReconciliationTestCase.test_approved_tolerance_is_applied_and_unapproved_is_not_passed",
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_all_bundled_profiles_validate_without_embedded_tolerance_values"
+      ],
+      "reason_remaining_gap": "Pending tolerance approval is prevented from linking and default profiles have null tolerance values, but one end-to-end case does not assert every expected status/value/owner field together.",
+      "owner": "release_owner",
+      "claim_limit": "Claim no automatic pass for the tested pending-approval tolerance paths; do not generalize to every profile."
+    },
+    {
+      "scenario_id": "DE-021",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No same-invoice-number/different-vendor fixture asserts separate records and absence of duplicate-payment classification.",
+      "owner": "release_owner",
+      "claim_limit": "No claim about cross-vendor invoice-number duplicate logic."
+    },
+    {
+      "scenario_id": "DE-022",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_domain_scripts.py::ReconciliationTestCase.test_leading_zero_mismatch_missing_field_and_ambiguity_are_not_confirmed"
+      ],
+      "reason_remaining_gap": "The test produces AMBIGUOUS_MATCH and suppresses a link, but it does not assert both candidate IDs and the complete human-review record required by the scenario.",
+      "owner": "release_owner",
+      "claim_limit": "Claim only that the tested ambiguity is not arbitrarily confirmed."
+    },
+    {
+      "scenario_id": "DE-023",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_domain_scripts.py::ReconciliationTestCase.test_bank_account_conflict_creates_contract_discrepancy_without_conclusion"
+      ],
+      "reason_remaining_gap": "The test directly asserts BANK_ACCOUNT_MISMATCH, both raw accounts, pending human review, schema-valid output, and absence of fraud/payment-block conclusions.",
+      "owner": "release_owner",
+      "claim_limit": "PASS is limited to technical discrepancy handling; no fraud, legal, or payment decision is implied."
+    },
+    {
+      "scenario_id": "DE-024",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No contract/order/receipt date-role conflict fixture asserts source-specific date retention and explicit contradiction.",
+      "owner": "release_owner",
+      "claim_limit": "No claim about conflicting date-role resolution."
+    },
+    {
+      "scenario_id": "DE-025",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No equal-row-count/different-amount case asserts separate count and amount controls and rejects an overall count-only pass.",
+      "owner": "release_owner",
+      "claim_limit": "No claim that matching row counts cannot conceal amount mismatches."
+    },
+    {
+      "scenario_id": "DE-026",
+      "disposition": "EXECUTED_PASS",
+      "evidence": [
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_workflow_package_is_byte_stable_role_conditional_and_formula_safe",
+        "tests/test_workbook_finalizer.py::WorkbookFinalizerTests.test_rejects_formula_hyperlink_external_vba_and_unsafe_member"
+      ],
+      "reason_remaining_gap": "The generated package covers =HYPERLINK with an injection flag, literal emission, and no formula/external/VBA relationship, but +cmd, -1+2, and @SUM are not directly exercised and asserted as exact canonical raw values and XLSX literals.",
+      "owner": "release_owner",
+      "claim_limit": "Claim formula safety only for the directly tested =HYPERLINK path; do not generalize to every formula-like prefix."
+    },
+    {
+      "scenario_id": "DE-027",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_artifact_integrity.py::ArtifactIntegrityTests.test_workbook_template_has_safe_structure",
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_workflow_package_is_byte_stable_role_conditional_and_formula_safe"
+      ],
+      "reason_remaining_gap": "No VBA, filters, freeze panes, conditional sheets, and template merge controls are exercised, but no current-candidate test ties every generated sheet row count and absence of merges/default blank sheets in one oracle.",
+      "owner": "release_owner",
+      "claim_limit": "Claim structural controls for the tested template and generated reconciliation workbook only."
+    },
+    {
+      "scenario_id": "DE-028",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_domain_scripts.py::ValidatorTestCase.test_leading_zero_identifier_is_not_coerced_and_missing_field_is_clear",
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_workflow_package_is_byte_stable_role_conditional_and_formula_safe"
+      ],
+      "reason_remaining_gap": "Identifier text and the presence of a date number format are tested, but validated numeric amounts and ambiguous raw dates remaining text are not directly asserted together.",
+      "owner": "release_owner",
+      "claim_limit": "Do not claim complete workbook typing coverage, especially for ambiguous dates."
+    },
+    {
+      "scenario_id": "DE-029",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_conversion_artifacts.py::ConversionArtifactTests.test_xlsx_refuses_oversize_cell_without_truncation_or_partial_outputs"
+      ],
+      "reason_remaining_gap": "The renderer refuses an oversized cell without partial output, but Excel row-count overflow, control workbook plus sidecar creation, checksum/count linkage, and permission-driven BLOCKED are not executed.",
+      "owner": "release_owner",
+      "claim_limit": "Claim only fail-closed handling of the tested cell-size limit, not row-volume sidecar behavior."
+    },
+    {
+      "scenario_id": "DE-030",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_conversion_artifacts.py::ConversionArtifactTests.test_xlsx_long_provenance_gets_adaptive_wrapped_row_height",
+        "tests/test_conversion_artifacts.py::ConversionArtifactTests.test_office_outputs_are_real_structural_ooxml_with_canonical_provenance"
+      ],
+      "reason_remaining_gap": "Wrap styles, adaptive height, widths, headers, and OOXML structure are asserted, but no automated render/image inspection covers every applicable sheet, clipping, readability, or unintended blanks.",
+      "owner": "release_owner",
+      "claim_limit": "Structural readability controls are covered; visual QA remains NOT_TESTED."
+    },
+    {
+      "scenario_id": "DE-031",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_domain_scripts.py::InventoryTestCase.test_inventory_is_deterministic_read_only_and_links_duplicate_content"
+      ],
+      "reason_remaining_gap": "The test directly asserts identical content IDs, distinct occurrence/document IDs, an EXACT_DUPLICATE relationship, both filenames retained, and unchanged sources.",
+      "owner": "release_owner",
+      "claim_limit": "PASS applies to exact byte duplicates in the tested local inventory helper."
+    },
+    {
+      "scenario_id": "DE-032",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No custody-event fixture asserts exact event count, actors, timestamps, unchanged original hash, and non-signature wording.",
+      "owner": "release_owner",
+      "claim_limit": "No claim about chain-of-custody event accuracy."
+    },
+    {
+      "scenario_id": "DE-033",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No unavailable-redaction-adapter path asserts NOT_EXECUTED, unchanged original, recorded requirements, and absence of a completion claim.",
+      "owner": "release_owner",
+      "claim_limit": "No claim about redaction fallback behavior."
+    },
+    {
+      "scenario_id": "DE-034",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No executed redaction fixture tests copy/search/extraction resistance, derivative checksum, original preservation, and audience-specific approval.",
+      "owner": "release_owner",
+      "claim_limit": "No claim that redaction removes recoverable target content."
+    },
+    {
+      "scenario_id": "DE-035",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_conversion_artifacts.py::ConversionArtifactTests.test_every_format_is_deterministic_for_identical_relative_inputs",
+        "tests/test_domain_scripts.py::ReconciliationTestCase.test_reconciliation_is_deterministic_and_does_not_mutate_inputs"
+      ],
+      "reason_remaining_gap": "Byte determinism and source non-mutation are exercised for conversion/reconciliation, but the scenario's explicit semantic-hash treatment of allowed timestamp differences is not tested.",
+      "owner": "release_owner",
+      "claim_limit": "Claim deterministic outputs only for identical tested inputs and deterministic timestamp conventions."
+    },
+    {
+      "scenario_id": "DE-036",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No retry orchestration test records changed methods, enforces a two-attempt ceiling, retains valid partial output, and routes to review.",
+      "owner": "release_owner",
+      "claim_limit": "No claim about bounded retry behavior."
+    },
+    {
+      "scenario_id": "DE-037",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No formal-investigation request with missing gates is executed to verify BLOCKED disclosure routing and safe method-only continuation.",
+      "owner": "release_owner",
+      "claim_limit": "No behavioral claim about formal investigation gating."
+    },
+    {
+      "scenario_id": "DE-038",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_domain_scripts.py::ReconciliationTestCase.test_reconciliation_is_deterministic_and_does_not_mutate_inputs",
+        "tests/test_domain_scripts.py::ReconciliationTestCase.test_bank_account_conflict_creates_contract_discrepancy_without_conclusion"
+      ],
+      "reason_remaining_gap": "Technical outputs omit prohibited fraud/legal/authenticity/payment conclusions, but no skill-level request test preserves extraction facts while proposing a capability-based handoff.",
+      "owner": "release_owner",
+      "claim_limit": "Claim only absence of prohibited conclusion fields in tested reconciliation outputs."
+    },
+    {
+      "scenario_id": "DE-039",
+      "disposition": "NOT_EXECUTED",
+      "evidence": [],
+      "reason_remaining_gap": "No test models separate external-processing and evidence-distribution approvals, intended audience, and pending-state suppression of network/release actions.",
+      "owner": "release_owner",
+      "claim_limit": "No behavioral claim about external processing or release approval separation."
+    },
+    {
+      "scenario_id": "DE-040",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_automated_reconciliation_never_exceeds_human_review_readiness",
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_per_file_failure_missing_roles_and_conditional_sheets_are_explicit"
+      ],
+      "reason_remaining_gap": "Current reconciliation helpers are directly capped at READY_FOR_HUMAN_REVIEW and block failure/missing roles, but QA-versus-approval separation and referenced test evidence are not exercised across every automated workflow.",
+      "owner": "release_owner",
+      "claim_limit": "Claim the readiness ceiling only for the tested reconciliation workflow paths."
+    },
+    {
+      "scenario_id": "DE-041",
+      "disposition": "EXECUTED_PASS",
+      "evidence": [
+        "tests/test_phase1_contracts.py::Phase1ContractTests.test_task_profiles_are_exclusive_and_matching_roles_are_extensible",
+        "tests/test_phase1_contracts.py::Phase1ContractTests.test_companion_schemas_are_additive_and_independently_versioned",
+        "tests/test_workbook_builder_safety.py::WorkbookBuilderSafetyTests.test_release_provenance_field_is_optional_for_legacy_and_accepted_when_valid"
+      ],
+      "reason_remaining_gap": "The tests reject mixed task branches, validate legacy extraction packages, and accept valid optional release provenance without mandatory migration.",
+      "owner": "release_owner",
+      "claim_limit": "PASS covers bundled v1.0.0 contracts and the tested additive schema fields."
+    },
+    {
+      "scenario_id": "DE-042",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_phase1_contracts.py::Phase1ContractTests.test_task_profiles_are_exclusive_and_matching_roles_are_extensible",
+        "tests/test_conversion_artifacts.py::ConversionArtifactTests.test_office_outputs_are_real_structural_ooxml_with_canonical_provenance"
+      ],
+      "reason_remaining_gap": "SEMANTIC_EDITABLE DOCX and preserved canonical provenance are exercised when explicitly selected, but no request-level test proves the profile is chosen as the default when omitted.",
+      "owner": "release_owner",
+      "claim_limit": "Claim explicit semantic-editable DOCX conversion, not autonomous default routing."
+    },
+    {
+      "scenario_id": "DE-043",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_conversion_artifacts.py::ConversionArtifactTests.test_office_outputs_are_real_structural_ooxml_with_canonical_provenance",
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_workflow_package_is_byte_stable_role_conditional_and_formula_safe"
+      ],
+      "reason_remaining_gap": "Structured XLSX and role-aware reconciliation XLSX are separately exercised, but request-level default routing and the non-replacement relationship between generic and role-specific views are not directly asserted.",
+      "owner": "release_owner",
+      "claim_limit": "Claim only the two explicit renderer/workflow modes tested."
+    },
+    {
+      "scenario_id": "DE-044",
+      "disposition": "EXECUTED_PASS",
+      "evidence": [
+        "tests/test_phase1_contracts.py::Phase1ContractTests.test_task_profiles_are_exclusive_and_matching_roles_are_extensible",
+        "tests/test_conversion_artifacts.py::ConversionArtifactTests.test_pptx_intent_pairing_and_page_image_gate_are_fail_closed"
+      ],
+      "reason_remaining_gap": "The contract requires null output profile plus CLARIFICATION_REQUIRED for ambiguity, distinguishes editable/page-slide pairings, and the renderer rejects ambiguous or mismatched intent before rendering.",
+      "owner": "release_owner",
+      "claim_limit": "PASS covers the deterministic contract and CLI renderer gate, not natural-language clarification quality."
+    },
+    {
+      "scenario_id": "DE-045",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_conversion_artifacts.py::ConversionArtifactTests.test_geometry_fidelity_is_distinct_page_mapped_and_fail_closed",
+        "tests/test_conversion_artifacts.py::ConversionArtifactTests.test_pptx_intent_pairing_and_page_image_gate_are_fail_closed"
+      ],
+      "reason_remaining_gap": "Geometry requirements and NOT_TESTED visual status are exercised, but an unavailable renderer/dependency path with NOT_CREATED or BLOCKED plus canonical fallback and no installation is not.",
+      "owner": "release_owner",
+      "claim_limit": "Claim geometry gating only; no general claim about unavailable renderer fallback."
+    },
+    {
+      "scenario_id": "DE-046",
+      "disposition": "EXECUTED_PASS",
+      "evidence": [
+        "tests/test_phase1_contracts.py::Phase1ContractTests.test_canonical_content_supports_semantics_order_and_conditional_geometry",
+        "tests/test_conversion_artifacts.py::ConversionArtifactTests.test_json_and_markdown_preserve_semantics_and_source_locator"
+      ],
+      "reason_remaining_gap": "Stable block IDs/order, type-specific structures, parent/caption/table invariants, provenance, conditional geometry, and geometry-aware requirements are directly validated.",
+      "owner": "release_owner",
+      "claim_limit": "PASS is structural and synthetic; it does not establish OCR accuracy or visual fidelity."
+    },
+    {
+      "scenario_id": "DE-047",
+      "disposition": "EXECUTED_PASS",
+      "evidence": [
+        "tests/test_phase1_contracts.py::Phase1ContractTests.test_artifact_manifest_covers_all_phase1_formats_and_statuses"
+      ],
+      "reason_remaining_gap": "The validator accepts valid created/checksummed artifacts and rejects NOT_CREATED-with-checksum and PASS-without-QA contradictions while keeping human review separate.",
+      "owner": "release_owner",
+      "claim_limit": "PASS covers the bundled artifact-manifest contract, not host-side approval workflows."
+    },
+    {
+      "scenario_id": "DE-048",
+      "disposition": "EXECUTED_PASS",
+      "evidence": [
+        "tests/test_rag_builder.py::RagBuilderTests.test_document_build_is_deterministic_and_every_checksum_verifies",
+        "tests/test_phase1_contracts.py::Phase1ContractTests.test_rag_package_defaults_collection_manifest_and_optional_chunks"
+      ],
+      "reason_remaining_gap": "A schema-valid root control and per-document markdown, metadata, manifest, source locators, and stable identifiers are created without chunks when no target/config is supplied.",
+      "owner": "release_owner",
+      "claim_limit": "PASS covers offline source-package construction, not ingestion or retrieval quality."
+    },
+    {
+      "scenario_id": "DE-049",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_rag_builder.py::RagBuilderTests.test_chunks_require_explicit_target_and_config_and_are_stable"
+      ],
+      "reason_remaining_gap": "Target/config checksum, stable chunk IDs, order, and source block/locator references are asserted, but table/clause split-warning retention and terminology guards against embeddings/index claims are not directly asserted.",
+      "owner": "release_owner",
+      "claim_limit": "Claim deterministic configured chunk/source mapping only."
+    },
+    {
+      "scenario_id": "DE-050",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_rag_builder.py::RagBuilderTests.test_collection_build_has_verified_collection_and_document_manifests",
+        "tests/test_domain_scripts.py::InventoryTestCase.test_inventory_is_deterministic_read_only_and_links_duplicate_content"
+      ],
+      "reason_remaining_gap": "Per-document collection boundaries and membership are tested, and duplicate occurrence identity is tested in inventory separately, but a duplicate-content RAG collection does not directly prove linking without collapse or mixed provenance.",
+      "owner": "release_owner",
+      "claim_limit": "Claim collection membership/boundaries for distinct synthetic documents only."
+    },
+    {
+      "scenario_id": "DE-051",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_rag_builder.py::RagBuilderTests.test_document_build_is_deterministic_and_every_checksum_verifies"
+      ],
+      "reason_remaining_gap": "The metadata records target ingestion as NOT_TESTED while structural package status passes, but target compatibility and retrieval quality are not separately asserted and absence of retrieval-ready certification is not checked.",
+      "owner": "release_owner",
+      "claim_limit": "Structural RAG package PASS must not be presented as target compatibility or retrieval quality."
+    },
+    {
+      "scenario_id": "DE-052",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_all_bundled_profiles_validate_without_embedded_tolerance_values",
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_invoice_payment_request_bank_settlement_exact_and_approved_partial"
+      ],
+      "reason_remaining_gap": "Named profiles, explicit payment-request and bank-transaction roles, and profile semantics are executed, but emitted profile/config hashes and the prohibition on bare side-count business semantics are not all asserted in current-source tests.",
+      "owner": "release_owner",
+      "claim_limit": "Claim tested named-profile mappings only; not a complete business-semantic certification."
+    },
+    {
+      "scenario_id": "DE-053",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_open_profile_registry_and_semantic_mutations_fail_closed",
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_custom_dotted_source_mapping_is_resolved_deterministically",
+        "tests/test_phase3_packaged_workflows.py::Phase3PackagedWorkflowTests.test_packaged_outbound_issue_customer_receipt_exact"
+      ],
+      "reason_remaining_gap": "Open custom roles and deterministic mappings are current-source tested, while outbound execution evidence is frozen-package-only and therefore does not establish 1.2.0 candidate behavior.",
+      "owner": "release_owner",
+      "claim_limit": "Claim extensible role validation/mapping in source; candidate outbound package behavior remains unverified."
+    },
+    {
+      "scenario_id": "DE-054",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_all_bundled_profiles_validate_without_embedded_tolerance_values",
+        "tests/test_phase3_packaged_workflows.py::Phase3PackagedWorkflowTests.test_packaged_inventory_count_book_stock_exact"
+      ],
+      "reason_remaining_gap": "The inventory profile is validated in current source and historically executed from a frozen package, but no 1.2.0 candidate execution proves role retention, versioned rules, traceable differences, and no write-back together.",
+      "owner": "release_owner",
+      "claim_limit": "Candidate inventory reconciliation remains unverified package-natively."
+    },
+    {
+      "scenario_id": "DE-055",
+      "disposition": "EXECUTED_PASS",
+      "evidence": [
+        "tests/test_phase1_contracts.py::Phase1ContractTests.test_new_document_profiles_validate_and_are_internally_consistent",
+        "tests/test_phase1_contracts.py::Phase1ContractTests.test_companion_schemas_are_additive_and_independently_versioned"
+      ],
+      "reason_remaining_gap": "New payment-request and bank-statement profiles validate independently and the legacy payment-bank profile remains schema-valid, but no executable classification-routing test proves requests and statement rows are assigned to the intended profiles.",
+      "owner": "release_owner",
+      "claim_limit": "Claim schema/profile availability and legacy compatibility only; runtime classification routing is unverified."
+    },
+    {
+      "scenario_id": "DE-056",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_rag_builder.py::RagBuilderTests.test_document_build_is_deterministic_and_every_checksum_verifies"
+      ],
+      "reason_remaining_gap": "Every declared payload checksum is recomputed and self-reference is excluded, but zero network calls and absence of authenticity-proof wording are not directly monitored/asserted.",
+      "owner": "release_owner",
+      "claim_limit": "Claim independently verifiable integrity checksums only, never authenticity or provenance certification."
+    },
+    {
+      "scenario_id": "DE-057",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_rag_builder.py::RagBuilderTests.test_chunks_require_explicit_target_and_config_and_are_stable",
+        "tests/test_rag_builder.py::RagBuilderTests.test_document_build_is_deterministic_and_every_checksum_verifies"
+      ],
+      "reason_remaining_gap": "Unchunked/configured determinism and source-block IDs are asserted, but no automated assertion checks that output and claims never call chunks embeddings or an index.",
+      "owner": "release_owner",
+      "claim_limit": "Claim deterministic chunk files, not embeddings, indexing, ingestion, or retrieval readiness."
+    },
+    {
+      "scenario_id": "DE-058",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_rag_builder.py::RagBuilderTests.test_collection_build_has_verified_collection_and_document_manifests",
+        "tests/test_rag_builder.py::RagBuilderTests.test_symlink_inputs_assets_and_outputs_are_rejected",
+        "tests/test_rag_builder.py::RagBuilderTests.test_no_overwrite_and_explicit_safe_overwrite"
+      ],
+      "reason_remaining_gap": "Collection membership, package boundaries, unsafe destinations, and overwrite guards are exercised, but duplicate occurrence coverage and provenance non-collapse are not directly tested in one collection.",
+      "owner": "release_owner",
+      "claim_limit": "Claim safe collection publication for distinct tested documents only."
+    },
+    {
+      "scenario_id": "DE-059",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_conversion_artifacts.py::ConversionArtifactTests.test_json_and_markdown_preserve_semantics_and_source_locator",
+        "tests/test_conversion_artifacts.py::ConversionArtifactTests.test_atomic_no_overwrite_publication_does_not_clobber_racing_file"
+      ],
+      "reason_remaining_gap": "JSON/Markdown ordering, provenance, checksums, source preservation, and no-overwrite are exercised, but a malicious embedded source instruction is not executed as a negative control.",
+      "owner": "release_owner",
+      "claim_limit": "Claim deterministic inert serialization of the tested canonical fixture, not general prompt-injection resistance."
+    },
+    {
+      "scenario_id": "DE-060",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_conversion_artifacts.py::ConversionArtifactTests.test_office_outputs_are_real_structural_ooxml_with_canonical_provenance",
+        "tests/test_conversion_artifacts.py::ConversionArtifactTests.test_pptx_intent_pairing_and_page_image_gate_are_fail_closed",
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_workflow_package_is_byte_stable_role_conditional_and_formula_safe"
+      ],
+      "reason_remaining_gap": "Real CRC-valid OOXML, DOCX headings/tables, formula safety, explicit PPTX intent, and absence of macro/external relationships are asserted, but no test directly inspects a leading-zero identifier cell in the generated XLSX to prove text preservation.",
+      "owner": "release_owner",
+      "claim_limit": "Claim real structural OOXML and tested safety controls only; XLSX identifier-text preservation and native-app visual fidelity remain unverified."
+    },
+    {
+      "scenario_id": "DE-061",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_conversion_artifacts.py::ConversionArtifactTests.test_pptx_intent_pairing_and_page_image_gate_are_fail_closed",
+        "tests/test_conversion_artifacts.py::ConversionArtifactTests.test_geometry_fidelity_is_distinct_page_mapped_and_fail_closed"
+      ],
+      "reason_remaining_gap": "Ambiguous/mismatched PPTX intent is rejected and created unrendered presentation output is marked NOT_TESTED, but output absence for every ambiguity path and absence of pixel-perfect wording are not directly asserted.",
+      "owner": "release_owner",
+      "claim_limit": "Claim CLI gating and NOT_TESTED visual status, not visual fidelity."
+    },
+    {
+      "scenario_id": "DE-062",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_all_bundled_profiles_validate_without_embedded_tolerance_values",
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_open_profile_registry_and_semantic_mutations_fail_closed"
+      ],
+      "reason_remaining_gap": "All nine current profiles and extensible custom roles are validated with explicit cardinality, partial, missing, candidate, and tolerance controls, but duplicate/review semantics and candidate package inclusion are not each directly asserted.",
+      "owner": "release_owner",
+      "claim_limit": "Claim registry/schema completeness in canonical source, not full package-native execution of every profile."
+    },
+    {
+      "scenario_id": "DE-063",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_workflow_package_is_byte_stable_role_conditional_and_formula_safe",
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_per_file_failure_missing_roles_and_conditional_sheets_are_explicit"
+      ],
+      "reason_remaining_gap": "Role-aware sheets, match/review/source/run controls, conditional sheet suppression, source IDs, counts, and limited coverage claims are tested; folder-versus-attachment coverage bases are not directly contrasted and no 1.2.0 package-native run is cited.",
+      "owner": "release_owner",
+      "claim_limit": "Claim current-source workflow structure for tested file inputs only."
+    },
+    {
+      "scenario_id": "DE-064",
+      "disposition": "PARTIAL",
+      "evidence": [
+        "tests/test_phase2_remediation_intake.py::RagOverwriteRecoveryTests.test_previous_output_is_preserved_when_destination_is_recreated",
+        "tests/test_conversion_artifacts.py::ConversionArtifactTests.test_three_file_transaction_rolls_back_create_and_overwrite_failures",
+        "tests/test_phase2_reconciliation.py::Phase2ReconciliationTests.test_publish_is_atomic_no_overwrite_and_cleans_failed_stage",
+        "tests/test_phase2_remediation_intake.py::InventorySnapshotAndRelationshipTests.test_inventory_metadata_uses_the_hashed_immutable_snapshot"
+      ],
+      "reason_remaining_gap": "Atomicity, no-overwrite, recovery, cleanup, and source immutability are directly exercised across helpers, but no network sandbox/monitor and no dependency-install sentinel establish the offline/no-install invariants for every helper.",
+      "owner": "release_owner",
+      "claim_limit": "Claim tested local atomicity and source preservation only; general offline/no-install behavior remains a nonclaim."
+    }
+  ]
+}

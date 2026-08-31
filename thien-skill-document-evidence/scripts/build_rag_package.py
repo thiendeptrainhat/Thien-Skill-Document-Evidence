@@ -2074,6 +2074,7 @@ def publish_directory(
 ) -> None:
     staging = Path(tempfile.mkdtemp(prefix=f".{output.name}.staging-", dir=output.parent))
     backup: Path | None = None
+    published = False
     try:
         write_staging_tree(staging, files)
         verify_staging_tree(staging, files)
@@ -2089,9 +2090,21 @@ def publish_directory(
             os.rename(staging, output)
         except OSError as exc:
             if backup is not None and backup.exists() and not output.exists():
-                os.rename(backup, output)
-                backup = None
-            raise RagBuildError(f"atomic directory publication failed: {exc}") from exc
+                try:
+                    os.rename(backup, output)
+                except OSError:
+                    pass
+                else:
+                    backup = None
+            preservation = (
+                f"; previous output preserved at {backup}"
+                if backup is not None and backup.exists()
+                else ""
+            )
+            raise RagBuildError(
+                f"atomic directory publication failed: {exc}{preservation}"
+            ) from exc
+        published = True
         if backup is not None:
             shutil.rmtree(backup)
             backup = None
@@ -2099,10 +2112,15 @@ def publish_directory(
         if staging.exists():
             shutil.rmtree(staging)
         if backup is not None and backup.exists():
-            if not output.exists():
-                os.rename(backup, output)
-            else:
+            if published:
                 shutil.rmtree(backup)
+            elif not output.exists():
+                try:
+                    os.rename(backup, output)
+                except OSError:
+                    # A recovery artifact is safer than deleting the previous
+                    # output if restoration loses a concurrent destination race.
+                    pass
 
 
 def package_summary(result: BuildResult, *, status: str, output: Path) -> dict[str, Any]:

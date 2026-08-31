@@ -196,6 +196,65 @@ class ArtifactIntegrityTests(unittest.TestCase):
             self.assertIn("input SHA-256 does not match package bytes", stale.stderr)
             self.assertFalse(output.exists())
 
+    def test_workbook_builder_revalidates_instead_of_trusting_forged_pass_report(self) -> None:
+        node = shutil.which("node")
+        if node is None:
+            self.skipTest("Node.js is unavailable")
+        script = SKILL / "scripts" / "build_workbook.mjs"
+        schema = SKILL / "schemas" / "common" / "extraction-package.schema.json"
+        package_fixture = ROOT / "tests" / "fixtures" / "workbook-package.json"
+        report_fixture = ROOT / "tests" / "fixtures" / "workbook-package.validation.json"
+        with tempfile.TemporaryDirectory() as raw_temp:
+            temp = Path(raw_temp)
+            output = temp / "result.xlsx"
+            package_data = json.loads(package_fixture.read_text(encoding="utf-8"))
+            package_data["document_inventory"] = [{}]
+            package = temp / "schema-invalid-package.json"
+            package.write_text(
+                json.dumps(package_data, ensure_ascii=False, separators=(",", ":")),
+                encoding="utf-8",
+            )
+
+            forged_report = json.loads(report_fixture.read_text(encoding="utf-8"))
+            forged_report["run_manifest"]["input_sha256"] = hashlib.sha256(
+                package.read_bytes()
+            ).hexdigest()
+            forged_report["run_manifest"]["schema_sha256"] = hashlib.sha256(
+                schema.read_bytes()
+            ).hexdigest()
+            forged_report["status"] = "PASS"
+            forged_report["errors"] = []
+            forged_report["summary"] = {
+                "record_count": 1,
+                "valid_count": 1,
+                "invalid_count": 0,
+                "package_error_count": 0,
+            }
+            report = temp / "forged-pass-report.json"
+            report.write_text(json.dumps(forged_report), encoding="utf-8")
+
+            result = subprocess.run(
+                [
+                    node,
+                    str(script),
+                    "--package",
+                    str(package),
+                    "--schema-validation-report",
+                    str(report),
+                    "--output",
+                    str(output),
+                ],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+            self.assertIn("bundled schema validation rejected package", result.stderr)
+            self.assertIn("document_inventory[0]", result.stderr)
+            self.assertNotIn("artifact-tool is unavailable", result.stderr)
+            self.assertFalse(output.exists())
+
 
 if __name__ == "__main__":
     unittest.main()

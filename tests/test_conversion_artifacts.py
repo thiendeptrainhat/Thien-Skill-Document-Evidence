@@ -178,16 +178,23 @@ class ConversionArtifactTests(unittest.TestCase):
                             self.assertIn("word/media/image1.png", archive.namelist())
                         elif output_format == "XLSX":
                             main = archive.read("xl/worksheets/sheet1.xml")
+                            styles = archive.read("xl/styles.xml")
                             self.assertIn(b"<autoFilter", main)
                             self.assertIn(b'state="frozen"', main)
                             self.assertIn(b"block-caption-001", main)
-                            self.assertIn(b'<c r="C2"><v>1</v></c>', main)
-                            self.assertIn(b'<c r="E2"><v>1</v></c>', main)
-                            self.assertIn(b'<c r="J2"><v>1</v></c>', main)
+                            self.assertIn(b'<c r="C2" s="2"><v>1</v></c>', main)
+                            self.assertIn(b'<c r="E2" s="2"><v>1</v></c>', main)
+                            self.assertIn(b'<c r="J2" s="2"><v>1</v></c>', main)
                             self.assertIn(
-                                b'<c r="A2" t="inlineStr"><is><t xml:space="preserve">block-heading-001',
+                                b'<c r="A2" s="2" t="inlineStr"><is><t xml:space="preserve">block-heading-001',
                                 main,
                             )
+                            self.assertIn(b'<c r="A1" s="1" t="inlineStr">', main)
+                            self.assertIn(b'<col min="7" max="7" width="44"', main)
+                            self.assertIn(b'<col min="9" max="9" width="52"', main)
+                            self.assertNotIn(b'min="1" max="16" width="22"', main)
+                            self.assertIn(b'<cellXfs count="3">', styles)
+                            self.assertEqual(styles.count(b'wrapText="1"'), 2)
                             self.assertIn(b'<pageSetUpPr fitToPage="1"/>', main)
                             self.assertIn(
                                 b'<pageSetup paperSize="9" orientation="landscape" fitToWidth="1" fitToHeight="0"/>',
@@ -241,6 +248,31 @@ class ConversionArtifactTests(unittest.TestCase):
                     self.assertEqual(
                         artifact["checksum"]["digest"], hashlib.sha256(output.read_bytes()).hexdigest()
                     )
+
+    def test_xlsx_long_provenance_gets_adaptive_wrapped_row_height(self) -> None:
+        with ConversionWorkspace() as workspace:
+            canonical = workspace.canonical()
+            canonical["blocks"][0]["provenance"]["source_snippet"] = " ".join(
+                ["long-provenance-value"] * 30
+            )
+            canonical_name = workspace.write_canonical(canonical, "long-content.json")
+            render(
+                workspace,
+                "XLSX",
+                output_name="out/long-content.xlsx",
+                canonical_name=canonical_name,
+                profile="STRUCTURED_DATA",
+            )
+            with zipfile.ZipFile(workspace.root / "out/long-content.xlsx") as archive:
+                worksheet = ET.fromstring(archive.read("xl/worksheets/sheet1.xml"))
+            namespace = {"x": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
+            data_row = worksheet.find(".//x:sheetData/x:row[@r='2']", namespace)
+            self.assertIsNotNone(data_row)
+            height = int(data_row.attrib["ht"])
+            self.assertGreater(height, 45)
+            self.assertLess(height, 405)
+            self.assertEqual(data_row.attrib["customHeight"], "1")
+            self.assertEqual(RENDER._xlsx_row_height(["x" * 32_767], (44,)), 405)
 
     def test_every_format_is_deterministic_for_identical_relative_inputs(self) -> None:
         cases = {

@@ -1009,16 +1009,23 @@ def render_docx(content: Mapping[str, object], asset_data: Mapping[str, bytes]) 
     return _zip_bytes(parts)
 
 
-def _xlsx_cell(reference: str, value: object, *, numeric_integer: bool = False) -> str:
+def _xlsx_cell(
+    reference: str,
+    value: object,
+    *,
+    numeric_integer: bool = False,
+    style_id: int | None = None,
+) -> str:
+    style = f' s="{style_id}"' if style_id is not None else ""
     if numeric_integer and isinstance(value, int) and not isinstance(value, bool):
-        return f'<c r="{reference}"><v>{value}</v></c>'
+        return f'<c r="{reference}"{style}><v>{value}</v></c>'
     text = "" if value is None else str(value)
     if len(text) > 32_767:
         raise ConversionError(
             f"XLSX cell {reference} exceeds Excel's 32767-code-point text limit; refusing truncation"
         )
     return (
-        f'<c r="{reference}" t="inlineStr"><is><t xml:space="preserve">'
+        f'<c r="{reference}"{style} t="inlineStr"><is><t xml:space="preserve">'
         f'{_xml_escape(text)}</t></is></c>'
     )
 
@@ -1030,6 +1037,21 @@ def _column_name(index: int) -> str:
         value, remainder = divmod(value - 1, 26)
         result = chr(65 + remainder) + result
     return result
+
+
+def _xlsx_row_height(row: list[object], column_widths: tuple[int, ...]) -> int:
+    """Estimate a readable wrapped height within Excel's row-height limit."""
+
+    wrapped_lines = 1
+    for value, width in zip(row, column_widths):
+        text = "" if value is None else str(value)
+        characters_per_line = max(8, int(width * 1.15))
+        cell_lines = sum(
+            max(1, (len(segment) + characters_per_line - 1) // characters_per_line)
+            for segment in text.split("\n")
+        )
+        wrapped_lines = max(wrapped_lines, cell_lines)
+    return min(405, max(30, wrapped_lines * 15))
 
 
 def render_xlsx(content: Mapping[str, object]) -> bytes:
@@ -1056,6 +1078,7 @@ def render_xlsx(content: Mapping[str, object]) -> bytes:
             block.get("asset_reference"), block.get("media_type"), block.get("alt_text"),
             block.get("target_block_id"),
         ])
+    column_widths = (24, 16, 13, 24, 12, 26, 44, 18, 52, 10, 34, 52, 30, 24, 38, 24)
     rendered_rows = []
     for row_index, row in enumerate(rows, start=1):
         cells = [
@@ -1067,11 +1090,21 @@ def render_xlsx(content: Mapping[str, object]) -> bytes:
                     and headers[column_index - 1]
                     in {"reading_order", "source_page", "level"}
                 ),
+                style_id=1 if row_index == 1 else 2,
             )
             for column_index, value in enumerate(row, start=1)
         ]
-        rendered_rows.append(f'<row r="{row_index}">' + "".join(cells) + "</row>")
+        height = 30 if row_index == 1 else _xlsx_row_height(row, column_widths)
+        rendered_rows.append(
+            f'<row r="{row_index}" ht="{height}" customHeight="1">'
+            + "".join(cells)
+            + "</row>"
+        )
     final_column = _column_name(len(headers))
+    rendered_columns = "".join(
+        f'<col min="{index}" max="{index}" width="{width}" customWidth="1"/>'
+        for index, width in enumerate(column_widths, start=1)
+    )
     worksheet = (
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
         '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
@@ -1079,7 +1112,7 @@ def render_xlsx(content: Mapping[str, object]) -> bytes:
         f'<dimension ref="A1:{final_column}{len(rows)}"/>'
         '<sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>'
         '<sheetFormatPr defaultRowHeight="15"/>'
-        '<cols><col min="1" max="16" width="22" customWidth="1"/></cols>'
+        '<cols>' + rendered_columns + '</cols>'
         '<sheetData>' + "".join(rendered_rows) + '</sheetData>'
         f'<autoFilter ref="A1:{final_column}{len(rows)}"/>'
         '<pageMargins left="0.25" right="0.25" top="0.5" bottom="0.5" header="0.2" footer="0.2"/>'
@@ -1103,11 +1136,22 @@ def render_xlsx(content: Mapping[str, object]) -> bytes:
     styles = (
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
         '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
-        '<fonts count="1"><font><sz val="11"/><name val="Aptos"/><family val="2"/></font></fonts>'
-        '<fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills>'
+        '<fonts count="2">'
+        '<font><sz val="11"/><name val="Aptos"/><family val="2"/></font>'
+        '<font><b/><color rgb="FFFFFFFF"/><sz val="11"/><name val="Aptos"/><family val="2"/></font>'
+        '</fonts>'
+        '<fills count="3">'
+        '<fill><patternFill patternType="none"/></fill>'
+        '<fill><patternFill patternType="gray125"/></fill>'
+        '<fill><patternFill patternType="solid"><fgColor rgb="FF001838"/><bgColor indexed="64"/></patternFill></fill>'
+        '</fills>'
         '<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>'
         '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
-        '<cellXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/></cellXfs>'
+        '<cellXfs count="3">'
+        '<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'
+        '<xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>'
+        '<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf>'
+        '</cellXfs>'
         '<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>'
         '</styleSheet>'
     ).encode("utf-8")

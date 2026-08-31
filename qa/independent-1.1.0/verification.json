@@ -1,0 +1,310 @@
+{
+  "schema_version": "1.0.0",
+  "record_type": "INDEPENDENT_QA_PHASE_1",
+  "recorded_at": "2026-08-31T22:15:39+07:00",
+  "release": "1.1.0",
+  "release_state_preserved": "FINAL",
+  "phase": 1,
+  "phase_status": "COMPLETE",
+  "overall_assessment": "REMEDIATION_REQUIRED",
+  "readiness": "READY_FOR_HUMAN_REVIEW",
+  "scope": {
+    "mode": "LOCAL_OFFLINE_INDEPENDENT_QA",
+    "source_modified": false,
+    "release_rebuilt": false,
+    "dependencies_installed": false,
+    "network_accessed": false,
+    "external_services_accessed": false,
+    "runtime_artifacts_location": "PRIVATE_TMP_ONLY",
+    "repository_outputs": [
+      "INDEPENDENT-QA-PHASE1-v1.1.0.md",
+      "qa/independent-1.1.0/verification.json"
+    ]
+  },
+  "baseline": {
+    "branch": "main",
+    "head": "f4dd3446bc3b77511013958ee14aa0e7c402224d",
+    "origin_main": "f4dd3446bc3b77511013958ee14aa0e7c402224d",
+    "version_file": "1.1.0",
+    "preexisting_changes": [
+      "HANDOFF.md"
+    ],
+    "tracked_files": 180,
+    "tracked_bytes": 40714289,
+    "dist_files": 24,
+    "dist_bytes": 36206018,
+    "dist_share_of_tracked_bytes": 0.8892,
+    "release_zip_files": 12,
+    "release_zip_bytes": 36194348,
+    "final_zip_files": 3,
+    "final_zip_bytes": 9213420,
+    "historical_zip_files": 9,
+    "historical_zip_bytes": 26980928,
+    "largest_tracked_file_bytes": 3821458,
+    "git_object_store": {
+      "size": "37.50 MiB",
+      "garbage_objects": 0,
+      "garbage_bytes": 0
+    }
+  },
+  "execution": {
+    "full_unittest_suite": {
+      "status": "PASS_WITH_OPTIONAL_SKIP",
+      "tests": 145,
+      "passed": 144,
+      "skipped": 1,
+      "skip_reason": "plugin-creator quick validation unavailable because PyYAML is not installed"
+    },
+    "exact_package_build_check": "PASS",
+    "final_checksum_targets": {
+      "status": "PASS",
+      "passed": 5,
+      "total": 5
+    },
+    "package_manifest_hashes": {
+      "universal": "90/90 PASS",
+      "claude": "96/96 PASS",
+      "openai": "99/99 PASS"
+    },
+    "schema_reference_integrity": {
+      "status": "PASS",
+      "schema_files": 26,
+      "missing_refs_or_fragments": 0
+    },
+    "conversion": {
+      "structural_contract": "PASS",
+      "companion_objects": "14/14 PASS",
+      "negative_boundaries": "PASS",
+      "sample_docx_pptx_render": "PASS",
+      "sample_xlsx_render": "PASS_WITH_USABILITY_FINDING",
+      "native_office_import": "NOT_TESTED"
+    },
+    "rag": {
+      "structural_package": "PASS",
+      "repeat_build_determinism": "PASS",
+      "live_ingestion_retrieval": "NOT_TESTED",
+      "adversarial_overwrite": "FAIL"
+    },
+    "reconciliation": {
+      "technical_profiles": "9/9 PASS",
+      "contract_checks": "36 PASS",
+      "repeat_build_determinism": "9/9 PASS",
+      "readiness_boundary": "FAIL"
+    },
+    "blind_forward_cases": {
+      "status": "PASS_WITH_TWO_AMBIGUITIES",
+      "cases": 6
+    }
+  },
+  "findings": [
+    {
+      "id": "IQA-001",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "RAG overwrite race can discard the previous output",
+      "status": "VALIDATED",
+      "locations": [
+        "thien-skill-document-evidence/scripts/build_rag_package.py:2087",
+        "thien-skill-document-evidence/scripts/build_rag_package.py:2105"
+      ],
+      "evidence": {
+        "exception": "RagBuildError: atomic directory publication failed: [Errno 66] Directory not empty",
+        "original_survives": false,
+        "racer_survives": true,
+        "new_exists": false,
+        "backup_count": 0
+      }
+    },
+    {
+      "id": "IQA-002",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "OOXML external relationship with valid XML whitespace bypasses intake detection",
+      "status": "VALIDATED",
+      "locations": [
+        "thien-skill-document-evidence/scripts/document_inventory.py:378",
+        "thien-skill-document-evidence/scripts/document_inventory.py:491"
+      ],
+      "fixture_sha256": "a49c0737e1610a74dd65433482f130b0e19c2d0fd99d22774d678f45cee728a5",
+      "observed": {
+        "external_links": "NOT_DETECTED",
+        "processing_eligibility": "ELIGIBLE",
+        "review_status": "NOT_REQUIRED",
+        "security_flags": []
+      }
+    },
+    {
+      "id": "IQA-003",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "Reconciliation readiness exceeds the top-level automated ceiling",
+      "status": "VALIDATED",
+      "locations": [
+        "thien-skill-document-evidence/SKILL.md:163",
+        "thien-skill-document-evidence/references/acceptance-scenarios.md:61",
+        "thien-skill-document-evidence/scripts/prepare_reconciliation_workbook.py:1689",
+        "thien-skill-document-evidence/scripts/prepare_reconciliation_workbook.py:1720"
+      ],
+      "observed": {
+        "clean_profiles_reporting_ready_for_limited_use": 9,
+        "profiles_executed": 9,
+        "inner_workbook_package_status": "READY_FOR_HUMAN_REVIEW",
+        "workflow_manifest_status": "READY_FOR_LIMITED_USE"
+      }
+    },
+    {
+      "id": "IQA-004",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "title": "Workbook builder accepts a forged PASS report for a schema-invalid package",
+      "status": "VALIDATED",
+      "locations": [
+        "thien-skill-document-evidence/scripts/build_workbook.mjs:251",
+        "thien-skill-document-evidence/scripts/build_workbook.mjs:355"
+      ],
+      "invalid_package_sha256": "7e0aea1ec2b91c356daa9856b638462dea4cc04c31ca8c2a6ae56f9ea2e42bde",
+      "observed": {
+        "exit_code": 0,
+        "output_created": true,
+        "reported_status": "PASS"
+      }
+    },
+    {
+      "id": "IQA-005",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Inventory can combine an old checksum with security metadata from new bytes",
+      "status": "VALIDATED",
+      "locations": [
+        "thien-skill-document-evidence/scripts/document_inventory.py:431",
+        "thien-skill-document-evidence/scripts/document_inventory.py:455",
+        "thien-skill-document-evidence/scripts/document_inventory.py:580",
+        "thien-skill-document-evidence/scripts/document_inventory.py:595"
+      ],
+      "old_sha256": "7527a56172dc5535794df9d31ce57b3089546d2da34b95577953462698c8734e",
+      "new_sha256": "589ef2ffa1160b09f3c568eaa8ccfe5c32e27cce1bffd876352e8c1b5dcd091e"
+    },
+    {
+      "id": "IQA-006",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Reconciliation artifacts do not record the 1.1.0 skill release separately from 1.0.0 tool compatibility",
+      "status": "VALIDATED",
+      "locations": [
+        "thien-skill-document-evidence/scripts/prepare_reconciliation_workbook.py:1787",
+        "thien-skill-document-evidence/scripts/prepare_reconciliation_workbook.py:1794",
+        "thien-skill-document-evidence/scripts/reconcile_records.py:1905",
+        "thien-skill-document-evidence/scripts/reconcile_records.py:1911"
+      ],
+      "observed": {
+        "installed_release": "1.1.0",
+        "tool_version": "1.0.0",
+        "skill_release_version_present": false,
+        "workbook_package_skill_version": "1.0.0"
+      }
+    },
+    {
+      "id": "IQA-007",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "title": "Canonical XLSX renders long provenance values poorly",
+      "status": "VALIDATED",
+      "locations": [
+        "thien-skill-document-evidence/scripts/render_canonical_artifacts.py:1035",
+        "thien-skill-document-evidence/scripts/render_canonical_artifacts.py:1111"
+      ],
+      "observed": {
+        "columns": 16,
+        "uniform_width": 22,
+        "wrap_style": false,
+        "data_loss": false,
+        "visual_readability": "FAIL"
+      }
+    },
+    {
+      "id": "IQA-008",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "title": "README dist inventory summary understates the retained ZIP count",
+      "status": "VALIDATED",
+      "locations": [
+        "README.md:581",
+        "README.md:597"
+      ],
+      "observed": {
+        "summary_wording": "Ba ZIP",
+        "actual_zip_files": 12
+      }
+    }
+  ],
+  "finding_counts": {
+    "high": 4,
+    "medium": 3,
+    "low": 1,
+    "total": 8
+  },
+  "objective_assessment": {
+    "routing_and_three_task_profiles": "PASS",
+    "portable_packages_parity_checksums": "PASS",
+    "conversion": "PARTIAL",
+    "rag_source_preparation": "PARTIAL",
+    "reconciliation": "FAIL_READINESS_BOUNDARY",
+    "intake_security_and_provenance": "PARTIAL",
+    "schema_gated_workbook_export": "FAIL_TRUST_BOUNDARY",
+    "no_overclaim_human_review_ceiling": "FAIL",
+    "repository_hygiene_and_maintainability": "PARTIAL",
+    "behavioral_catalog": "NOT_TESTED_64_OF_64"
+  },
+  "repository_hygiene": {
+    "confirmed_tracked_orphans": 0,
+    "tracked_cache_log_temp_files": 0,
+    "local_ignored_ds_store_files": 2,
+    "local_empty_untracked_directories": [
+      "registry"
+    ],
+    "byte_identical_duplicate_groups": 7,
+    "duplicate_groups_assessed_as_intentional": 7,
+    "large_source_hotspots": [
+      {
+        "path": "thien-skill-document-evidence/scripts/render_canonical_artifacts.py",
+        "lines": 2264
+      },
+      {
+        "path": "thien-skill-document-evidence/scripts/build_rag_package.py",
+        "lines": 2246
+      },
+      {
+        "path": "thien-skill-document-evidence/scripts/reconcile_records.py",
+        "lines": 2112
+      },
+      {
+        "path": "thien-skill-document-evidence/scripts/prepare_reconciliation_workbook.py",
+        "lines": 1949
+      },
+      {
+        "path": "thien-skill-document-evidence/scripts/build_workbook.mjs",
+        "lines": 1089
+      }
+    ]
+  },
+  "not_tested": [
+    "64 behavioral catalog scenarios remain specification-only",
+    "live OpenAI or Claude installation",
+    "real scanned receipt OCR and handwriting",
+    "full real bank-statement extraction",
+    "live RAG ingestion embedding indexing and retrieval quality",
+    "broad native Office or LibreOffice import and pixel-fidelity testing",
+    "clause and obligation extraction end-to-end",
+    "custody and redaction-removal verification end-to-end",
+    "performance volume Excel overflow and resource exhaustion",
+    "independent human legal or business approval"
+  ],
+  "phase_2_candidates_only": [
+    "remediate IQA-001 through IQA-008 in severity order",
+    "add executable repository hygiene and artifact size budgets",
+    "add regression tests for each validated defect",
+    "define explicit historical-release retention policy",
+    "modularize large helpers at trust boundaries without changing compatibility",
+    "resolve chunking and top-level readiness roll-up ambiguities"
+  ]
+}

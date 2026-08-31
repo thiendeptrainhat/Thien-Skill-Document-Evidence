@@ -10,6 +10,7 @@
 
 import fs from "node:fs/promises";
 import { constants as fsConstants } from "node:fs";
+import { spawnSync } from "node:child_process";
 import path from "node:path";
 import process from "node:process";
 import { createHash } from "node:crypto";
@@ -181,6 +182,7 @@ function usage() {
     "  --help                   Show this help.",
     "",
     "The script does not install dependencies or call the network.",
+    "Package export re-runs the bundled validator; set DOCUMENT_EVIDENCE_PYTHON only when python3 is not on PATH.",
   ].join("\n");
 }
 
@@ -220,7 +222,7 @@ function parseArgs(argv) {
   return args;
 }
 
-const PACKAGE_KEYS = [
+const PACKAGE_REQUIRED_KEYS = [
   "schema_version", "package_id", "package_version", "skill_id", "skill_version",
   "run_id", "engagement_id", "case_id", "route", "status", "run_manifest",
   "document_inventory", "evidence_register", "runtime_adapter_results",
@@ -230,6 +232,7 @@ const PACKAGE_KEYS = [
   "critical_field_failures", "security_flags", "assumptions", "limitations",
   "qa_status", "human_approval_status",
 ];
+const PACKAGE_KEYS = [...PACKAGE_REQUIRED_KEYS];
 
 const PACKAGE_ARRAY_KEYS = [
   "document_inventory", "evidence_register", "runtime_adapter_results",
@@ -252,7 +255,7 @@ function assertPackage(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     throw new Error("package must be a JSON object");
   }
-  const missing = PACKAGE_KEYS.filter((key) => value[key] === undefined);
+  const missing = PACKAGE_REQUIRED_KEYS.filter((key) => value[key] === undefined);
   if (missing.length > 0) throw new Error(`package is missing required keys: ${missing.join(", ")}`);
   const unexpected = Object.keys(value).filter((key) => !PACKAGE_KEYS.includes(key));
   if (unexpected.length > 0) throw new Error(`package has unexpected keys: ${unexpected.join(", ")}`);
@@ -352,6 +355,132 @@ async function assertSchemaValidationReport(packageBytes, reportBytes) {
   }
   if (failures.length > 0) {
     throw new Error(`schema validation report rejected: ${failures.join("; ")}`);
+  }
+  return report;
+}
+
+function pythonCandidates() {
+  if (process.env.DOCUMENT_EVIDENCE_PYTHON) {
+    return [{ command: process.env.DOCUMENT_EVIDENCE_PYTHON, prefix: [] }];
+  }
+  if (process.platform === "win32") {
+    return [
+      { command: "py", prefix: ["-3"] },
+      { command: "python3", prefix: [] },
+      { command: "python", prefix: [] },
+    ];
+  }
+  return [
+    { command: "python3", prefix: [] },
+    { command: "python", prefix: [] },
+  ];
+}
+
+function runValidatorProcess(argumentsList) {
+  const unavailable = [];
+  for (const candidate of pythonCandidates()) {
+    const result = spawnSync(
+      candidate.command,
+      [...candidate.prefix, ...argumentsList],
+      {
+        encoding: "utf8",
+        maxBuffer: 8 * 1024 * 1024,
+        windowsHide: true,
+      },
+    );
+    if (result.error?.code === "ENOENT") {
+      unavailable.push(candidate.command);
+      continue;
+    }
+    if (result.error) {
+      throw new Error(`bundled schema validator could not start: ${result.error.message}`);
+    }
+    return result;
+  }
+  throw new Error(
+    "bundled schema validation requires Python 3; no interpreter was found "
+    + `(tried: ${unavailable.join(", ")}). Set DOCUMENT_EVIDENCE_PYTHON to a trusted Python 3 executable`,
+  );
+}
+
+async function assertTrustedSchemaValidation(packageInput) {
+  const validatorPath = fileURLToPath(new URL("./validate_records.py", import.meta.url));
+  const schemaRoot = fileURLToPath(new URL("../schemas", import.meta.url));
+  const schemaPath = path.join(schemaRoot, "common", "extraction-package.schema.json");
+  await readRegularFile(validatorPath, "bundled schema validator");
+  const schemaBytes = (
+    await readRegularFile(schemaPath, "canonical extraction-package schema")
+  ).bytes;
+  const realPackagePath = await fs.realpath(packageInput.resolvedPath);
+  const packageRoot = path.dirname(realPackagePath);
+  const result = runValidatorProcess([
+    "-B",
+    validatorPath,
+    realPackagePath,
+    "--root",
+    packageRoot,
+    "--schema",
+    "common/extraction-package.schema.json",
+    "--schema-root",
+    schemaRoot,
+    "--records-key",
+    "__document_evidence_root_package__",
+    "--dry-run",
+  ]);
+
+  let report;
+  try {
+    report = JSON.parse(result.stdout);
+  } catch (error) {
+    const detail = result.stderr.trim() || error.message;
+    throw new Error(`bundled schema validator returned invalid evidence: ${detail}`);
+  }
+
+  const failures = [];
+  if (result.signal !== null) failures.push(`terminated by signal ${result.signal}`);
+  if (result.status !== 0) failures.push(`exited with status ${result.status}`);
+  if (report.status !== "PASS") failures.push("status is not PASS");
+  if (!Array.isArray(report.errors) || report.errors.length !== 0) {
+    failures.push("errors is absent or non-empty");
+  }
+  if (report.run_manifest?.tool !== "thien-record-validator") {
+    failures.push("unexpected validator tool identity");
+  }
+  if (report.run_manifest?.validator_engine !== "INTERNAL_DRAFT_2020_SUBSET") {
+    failures.push("unexpected validator engine identity");
+  }
+  if (report.run_manifest?.input_sha256 !== sha256(packageInput.bytes)) {
+    failures.push("validated input SHA-256 does not match package bytes");
+  }
+  if (report.run_manifest?.schema_sha256 !== sha256(schemaBytes)) {
+    failures.push("validated schema SHA-256 does not match bundled schema");
+  }
+  if (report.summary?.invalid_count !== 0 || report.summary?.package_error_count !== 0) {
+    failures.push("validator summary contains invalid/package errors");
+  }
+  if (report.summary?.record_count !== 1 || report.summary?.valid_count !== 1) {
+    failures.push("validator summary does not cover exactly one valid package");
+  }
+  if (failures.length > 0) {
+    const firstErrors = Array.isArray(report.errors)
+      ? report.errors.slice(0, 3).map((item) => (
+        `${item.path || item.record_path || "$"}: ${item.message || item.keyword || "validation error"}`
+      ))
+      : [];
+    const detail = [...failures, ...firstErrors].join("; ");
+    throw new Error(`bundled schema validation rejected package: ${detail}`);
+  }
+  return report;
+}
+
+function assertReportMatchesTrustedValidation(suppliedReport, trustedReport) {
+  const supplied = JSON.stringify(canonicalize(suppliedReport));
+  const trusted = JSON.stringify(canonicalize(trustedReport));
+  if (supplied !== trusted) {
+    throw new Error(
+      "schema validation report rejected: supplied report does not exactly match "
+      + "fresh evidence from the bundled validator",
+    );
   }
 }
 
@@ -971,7 +1100,9 @@ async function main() {
     const packageBytes = packageInput.bytes;
     packageData = JSON.parse(packageBytes.toString("utf8"));
     assertPackage(packageData);
-    await assertSchemaValidationReport(packageBytes, reportInput.bytes);
+    const suppliedReport = await assertSchemaValidationReport(packageBytes, reportInput.bytes);
+    const trustedReport = await assertTrustedSchemaValidation(packageInput);
+    assertReportMatchesTrustedValidation(suppliedReport, trustedReport);
     protectedInputs.push(
       { ...packageInput, label: "--package" },
       { ...reportInput, label: "--schema-validation-report" },

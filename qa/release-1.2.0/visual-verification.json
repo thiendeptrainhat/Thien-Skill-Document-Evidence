@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "record_type": "PHASE3_XLSX_VISUAL_VERIFICATION",
+  "recorded_at": "2026-09-01",
+  "skill_release_version": "1.2.0",
+  "input": {
+    "fixture": "synthetic canonical-content fixture with a 659-character source_snippet",
+    "xlsx_sha256": "8acb343c9345e0391b136fdf8225828aa0886f01622e0d4982dc967a61d7d2cc",
+    "source_retained": false
+  },
+  "tooling": {
+    "import_and_render": "@oai/artifact-tool 2.8.6+ from bundled workspace dependencies",
+    "network_used": false,
+    "dependency_installed": false
+  },
+  "inspection": {
+    "sheets_rendered": 1,
+    "sheets_total": 1,
+    "sheet_name": "Canonical Content",
+    "used_range": "A1:P6",
+    "table_count": 1,
+    "max_text_length": 659,
+    "formula_error_matches": 0,
+    "header_wrap": true,
+    "data_row_wrap": true,
+    "long_data_row_height_points": 210,
+    "freeze_pane": "A2",
+    "auto_filter": "A1:P6"
+  },
+  "visual_review": {
+    "status": "PASS",
+    "reviewed_range": "E1:I3 plus full A1:P6 sheet render",
+    "long_value_fully_visible": true,
+    "material_clipping": false,
+    "overlap": false,
+    "unintended_blank_sheet": false,
+    "header_legible": true
+  },
+  "evidence": {
+    "render_path": "qa/release-1.2.0/visual-long-xlsx-01.png",
+    "render_size_bytes": 368503,
+    "render_sha256": "663edc026f667136a93cf2eb4e822d3e73bc1d1e1e3396ce63566fbdd78e810f"
+  },
+  "limitations": [
+    "Synthetic content only; this is not broad native Excel or LibreOffice fidelity testing.",
+    "The rendered XLSX is temporary and was not retained; the single PNG and this record are the durable QA evidence.",
+    "Excel caps row height at 405 points; extreme values remain stored but may require cell inspection."
+  ]
+}

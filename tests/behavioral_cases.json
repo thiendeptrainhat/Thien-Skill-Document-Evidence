@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "catalog_id": "thien-document-evidence-behavioral-cases",
   "catalog_status": "SPECIFICATION_ONLY",
-  "skill_version": "1.1.0",
+  "skill_version": "1.2.0",
   "fixture_policy": {
     "synthetic_or_deidentified_only": true,
     "production_sources_allowed": false,

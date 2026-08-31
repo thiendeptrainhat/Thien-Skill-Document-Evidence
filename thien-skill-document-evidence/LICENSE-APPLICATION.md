@@ -11,8 +11,8 @@ This Declaration identifies Licensed Material only. It **does not itself grant a
 - **Nhãn bộ sưu tập/thương hiệu / Collection and brand label:** `Tran Ngoc Thien's Skill`
 - **Tên hiển thị chính xác / Exact display name:** `Thien Skill — Document Intelligence, Evidence & Reconciliation`
 - **Mã định danh chính xác / Exact identifier:** `thien-skill-document-evidence`
-- **Phiên bản skill / Skill version:** `1.1.0`
-- **Ngày áp dụng / Application date:** `27 August 2026` (`27 tháng 8 năm 2026`)
+- **Phiên bản skill / Skill version:** `1.2.0`
+- **Ngày áp dụng / Application date:** `1 September 2026` (`1 tháng 9 năm 2026`)
 - **Tình trạng repository / Repository status:** `PRIVATE`
 - **Nền tảng dự kiến / Intended platforms:** `OpenAI`; `Anthropic Claude`; `Universal`
 - **Giấy phép chung / Master license:** `Tran Ngoc Thien's Skills Commercial Source-Available License 2.0`
@@ -36,7 +36,7 @@ Việc xem source, nhận đường dẫn, truy cập repository/workspace, clon
 
 ### 2. Tài liệu được cấp phép được nhận diện
 
-Đối với phiên bản `1.1.0`, và chỉ trong phạm vi Chủ sở hữu thực sự sở hữu hoặc có quyền cấp phép, Tuyên bố này nhận diện các thành phần sau của canonical skill và các package phát hành hợp lệ được tạo từ canonical skill:
+Đối với phiên bản `1.2.0`, và chỉ trong phạm vi Chủ sở hữu thực sự sở hữu hoặc có quyền cấp phép, Tuyên bố này nhận diện các thành phần sau của canonical skill và các package phát hành hợp lệ được tạo từ canonical skill:
 
 - `SKILL.md` và metadata skill thuộc phiên bản;
 - cấu hình interface dưới `agents/`;
@@ -110,7 +110,7 @@ Viewing source, receiving a link, accessing a repository/workspace, cloning, for
 
 ### 2. Identified Licensed Material
 
-For version `1.1.0`, and only to the extent the Owner owns or may license the relevant rights, this Declaration identifies the following components of the canonical Skill and valid release packages derived from it:
+For version `1.2.0`, and only to the extent the Owner owns or may license the relevant rights, this Declaration identifies the following components of the canonical Skill and valid release packages derived from it:
 
 - `SKILL.md` and version-specific Skill metadata;
 - interface configuration under `agents/`;

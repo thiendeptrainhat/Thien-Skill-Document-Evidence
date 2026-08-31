@@ -5,13 +5,13 @@ Ba gói phát hành được sinh từ cùng một canonical skill và có cùng
 ## Xác minh trước khi cài
 
 1. Giữ nguyên file ZIP đã phát hành.
-2. Đối chiếu SHA-256 của ZIP với `SHA256SUMS-v1.1.0.txt`.
-3. Kiểm tra `release-manifest-v1.1.0.json` và `PARITY-v1.1.0.json` có `status` phù hợp, trong đó parity phải là `PASS`.
-4. Đọc `LICENSE.md`, `LICENSE-APPLICATION.md`, `NOTICE`, `LEGAL-REVIEW-v1.1.0.md` và `ACCEPTANCE-REPORT-v1.1.0.md` trước khi sử dụng. Các file version cũ là hồ sơ lịch sử, không phải tài liệu điều khiển bản phát hành hiện tại.
+2. Đối chiếu SHA-256 của ZIP với `SHA256SUMS-v1.2.0.txt`.
+3. Kiểm tra `release-manifest-v1.2.0.json` và `PARITY-v1.2.0.json` có `status` phù hợp, trong đó parity phải là `PASS`.
+4. Đọc `LICENSE.md`, `LICENSE-APPLICATION.md`, `NOTICE`, `LEGAL-REVIEW-v1.2.0.md` và `ACCEPTANCE-REPORT-v1.2.0.md` trước khi sử dụng. Các file version cũ là hồ sơ lịch sử, không phải tài liệu điều khiển bản phát hành hiện tại.
 
 ## OpenAI / ChatGPT / Codex
 
-Dùng `Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip`. Đây là skills-only native plugin có `.codex-plugin/plugin.json`, tài sản giao diện và canonical skill tại `skills/thien-skill-document-evidence/`.
+Dùng `Thien-Skill-Document-Evidence-OpenAI-v1.2.0.zip`. Đây là skills-only native plugin có `.codex-plugin/plugin.json`, tài sản giao diện và canonical skill tại `skills/thien-skill-document-evidence/`.
 
 - Khi bề mặt hiện tại có chức năng import/upload plugin, upload nguyên ZIP và kiểm tra tên/version trước khi bật.
 - Với Codex local, có thể chỉ sao chép thư mục lồng `skills/thien-skill-document-evidence/` vào `$HOME/.agents/skills/` cho phạm vi cá nhân hoặc `.agents/skills/` tại repository cho phạm vi dự án.
@@ -20,7 +20,7 @@ Dùng `Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip`. Đây là skills-only n
 
 ## Claude
 
-Dùng `Thien-Skill-Document-Evidence-Claude-v1.1.0.zip`. Đây là native Claude plugin có `.claude-plugin/plugin.json` và skill tại `skills/thien-skill-document-evidence/`.
+Dùng `Thien-Skill-Document-Evidence-Claude-v1.2.0.zip`. Đây là native Claude plugin có `.claude-plugin/plugin.json` và skill tại `skills/thien-skill-document-evidence/`.
 
 - Với Claude Code, giải nén an toàn rồi kiểm tra local bằng `claude --plugin-dir /absolute/path/to/thien-skill-document-evidence`; cài thường xuyên qua marketplace cần một private marketplace/repository riêng và không được cấu hình trong release này vì chưa có repository URL được phê duyệt.
 - Với Claude Code standalone, sao chép thư mục lồng `skills/thien-skill-document-evidence/` vào `$HOME/.claude/skills/` cho phạm vi cá nhân hoặc `.claude/skills/` tại repository cho phạm vi dự án.
@@ -29,14 +29,14 @@ Dùng `Thien-Skill-Document-Evidence-Claude-v1.1.0.zip`. Đây là native Claude
 
 ## Universal Agent Skill
 
-Dùng `Thien-Skill-Document-Evidence-Universal-v1.1.0.zip` cho bề mặt hỗ trợ Agent Skills hoặc cài đặt thủ công. ZIP có đúng một thư mục cấp cao; sau khi giải nén an toàn, thư mục `thien-skill-document-evidence/` phải chứa `SKILL.md` ở ngay cấp gốc. Gói này không chứa adapter riêng của OpenAI hoặc Claude.
+Dùng `Thien-Skill-Document-Evidence-Universal-v1.2.0.zip` cho bề mặt hỗ trợ Agent Skills hoặc cài đặt thủ công. ZIP có đúng một thư mục cấp cao; sau khi giải nén an toàn, thư mục `thien-skill-document-evidence/` phải chứa `SKILL.md` ở ngay cấp gốc. Gói này không chứa adapter riêng của OpenAI hoặc Claude.
 
 ## Kiểm tra sau cài đặt
 
 - Xác nhận `SKILL.md` và các file được tham chiếu có thể đọc được.
 - Chạy một tình huống smoke test không nhạy cảm, ví dụ: lập inventory cho một bộ tài liệu mẫu và yêu cầu evidence locator ở mức trang.
-- Không coi kiểm tra ZIP hoặc cài đặt cục bộ là xác nhận production. Phiên bản `1.1.0` có trạng thái `Testing` và cần human review theo acceptance report phiên bản tương ứng.
-- Bản phát hành 1.1.0 này đã được tạo để cài đặt nhưng không được live-install trên ChatGPT, Codex hay Claude; các gate đó giữ `NOT_TESTED` theo quyết định phạm vi của người dùng.
+- Không coi kiểm tra ZIP hoặc cài đặt cục bộ là xác nhận production. Phiên bản `1.2.0` có trạng thái `Testing` và cần human review theo acceptance report phiên bản tương ứng.
+- Bản phát hành 1.2.0 này đã được tạo để cài đặt nhưng không được live-install trên ChatGPT, Codex hay Claude; các gate đó giữ `NOT_TESTED` theo quyết định phạm vi của người dùng.
 
 ## Output của trình đối soát deterministic
 
@@ -127,7 +127,7 @@ python3 /path/to/thien-skill-document-evidence/scripts/finalize_workbook.py \
   --output workbook.xlsx
 ```
 
-Builder chỉ chạy khi host đã có `@oai/artifact-tool`; skill không tự tải hoặc cài dependency. Finalizer dùng Python standard library, luôn tạo output khác input và kiểm tra lại OOXML trước khi publish. Sau cùng vẫn phải mở/render workbook trên ứng dụng đích để kiểm tra row count, kiểu dữ liệu, freeze pane, filter và readability; structural PASS không phải business hoặc visual approval.
+Builder chỉ chạy khi host đã có Node.js, Python 3 và `@oai/artifact-tool`; skill không tự tải hoặc cài dependency. Trước export, builder tự tái chạy bundled `validate_records.py` trên exact package bytes và yêu cầu report được cung cấp khớp fresh validation evidence; `DOCUMENT_EVIDENCE_PYTHON` chỉ nên trỏ tới Python 3 được tin cậy khi `python3` không nằm trên PATH. Finalizer dùng Python standard library, luôn tạo output khác input và kiểm tra lại OOXML trước khi publish. Sau cùng vẫn phải mở/render workbook trên ứng dụng đích để kiểm tra row count, kiểu dữ liệu, freeze pane, filter và readability; structural PASS không phải business hoặc visual approval.
 
 ## Gỡ cài đặt
 
@@ -135,4 +135,4 @@ Trước khi xóa hoặc thay thế, sao lưu thư mục skill hiện tại nế
 
 ---
 
-English summary: verify the published checksums and manifests, use the native OpenAI or Claude ZIP for plugin installation, and use the Universal ZIP for portable Agent Skill installation. Version `1.1.0` remains in Testing, was not live-installed, and requires human review before production use.
+English summary: verify the published checksums and manifests, use the native OpenAI or Claude ZIP for plugin installation, and use the Universal ZIP for portable Agent Skill installation. Version `1.2.0` remains in Testing, was not live-installed, and requires human review before production use.

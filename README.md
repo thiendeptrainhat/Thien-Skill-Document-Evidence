@@ -6,7 +6,7 @@
 
 Biến bộ tài liệu rời rạc thành dữ liệu có cấu trúc, tệp có thể sử dụng tiếp và kết quả đối soát có đường dẫn về nguồn. Khi được kích hoạt, skill hướng dẫn agent xử lý theo một quy trình nhất quán: kiểm kê → trích xuất → chuẩn hóa có kiểm soát → kiểm tra → xuất kết quả → bàn giao các điểm cần con người xem xét.
 
-**Phiên bản 1.1.0 — Final.** Đây là bản phát hành chính thức, không còn hậu tố RC, tập trung vào ba nhu cầu: **chuyển đổi tài liệu**, **chuẩn bị nguồn RAG** và **đối soát nhiều loại chứng từ**. Skill kết hợp hướng dẫn nghiệp vụ, schema dữ liệu, templates và script offline; không phải một OCR engine hay hệ thống phê duyệt tự động.
+**Phiên bản 1.2.0 — Final.** Đây là bản phát hành chính thức, không còn hậu tố RC, tập trung vào ba nhu cầu: **chuyển đổi tài liệu**, **chuẩn bị nguồn RAG** và **đối soát nhiều loại chứng từ**. Skill kết hợp hướng dẫn nghiệp vụ, schema dữ liệu, templates và script offline; không phải một OCR engine hay hệ thống phê duyệt tự động.
 
 ## Đọc nhanh
 
@@ -50,13 +50,17 @@ Kích hoạt nghĩa là agent nạp hướng dẫn và tài nguyên của skill 
 
 Đây là lợi ích về quy trình và khả năng kiểm tra. Repository chưa công bố benchmark về thời gian tiết kiệm, độ chính xác OCR hoặc tỷ lệ phát hiện sai sót; không suy các chỉ số đó từ số lượng tests.
 
-### Điểm mới nổi bật của 1.1.0
+### Điểm mới nổi bật của 1.2.0
 
 - Có ba helper offline cho **conversion artifact**, **RAG source package** và **reconciliation package/workbook**, không chỉ có hướng dẫn hoặc template đầu ra.
 - Bổ sung cấu trúc dữ liệu chung cho yêu cầu xử lý, nội dung theo block, artifact manifest, conversion run, RAG package và matching profile; giữ tương thích các contract/tool v1.0 hiện hữu.
 - Có **9 matching profiles** đi kèm và cơ chế custom profile cho quy trình khác; không khóa đối soát vào hóa đơn đầu vào–PO–GRN.
 - Tách rõ **tệp đã tạo**, **kiểm tra cấu trúc**, **kiểm tra hiển thị/nhập vào hệ thống đích** và **phê duyệt của con người**.
 - Phân phối cùng một portable core trong ba gói OpenAI, Claude và Universal; kiểm tra parity và checksum giúp xác định gói đang dùng.
+- Gia cố atomic/no-overwrite cho RAG, kiểm tra OOXML external relationships theo XML fail-closed và chụp immutable source snapshot trước khi lập inventory.
+- Mọi readiness tự động dừng tối đa ở `READY_FOR_HUMAN_REVIEW`; missing required role và trạng thái lỗi/không biết roll up thành `BLOCKED` nhất quán giữa manifest và package.
+- Workbook package export tái chạy bundled validator trên exact bytes bằng Python 3 được tin cậy; release provenance nằm trong contract mở sẵn mà không làm thay đổi closed extraction schema v1.0.0.
+- Bổ sung repository hygiene gate về file rác, duplicate, size/LOC budget và retention; cải thiện wrap, column width và adaptive row height cho XLSX dài.
 
 <a id="quy-trinh"></a>
 
@@ -326,39 +330,39 @@ Các script đi kèm không tự gọi mạng, không tự cài dependency và m
 
 <a id="kiem-thu"></a>
 
-## Thông tin bản phát hành 1.1.0 — Final
+## Thông tin bản phát hành 1.2.0 — Final
 
 | Thuộc tính | Giá trị |
 |---|---|
 | Skill ID | `thien-skill-document-evidence` |
-| Version | `1.1.0` |
+| Version | `1.2.0` |
 | Trạng thái phát hành | **Final — bản phát hành chính thức, không phải release candidate** |
 | Repository | Private |
 | Owner | Tran Ngoc Thien |
 | License | Tran Ngoc Thien's Skills Commercial Source-Available License 2.0 |
 
-Bản Final 1.1.0 bao gồm các helper offline cho conversion, RAG source package và reconciliation cùng các contract v1.0 tương thích. Các bản `1.1.0-rc.1` và `1.1.0-rc.2` chỉ được giữ làm lịch sử; gói cài đặt hiện tại mang phiên bản `1.1.0`.
+Bản Final 1.2.0 bao gồm các helper offline cho conversion, RAG source package và reconciliation cùng các contract v1.0 tương thích. `1.0.0`, `1.1.0-rc.2` và `1.1.0` được giữ trực tiếp làm lịch sử; sáu artifact `1.1.0-rc.1` được rút khỏi `dist/` theo cap ba historical versions nhưng vẫn phục hồi được từ Git commit `f4dd3446bc3b77511013958ee14aa0e7c402224d`.
 
 **Phân biệt phát hành với kiểm thử:** Final là trạng thái của bản phát hành. Hồ sơ nghiệm thu kỹ thuật hiện có vẫn ghi nhãn QA `Testing`; kết quả tự động được bàn giao tối đa ở mức `READY_FOR_HUMAN_REVIEW`. Đây không phải nhãn RC và cũng không phải bằng chứng đã kiểm thử live hoặc được phê duyệt nghiệp vụ.
 
-## Phạm vi đã kiểm thử của bản 1.1.0
+## Phạm vi đã kiểm thử của bản 1.2.0
 
 Các kết quả dưới đây là bằng chứng kỹ thuật tại thời điểm nghiệm thu; không phải cam kết độ chính xác cho mọi tài liệu hoặc môi trường.
 
 | Hạng mục | Kết quả/phạm vi |
 |---|---|
-| Regression suite | 145 tests: **144 PASS, 1 optional SKIP** do môi trường thiếu PyYAML |
-| Kiểm thử workflow từ ZIP 1.1.0 | **24/24 PASS**, gồm kiểm tra identity/parity và các workflow chạy từ gói đã giải nén |
-| Matching packaged E2E | 7/9 profiles có kịch bản đại diện; không phải mọi biến thể của từng profile |
-| Hai profile còn lại | `CONTRACT_PO_GRN_INVOICE_BANK_PAYMENT` và `CUSTOM_N_WAY` có source-level checks, chưa có packaged E2E tương ứng trong bộ nghiệm thu này |
-| Gói phát hành | Exact-build, portable-core parity và checksum đã kiểm tra; giữ nguyên các gói RC lịch sử |
-| DOCX/XLSX/PPTX | Có kiểm tra cấu trúc/package; không có lượt visual render mới trong promotion 1.1.0 |
+| Regression suite | **188 tests: 187 PASS, 1 optional SKIP** do môi trường thiếu PyYAML |
+| Kiểm thử workflow từ ZIP 1.2.0 | **26/26 PASS** từ cả ba ZIP; oracle tách khỏi RC2/1.1.0 frozen |
+| Matching packaged E2E | Cả 9 bundled profiles được tái thực hiện; không suy mọi biến thể dữ liệu thật từ fixture synthetic |
+| Tám finding Phase 1 | PASS khi reperform riêng race/rollback, OOXML fail-closed, readiness, forged validation, immutable snapshot, release provenance, XLSX readability và inventory docs |
+| Gói phát hành | PASS: exact-build, second exact-check, portable-core parity, 5/5 checksum và ZIP CRC/layout/permission gate |
+| DOCX/XLSX/PPTX | Structural/package PASS; visual rerun XLSX dài PASS, còn native Office fidelity rộng vẫn ngoài claim |
 | Live install và dữ liệu thô | Chưa live-install; OCR receipt/scan và full bank-statement extraction vẫn `NOT_TESTED` |
 | RAG system đích | Ingestion, embedding và retrieval quality vẫn `NOT_TESTED` |
 
 Các tests dùng fixture/synthetic inputs và kiểm tra kỹ thuật. Behavioral catalog vẫn tách khỏi kết quả thực thi; không gọi toàn bộ kịch bản mô tả là đã được chạy.
 
-Xem [báo cáo nghiệm thu 1.1.0](./ACCEPTANCE-REPORT-v1.1.0.md), [verification record](./qa/release-1.1.0/verification.json) và [packaged release tests](./tests/test_release_110.py). Trạng thái phát hành Final không tự chuyển những hạng mục chưa kiểm thử thành PASS hoặc thay thế human approval.
+Xem [báo cáo nghiệm thu 1.2.0](./ACCEPTANCE-REPORT-v1.2.0.md), [verification record](./qa/release-1.2.0/verification.json) và [packaged release tests](./tests/test_release_120.py). Trạng thái phát hành Final không tự chuyển những hạng mục chưa kiểm thử thành PASS hoặc thay thế human approval.
 
 ## Skill không làm gì?
 
@@ -394,20 +398,20 @@ cd Thien-Skill-Document-Evidence
 Trên macOS:
 
 ```bash
-(cd dist && shasum -a 256 -c SHA256SUMS-v1.1.0.txt)
+(cd dist && shasum -a 256 -c SHA256SUMS-v1.2.0.txt)
 ```
 
 Trên Linux:
 
 ```bash
-(cd dist && sha256sum -c SHA256SUMS-v1.1.0.txt)
+(cd dist && sha256sum -c SHA256SUMS-v1.2.0.txt)
 ```
 
 Tất cả artifact phải trả về `OK`. Kiểm tra thêm:
 
-- [release-manifest-v1.1.0.json](./dist/release-manifest-v1.1.0.json);
-- [PARITY-v1.1.0.json](./dist/PARITY-v1.1.0.json) phải có `status: PASS`;
-- [ACCEPTANCE-REPORT-v1.1.0.md](./ACCEPTANCE-REPORT-v1.1.0.md);
+- [release-manifest-v1.2.0.json](./dist/release-manifest-v1.2.0.json);
+- [PARITY-v1.2.0.json](./dist/PARITY-v1.2.0.json) phải có `status: PASS`;
+- [ACCEPTANCE-REPORT-v1.2.0.md](./ACCEPTANCE-REPORT-v1.2.0.md);
 - [LICENSE-APPLICATION.md](./LICENSE-APPLICATION.md) và [LICENSE](./LICENSE).
 
 #### 3. Chọn đúng phương án cài đặt
@@ -416,10 +420,10 @@ Tất cả artifact phải trả về `OK`. Kiểm tra thêm:
 |---|---|
 | Codex local — cài nhanh từ GitHub | `$skill-installer` với đường dẫn canonical skill |
 | Codex local — personal/project skill | Sao chép canonical folder vào `.agents/skills/` |
-| ChatGPT/ChatGPT Work có quyền import plugin | [OpenAI ZIP](./dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip) |
-| Claude Code plugin | [Claude ZIP](./dist/claude/Thien-Skill-Document-Evidence-Claude-v1.1.0.zip) |
+| ChatGPT/ChatGPT Work có quyền import plugin | [OpenAI ZIP](./dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.2.0.zip) |
+| Claude Code plugin | [Claude ZIP](./dist/claude/Thien-Skill-Document-Evidence-Claude-v1.2.0.zip) |
 | Claude Code standalone | Sao chép canonical folder vào `.claude/skills/` |
-| Nền tảng hỗ trợ Agent Skills chuẩn mở | [Universal ZIP](./dist/universal/Thien-Skill-Document-Evidence-Universal-v1.1.0.zip) |
+| Nền tảng hỗ trợ Agent Skills chuẩn mở | [Universal ZIP](./dist/universal/Thien-Skill-Document-Evidence-Universal-v1.2.0.zip) |
 
 Không trộn file giữa các gói. Canonical source duy nhất là [thien-skill-document-evidence/](./thien-skill-document-evidence/).
 
@@ -470,7 +474,7 @@ Commit thư mục `.agents/skills/thien-skill-document-evidence/` nếu muốn c
 
 Sử dụng nguyên file:
 
-[Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip](./dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip)
+[Thien-Skill-Document-Evidence-OpenAI-v1.2.0.zip](./dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.2.0.zip)
 
 Gói chứa:
 
@@ -499,7 +503,7 @@ Claude Code đọc personal skills từ `~/.claude/skills/<skill-name>/SKILL.md`
 ### Cách A — nạp Claude plugin ZIP
 
 ```bash
-claude --plugin-dir ./dist/claude/Thien-Skill-Document-Evidence-Claude-v1.1.0.zip
+claude --plugin-dir ./dist/claude/Thien-Skill-Document-Evidence-Claude-v1.2.0.zip
 ```
 
 Claude Code hỗ trợ `--plugin-dir` với cả thư mục và ZIP. Sau khi mở phiên:
@@ -540,7 +544,7 @@ Nếu tạo mới thư mục skill cấp cao trong khi Claude Code đang chạy 
 
 Sử dụng:
 
-[Thien-Skill-Document-Evidence-Universal-v1.1.0.zip](./dist/universal/Thien-Skill-Document-Evidence-Universal-v1.1.0.zip)
+[Thien-Skill-Document-Evidence-Universal-v1.2.0.zip](./dist/universal/Thien-Skill-Document-Evidence-Universal-v1.2.0.zip)
 
 Gói Universal dành cho bề mặt hỗ trợ Agent Skills hoặc custom skill upload. ZIP có đúng một thư mục cấp cao; sau khi giải nén, `SKILL.md` nằm ngay tại:
 
@@ -578,7 +582,7 @@ GitHub không chạy skill và repository này không phải GitHub Action. Agen
 ├── platform/                        # OpenAI và Claude manifests
 ├── build/                           # Deterministic package builder
 ├── tests/                           # Automated và behavioral specifications
-├── dist/                            # Ba ZIP + checksums/manifests
+├── dist/                            # Ba ZIP hiện hành + các release lịch sử được retention policy giữ lại
 ├── INSTALLATION.md                  # Hướng dẫn vận hành chi tiết
 ├── ACCEPTANCE-REPORT-v*.md          # Evidence và release gates theo version
 └── LEGAL-REVIEW-v*.md               # Versioned legal/license release note
@@ -591,12 +595,17 @@ Không sửa trực tiếp nội dung trong `dist/`. Mọi thay đổi portable 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 python3 -B build/build_skill_packages.py
 PYTHONDONTWRITEBYTECODE=1 python3 -B build/build_skill_packages.py --check
+PYTHONDONTWRITEBYTECODE=1 python3 -B build/check_repository_hygiene.py
 PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover -s tests -p 'test_*.py'
 ```
 
-Bản phát hành `1.1.0` có contract/regression tests, kiểm thử implementation Phase 2, package parity, checksum và package-native structural validation. Xem [ACCEPTANCE-REPORT-v1.1.0.md](./ACCEPTANCE-REPORT-v1.1.0.md) để phân biệt gate đã chạy, `NOT_TESTED` và giới hạn còn lại. Release `1.0.0`, `1.1.0-rc.1`, `1.1.0-rc.2` cùng hồ sơ lịch sử của chúng được giữ nguyên trong repository.
+Repository hygiene gate quét cả working tree thay vì chỉ file tracked hoặc nội dung ZIP. Gate từ chối cache/editor metadata, log/temp, symlink, empty directory, Office artifact ngoài allowlist, duplicate byte-identical ngoài allowlist và file vượt size/line budget. Ngân sách hiện hành: repository `50 MiB`, `dist/` `40 MiB`, mỗi file trong `dist/` `5 MiB`, source hard limit `2.500` dòng; từ `1.500` dòng trở lên phát warning để ưu tiên modularization. Tối đa ba historical versions được giữ trực tiếp trong `dist/`; tăng retention cần quyết định rõ và phải giữ khả năng phục hồi trước khi di chuyển/xóa artifact.
 
-### Các CLI trong bản 1.1.0
+Runtime preview, staging và intermediate output phải nằm ngoài repository, ưu tiên temporary workspace. Chỉ artifact cuối và sidecar bắt buộc mới được persist; không thêm bản sao `final-final`, cache hoặc output dung lượng lớn không có manifest/retention owner.
+
+Bản phát hành `1.2.0` có contract/regression tests, kiểm thử implementation Phase 2, QA độc lập Phase 3, package parity, checksum và package-native validation. Xem [ACCEPTANCE-REPORT-v1.2.0.md](./ACCEPTANCE-REPORT-v1.2.0.md) để phân biệt gate đã chạy, `NOT_TESTED` và giới hạn còn lại. `1.0.0`, `1.1.0-rc.2` và `1.1.0` là ba historical versions được giữ trong `dist/`; hồ sơ RC1 vẫn còn trong repository và sáu artifact RC1 có thể phục hồi từ commit nêu trên.
+
+### Các CLI trong bản 1.2.0
 
 - `scripts/render_canonical_artifacts.py`: sinh deterministic JSON/Markdown/DOCX/XLSX/PPTX từ canonical content; PPTX bắt buộc intent/profile rõ; mỗi lần chạy liên kết artifact, artifact manifest và closed `conversion-run.json` sidecar.
 - `scripts/build_rag_package.py`: sinh DOCUMENT/COLLECTION RAG package, root control, payload manifests, asset media validation và optional configured chunks.
@@ -621,7 +630,7 @@ Không ghi đè bản cài đã sửa cục bộ nếu chưa so sánh hoặc sao
 - **Skill không xuất hiện:** kiểm tra đúng path và `SKILL.md`; chạy `/skills`; mở phiên mới nếu thư mục discovery vừa được tạo.
 - **Skill kích hoạt sai:** gọi explicit bằng `$`/ `@`/ `/skill-name` và mô tả rõ loại tài liệu, mục tiêu, output.
 - **Claude plugin không load:** chạy `claude plugin validate --strict /path/to/plugin`, kiểm tra `.claude-plugin/plugin.json`, rồi dùng `/reload-plugins`.
-- **Generic evidence workbook builder thiếu dependency:** `build_workbook.mjs` cần Node.js và `@oai/artifact-tool`; skill không tự cài. Đây là pipeline riêng với các helper Python offline cho conversion, RAG và reconciliation.
+- **Generic evidence workbook builder thiếu dependency:** `build_workbook.mjs` cần Node.js, Python 3 để tái chạy bundled schema validator và `@oai/artifact-tool`; skill không tự cài. Có thể đặt `DOCUMENT_EVIDENCE_PYTHON` tới Python 3 được tin cậy khi `python3` không nằm trên PATH. Đây là pipeline riêng với các helper Python offline cho conversion, RAG và reconciliation.
 - **OCR/vision không chạy:** cung cấp adapter được phê duyệt hoặc chuyển trạng thái sang `NOT_EXECUTED`/`BLOCKED`/human review.
 - **Repository private không clone được:** xác thực đúng GitHub account hoặc token có quyền đọc repository.
 
@@ -631,8 +640,8 @@ Hướng dẫn nâng cao về reconciliation CLI, schema gate, workbook pipeline
 
 Áp dụng [Tran Ngoc Thien's Skills Commercial Source-Available License 2.0](./LICENSE). Bản tiếng Việt được ưu tiên khi có mâu thuẫn; pháp luật và tòa án Việt Nam áp dụng theo master license.
 
-Việc xem, clone hoặc nhận package không tự tạo quyền sử dụng thương mại. Đọc [LICENSE-APPLICATION.md](./LICENSE-APPLICATION.md), [NOTICE](./NOTICE), [THIRD-PARTY-NOTICES.md](./THIRD-PARTY-NOTICES.md) và [LEGAL-REVIEW-v1.1.0.md](./LEGAL-REVIEW-v1.1.0.md) trước khi sao chép, sửa đổi, phân phối hoặc dùng ngoài môi trường kiểm thử.
+Việc xem, clone hoặc nhận package không tự tạo quyền sử dụng thương mại. Đọc [LICENSE-APPLICATION.md](./LICENSE-APPLICATION.md), [NOTICE](./NOTICE), [THIRD-PARTY-NOTICES.md](./THIRD-PARTY-NOTICES.md) và [LEGAL-REVIEW-v1.2.0.md](./LEGAL-REVIEW-v1.2.0.md) trước khi sao chép, sửa đổi, phân phối hoặc dùng ngoài môi trường kiểm thử.
 
 ---
 
-**English summary:** This private repository provides one canonical document-intelligence skill and deterministic OpenAI, Claude, and Universal packages. Version `1.1.0` is the final release, with no RC suffix. It implements offline RAG-package, artifact-conversion, and extensible role-configured reconciliation helpers while retaining v1.0 data contracts. The packages are structurally validated but are not live-installed. The skill does not claim legal validity, fraud, audit opinion, document authenticity, or platform certification.
+**English summary:** This private repository provides one canonical document-intelligence skill and deterministic OpenAI, Claude, and Universal packages. Version `1.2.0` is the final release, with no RC suffix. It hardens offline RAG-package, artifact-conversion, and extensible role-configured reconciliation helpers while retaining the closed extraction v1.0 data contract. The packages are structurally and package-natively validated but are not live-installed. The skill does not claim legal validity, fraud, audit opinion, document authenticity, or platform certification.

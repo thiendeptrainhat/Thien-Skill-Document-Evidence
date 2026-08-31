@@ -1,6 +1,6 @@
 {
   "name": "thien-skill-document-evidence",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Convert, structure, prepare for RAG, reconcile, and package document evidence with traceable provenance and controlled human review.",
   "author": {
     "name": "Tran Ngoc Thien",

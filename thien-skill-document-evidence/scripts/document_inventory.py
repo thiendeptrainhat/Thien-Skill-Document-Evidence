@@ -21,6 +21,7 @@ import stat
 import sys
 import tempfile
 from typing import BinaryIO, Iterable, Mapping
+import xml.etree.ElementTree as ET
 import zipfile
 
 
@@ -77,6 +78,16 @@ OOXML_MIME = {
 
 class InventoryError(ValueError):
     """Raised for unsafe paths, unreadable inputs, or invalid CLI requests."""
+
+
+class UnsafeRelationshipXml(ValueError):
+    """Raised when OOXML relationship XML declares a DTD or entity set."""
+
+
+class _RelationshipTreeBuilder(ET.TreeBuilder):
+    def doctype(self, name: str, pubid: str | None, system: str | None) -> None:
+        del name, pubid, system
+        raise UnsafeRelationshipXml("DTD declarations are not allowed in relationships XML")
 
 
 def open_regular_nofollow(path: Path) -> BinaryIO:
@@ -203,19 +214,55 @@ def walk_regular_files(root: Path, inputs: Iterable[str | Path]) -> list[Path]:
     return [collected[key] for key in sorted(collected)]
 
 
-def hash_file(path: Path) -> tuple[str, int]:
+def _source_identity(value: os.stat_result) -> tuple[int, int, int, int, int, int]:
+    """Return fields that must remain stable while a source snapshot is captured."""
+
+    return (
+        value.st_dev,
+        value.st_ino,
+        stat.S_IFMT(value.st_mode),
+        value.st_size,
+        value.st_mtime_ns,
+        value.st_ctime_ns,
+    )
+
+
+def capture_source_snapshot(path: Path, snapshot: Path) -> tuple[str, int]:
+    """Copy one stable source view while hashing it for later inspection.
+
+    All signature and active-content inspection uses the private snapshot rather
+    than reopening the source path. Identity and metadata checks fail closed if
+    the source changes while that snapshot is being captured.
+    """
+
     digest = hashlib.sha256()
     size = 0
     try:
-        with open_regular_nofollow(path) as handle:
+        with open_regular_nofollow(path) as source, snapshot.open("xb") as target:
+            before = os.fstat(source.fileno())
             while True:
-                chunk = handle.read(CHUNK_SIZE)
+                chunk = source.read(CHUNK_SIZE)
                 if not chunk:
                     break
+                target.write(chunk)
                 digest.update(chunk)
                 size += len(chunk)
+            target.flush()
+            after = os.fstat(source.fileno())
     except OSError as exc:
-        raise InventoryError(f"cannot read {path.name}: {exc}") from exc
+        raise InventoryError(f"cannot snapshot {path.name}: {exc}") from exc
+
+    try:
+        current = os.stat(path, follow_symlinks=False)
+    except OSError as exc:
+        raise InventoryError(f"source changed during snapshot: {path.name}: {exc}") from exc
+    if (
+        not stat.S_ISREG(current.st_mode)
+        or _source_identity(before) != _source_identity(after)
+        or _source_identity(current) != _source_identity(after)
+        or size != after.st_size
+    ):
+        raise InventoryError(f"source changed during snapshot: {path.name}")
     return digest.hexdigest(), size
 
 
@@ -319,6 +366,53 @@ def _safe_zip_name(raw_name: str) -> bool:
     )
 
 
+def _xml_local_name(value: str) -> str:
+    return value.rsplit("}", 1)[-1].rsplit(":", 1)[-1].casefold()
+
+
+def _mark_relationship_inspection_unknown(states: dict[str, str]) -> None:
+    for key in ("external_links", "javascript"):
+        if states[key] != "DETECTED":
+            states[key] = "UNKNOWN"
+
+
+def inspect_relationship_xml(
+    payload: bytes,
+    states: dict[str, str],
+    security_flags: list[str],
+) -> None:
+    """Inspect bounded OOXML relationship XML without resolving external data."""
+
+    folded = payload.lower()
+    if b"<!doctype" in folded or b"<!entity" in folded:
+        security_flags.append("UNSAFE_RELATIONSHIPS_XML_DECLARATION")
+        _mark_relationship_inspection_unknown(states)
+        return
+    try:
+        parser = ET.XMLParser(target=_RelationshipTreeBuilder())
+        root = ET.fromstring(payload, parser=parser)
+    except UnsafeRelationshipXml:
+        security_flags.append("UNSAFE_RELATIONSHIPS_XML_DECLARATION")
+        _mark_relationship_inspection_unknown(states)
+        return
+    except (ET.ParseError, RecursionError, ValueError):
+        security_flags.append("MALFORMED_RELATIONSHIPS_XML")
+        _mark_relationship_inspection_unknown(states)
+        return
+
+    for element in root.iter():
+        if _xml_local_name(element.tag) != "relationship":
+            continue
+        attributes = {
+            _xml_local_name(name): value.strip()
+            for name, value in element.attrib.items()
+        }
+        if attributes.get("targetmode", "").casefold() == "external":
+            states["external_links"] = "DETECTED"
+        if attributes.get("target", "").lstrip().casefold().startswith("javascript:"):
+            states["javascript"] = "DETECTED"
+
+
 def inspect_zip_container(
     path: Path,
 ) -> tuple[str, str | None, dict[str, str], bool | None, list[str], list[str]]:
@@ -344,6 +438,7 @@ def inspect_zip_container(
             infos = archive.infolist()
             if len(infos) > MAX_ARCHIVE_MEMBERS:
                 security_flags.append("ARCHIVE_MEMBER_LIMIT_EXCEEDED")
+                _mark_relationship_inspection_unknown(states)
             for info in infos[: MAX_ARCHIVE_MEMBERS + 1]:
                 raw_name = info.filename
                 if not _safe_zip_name(raw_name):
@@ -375,20 +470,23 @@ def inspect_zip_container(
                     states["embedded_files"] = "DETECTED"
                 if "/externallinks/" in f"/{folded}":
                     states["external_links"] = "DETECTED"
-                if folded.endswith(".rels") and info.file_size <= MAX_RELATIONSHIP_BYTES:
+                if folded.endswith(".rels") and info.file_size > MAX_RELATIONSHIP_BYTES:
+                    security_flags.append("RELATIONSHIP_MEMBER_SIZE_LIMIT_EXCEEDED")
+                    _mark_relationship_inspection_unknown(states)
+                    continue
+                if folded.endswith(".rels"):
                     if relationship_bytes + info.file_size > MAX_RELATIONSHIP_TOTAL_BYTES:
                         security_flags.append("RELATIONSHIP_INSPECTION_LIMIT_EXCEEDED")
+                        _mark_relationship_inspection_unknown(states)
                         continue
                     relationship_bytes += info.file_size
                     try:
-                        relationships = archive.read(info).lower()
+                        relationships = archive.read(info)
                     except (OSError, RuntimeError, zipfile.BadZipFile):
                         security_flags.append("RELATIONSHIP_INSPECTION_FAILED")
+                        _mark_relationship_inspection_unknown(states)
                     else:
-                        if b'targetmode="external"' in relationships or b"targetmode='external'" in relationships:
-                            states["external_links"] = "DETECTED"
-                        if b"javascript:" in relationships:
-                            states["javascript"] = "DETECTED"
+                        inspect_relationship_xml(relationships, states, security_flags)
     except (OSError, zipfile.BadZipFile, RuntimeError, NotImplementedError) as exc:
         security_flags.append("INVALID_OR_UNREADABLE_ZIP_CONTAINER")
         limitations.append(f"ZIP container metadata could not be fully inspected: {type(exc).__name__}.")
@@ -436,22 +534,26 @@ def make_base_record(
     size: int,
     document_id: str,
     copy_role: str,
+    inspection_path: Path | None = None,
 ) -> dict[str, object]:
     relative = path.relative_to(root).as_posix()
     raw_extension = path.suffix.lower()
     extension = raw_extension if re.fullmatch(r"\.[A-Za-z0-9]{1,16}", raw_extension) else ".unknown"
     declared = EXTENSION_MIME.get(raw_extension) or mimetypes.guess_type(path.name)[0]
-    signature, detected = detect_signature(read_prefix(path), raw_extension)
+    inspected_source = path if inspection_path is None else inspection_path
+    signature, detected = detect_signature(read_prefix(inspected_source), raw_extension)
     states = {key: "NOT_TESTED" for key in ("javascript", "macro", "embedded_files", "external_links")}
     encrypted: bool | None = None
     security_flags: list[str] = []
     limitations: list[str] = []
 
     if signature == "PDF":
-        states, encrypted, pdf_limitations = scan_pdf(path)
+        states, encrypted, pdf_limitations = scan_pdf(inspected_source)
         limitations.extend(pdf_limitations)
     elif signature == "ZIP_CONTAINER":
-        signature, detected, states, encrypted, zip_flags, zip_limitations = inspect_zip_container(path)
+        signature, detected, states, encrypted, zip_flags, zip_limitations = inspect_zip_container(
+            inspected_source
+        )
         security_flags.extend(zip_flags)
         limitations.extend(zip_limitations)
     elif signature == "OLE_COMPOUND_FILE":
@@ -577,27 +679,27 @@ def build_inventory(
     if not files:
         raise InventoryError("no regular files were found in the requested scope")
 
-    hashed: list[tuple[Path, str, int]] = []
     occurrences: defaultdict[str, int] = defaultdict(int)
-    for path in files:
-        digest, size = hash_file(path)
-        hashed.append((path, digest, size))
-
     records: list[dict[str, object]] = []
     by_digest: defaultdict[str, list[dict[str, object]]] = defaultdict(list)
-    for path, digest, size in hashed:
-        occurrences[digest] += 1
-        document_id = f"doc-{digest[:24]}-{occurrences[digest]:04d}"
-        record = make_base_record(
-            path=path,
-            root=root,
-            digest=digest,
-            size=size,
-            document_id=document_id,
-            copy_role=copy_role,
-        )
-        records.append(record)
-        by_digest[digest].append(record)
+    with tempfile.TemporaryDirectory(prefix="thien-document-inventory-") as snapshot_dir:
+        snapshot_root = Path(snapshot_dir)
+        for index, path in enumerate(files):
+            snapshot = snapshot_root / f"source-{index:08d}.snapshot"
+            digest, size = capture_source_snapshot(path, snapshot)
+            occurrences[digest] += 1
+            document_id = f"doc-{digest[:24]}-{occurrences[digest]:04d}"
+            record = make_base_record(
+                path=path,
+                root=root,
+                digest=digest,
+                size=size,
+                document_id=document_id,
+                copy_role=copy_role,
+                inspection_path=snapshot,
+            )
+            records.append(record)
+            by_digest[digest].append(record)
 
     duplicate_groups: list[dict[str, object]] = []
     for digest in sorted(by_digest):

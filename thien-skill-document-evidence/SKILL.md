@@ -47,10 +47,10 @@ Hoàn thành phần document/evidence độc lập an toàn rồi bàn giao theo
 Chọn đúng một task profile chính; lifecycle route bên dưới mô tả giai đoạn đang thực hiện và có thể thay đổi trong cùng task.
 
 1. `CONVERT_DOCUMENT`: bảo toàn nội dung, cấu trúc, reading order và provenance rồi sinh artifact theo output profile. Mặc định DOCX là `SEMANTIC_EDITABLE`; XLSX là `STRUCTURED_DATA` trừ khi task là reconciliation; PPTX ghép cặp bắt buộc `PRESENTATION → EDITABLE_PRESENTATION`, `FAITHFUL_PAGE_CONVERSION → PAGE_AS_SLIDE`, hoặc `VISUAL_FIDELITY → VISUAL_FIDELITY_BEST_EFFORT`. Nếu ý định PPTX mơ hồ và lựa chọn làm đổi đáng kể kết quả, để `output_profile: null`, ghi `CLARIFICATION_REQUIRED` và hỏi trước.
-2. `PREPARE_RAG_SOURCE`: tạo root control `rag-package.json` và package per-document mặc định gồm `document.md`, `metadata.json` cùng payload `manifest.json`; `assets/` có điều kiện; chỉ tạo `chunks.jsonl` khi target và chunking config đều được nêu. Folder corpus có thêm collection manifest, không gộp provenance của nhiều tài liệu.
+2. `PREPARE_RAG_SOURCE`: tạo root control `rag-package.json` và package per-document mặc định gồm `document.md`, `metadata.json` cùng payload `manifest.json`; `assets/` có điều kiện; chỉ tạo `chunks.jsonl` khi target và chunking config đều được nêu. Nếu người dùng yêu cầu rõ chunks nhưng thiếu một trong hai, chỉ tiếp tục intake/canonicalization an toàn và hỏi trước khi publish package; không tự thay deliverable đó bằng package unchunked. Folder corpus có thêm collection manifest, không gộp provenance của nhiều tài liệu.
 3. `RECONCILE_DOCUMENT_SET`: khai báo role, grain, keys, direction, partial rules, tolerance và precedence rồi mới match. Role/profile là cấu hình mở, không bị khóa vào procurement.
 
-Task request dùng [task-request.schema.json](schemas/common/task-request.schema.json). Nội dung trung gian dùng [canonical-content.schema.json](schemas/common/canonical-content.schema.json); artifact, conversion run, RAG package và matching profile dùng các companion schema tương ứng. Các contract additive này có `schema_version` riêng và ghi provenance runtime bằng `skill_id` + `skill_release_version`, kể cả prerelease. Extraction package, reconciliation config và scripts `1.0.0` giữ nguyên version contract/tool để bảo toàn compatibility; không relabel chúng thành version release candidate.
+Task request dùng [task-request.schema.json](schemas/common/task-request.schema.json). Nội dung trung gian dùng [canonical-content.schema.json](schemas/common/canonical-content.schema.json); artifact, conversion run, RAG package và matching profile dùng các companion schema tương ứng. Các contract additive này có `schema_version` riêng và ghi provenance runtime bằng `skill_id` + `skill_release_version`, kể cả prerelease. Extraction package vẫn giữ nguyên closed contract `schema_version`/`skill_version: 1.0.0`; package do reconciliation sinh ghi release hiện hành trong map mở sẵn `run_manifest.tool_versions["thien-skill-document-evidence"]`. Reconciliation config và scripts tiếp tục giữ version contract/tool `1.0.0`.
 
 ## Chọn một route chính
 
@@ -119,11 +119,13 @@ Giữ riêng rounding, timing, currency conversion, partial transaction, duplica
 
 Chọn output nhỏ nhất giải quyết quyết định. Với document-to-data/Excel, tạo workbook không macro, không external link không cần thiết, không merged cells trong data sheets, có filter/freeze panes, identifier dạng text, amount/date typed, raw và normalized values, provenance, field dictionary, discrepancies, review queue và run manifest. Không tạo sheet rỗng vô nghĩa.
 
+Chỉ lưu artifact cuối được yêu cầu cùng sidecar bắt buộc bởi contract. Preview, staging, retry và intermediate output dùng temporary workspace ngoài source/package đích rồi dọn sau khi thành công hoặc thất bại; không sinh chuỗi bản sao kiểu `final-v2-copy`, không duplicate byte im lặng. Trước output lớn, ước lượng file/row/byte count; nếu vượt giới hạn format, host hoặc destination thì dùng control artifact + linked sidecar theo policy, hoặc `BLOCKED` trước write khi chưa có nơi lưu được phép.
+
 Mọi text chưa tin cậy bắt đầu bằng `=`, `+`, `-` hoặc `@` phải được ghi dưới dạng literal an toàn; đồng thời giữ raw value và formula-injection flag. Không âm thầm cắt row vượt giới hạn Excel: tạo control workbook và sidecar CSV/JSONL/Parquet phù hợp rồi bàn giao data-engineering capability.
 
 Với conversion, tạo canonical content trước rồi mới render. `VISUAL_FIDELITY_BEST_EFFORT` chỉ hợp lệ khi mọi block cần thiết có page dimensions và bounding box đủ dùng; normalized geometry nằm trong `0..1`, còn containment phải qua semantic validation. Chỉ ghi `structural_validation_status: PASS` sau khi đã kiểm unique/monotonic order, link không dangling/cycle, table width, caption target và geometry containment; nếu chưa chạy thì giữ `NOT_TESTED`. Luôn ghi limitation, không hứa pixel-perfect. Với RAG, giữ stable document/section/block IDs, source locator và collection membership; chunking là lớp dẫn xuất, không được làm mất liên kết về block nguồn.
 
-Đọc [output-redaction-and-handoff.md](references/output-redaction-and-handoff.md), [conversion-output-profiles.md](references/conversion-output-profiles.md), [rag-source-package.md](references/rag-source-package.md) và [evidence-provenance-confidence-and-review.md](references/evidence-provenance-confidence-and-review.md). Trước package export, chạy `scripts/validate_records.py` với bundled extraction-package schema và chuyển PASS report khớp package/schema hash vào `scripts/build_workbook.mjs`; builder từ chối shallow-only package, report cũ/sai hash và overwrite mặc định.
+Đọc [output-redaction-and-handoff.md](references/output-redaction-and-handoff.md), [conversion-output-profiles.md](references/conversion-output-profiles.md), [rag-source-package.md](references/rag-source-package.md) và [evidence-provenance-confidence-and-review.md](references/evidence-provenance-confidence-and-review.md). Trước package export, chạy `scripts/validate_records.py` với bundled extraction-package schema và chuyển PASS report khớp package/schema hash vào `scripts/build_workbook.mjs`; builder tự tái chạy bundled validator trên exact package, từ chối shallow-only package, report không khớp fresh evidence và overwrite mặc định.
 
 ### 7. Platform capability gate
 
@@ -132,6 +134,8 @@ Phát hiện capability trước khi chọn renderer. Hành vi routing/fallback 
 ## Human review và approval
 
 Human review bắt buộc cho critical field confidence thấp/unknown, engine disagreement, ambiguous date/locale, bank account conflict, missing/truncated page, incomplete table, handwritten correction, clause/obligation trọng yếu, failed cross-field validation, unmatched material amount hoặc investigation transcription.
+
+Roll-up bắt buộc: nếu missing/truncated page hoặc critical-field failure làm stated objective, reconciliation decision hay completeness claim không thể hỗ trợ thì top-level là `BLOCKED`. Nếu phần bị ảnh hưởng được cô lập và deliverable còn lại chỉ nhằm human review, dùng tối đa `READY_FOR_HUMAN_REVIEW` với coverage/exclusion rõ; không tùy ý chọn giữa nhiều readiness label cho cùng điều kiện.
 
 Cần ủy quyền rõ ràng trước cloud/external upload, dùng credential mở file, mở rộng source/scope, xử lý sensitive data ngoài authorization, phát hành redacted/evidence set, nêu danh tính, gửi ra ngoài, thay metadata/retention, ghi đè/xóa original hoặc hành động khó hoàn tác.
 
@@ -160,7 +164,7 @@ Trước bàn giao, kiểm tra:
 - scripts/runs/config/output có thể tái thực hiện;
 - limitations, unresolved issues, owner, approval và handoff rõ.
 
-Dùng [acceptance-scenarios.md](references/acceptance-scenarios.md) cho behavioral QA. Readiness tự đánh dấu tối đa `READY_FOR_HUMAN_REVIEW`; các trạng thái hợp lệ khác là `DRAFT`, `READY_FOR_QA`, `READY_FOR_HUMAN_VALIDATION`, `READY_FOR_RECONCILIATION`, `READY_FOR_LIMITED_USE`, `BLOCKED` và `NOT_EXECUTED`. Không tự ghi `PRODUCTION_READY`, `FORENSIC_CERTIFIED`, `FINAL_APPROVED` hoặc `FRAUD_CONFIRMED`.
+Dùng [acceptance-scenarios.md](references/acceptance-scenarios.md) cho behavioral QA. Mọi workflow tự động chỉ được đánh dấu tối đa `READY_FOR_HUMAN_REVIEW`; `READY_FOR_LIMITED_USE` chỉ do người có thẩm quyền gán bằng quyết định được ghi nhận ngoài helper tự động. Các trạng thái tự động hợp lệ khác là `DRAFT`, `READY_FOR_QA`, `READY_FOR_HUMAN_VALIDATION`, `READY_FOR_RECONCILIATION`, `BLOCKED` và `NOT_EXECUTED`. Không tự ghi `PRODUCTION_READY`, `FORENSIC_CERTIFIED`, `FINAL_APPROVED` hoặc `FRAUD_CONFIRMED`.
 
 ## Reference router
 

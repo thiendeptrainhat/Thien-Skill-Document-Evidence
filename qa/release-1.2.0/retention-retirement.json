@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0.0",
+  "decision_date": "2026-09-01",
+  "decision": "RETIRE_FROM_ACTIVE_DIST",
+  "retired_release": "1.1.0-rc.1",
+  "reason": "A new 1.2.0 current release makes 1.1.0 historical; the repository policy permits at most three historical versions. Preserve 1.0.0, 1.1.0-rc.2, and 1.1.0, and retire the older RC1 artifacts to stay within the size and retention budgets.",
+  "recovery": {
+    "git_commit": "f4dd3446bc3b77511013958ee14aa0e7c402224d",
+    "method": "Restore the exact tracked paths from this commit after explicit authorization; no tag or external archive was created in Phase 3."
+  },
+  "total_bytes": 8926278,
+  "files": [
+    {
+      "path": "dist/PARITY-v1.1.0-rc.1.json",
+      "size_bytes": 604,
+      "sha256": "eb9c65450860c2ba23666f660e3d78dec20c77afb5eb5d070c3886a05f8eccda"
+    },
+    {
+      "path": "dist/SHA256SUMS-v1.1.0-rc.1.txt",
+      "size_bytes": 574,
+      "sha256": "b8f9a52ce671877ae81e82eff5a1928ea01f525753240e998e0e4ee5db3b4f86"
+    },
+    {
+      "path": "dist/claude/Thien-Skill-Document-Evidence-Claude-v1.1.0-rc.1.zip",
+      "size_bytes": 2619059,
+      "sha256": "7ec508652ba6191c13760f18e725be1d2c16cb2cb0e35dc362759a05a4e6891f"
+    },
+    {
+      "path": "dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0-rc.1.zip",
+      "size_bytes": 3721329,
+      "sha256": "efff8f3ffbb055031bcc59de6428e3369c8bf31354d904a8ce28c2d8af958d7d"
+    },
+    {
+      "path": "dist/release-manifest-v1.1.0-rc.1.json",
+      "size_bytes": 1775,
+      "sha256": "07d7886ddff8f7931924754398f392d4261a7e5598064e93b582f668d436adb5"
+    },
+    {
+      "path": "dist/universal/Thien-Skill-Document-Evidence-Universal-v1.1.0-rc.1.zip",
+      "size_bytes": 2582937,
+      "sha256": "491add9a09a316b8968c2248c6368c4bfdc9a39af5b09b10bd5f11abff6e2018"
+    }
+  ]
+}

@@ -19,6 +19,23 @@ RC2_DISTRIBUTION = set(frozen.DISTRIBUTION_FILES)
 FINAL_DISTRIBUTION = {
     "INSTALLATION.md", "ACCEPTANCE-REPORT-v1.1.0.md", "LEGAL-REVIEW-v1.1.0.md",
 }
+FROZEN_110_ARCHIVES = {
+    "openai": "openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip",
+    "claude": "claude/Thien-Skill-Document-Evidence-Claude-v1.1.0.zip",
+    "universal": "universal/Thien-Skill-Document-Evidence-Universal-v1.1.0.zip",
+}
+FROZEN_110_SHA256 = {
+    "PARITY-v1.1.0.json":
+        "fb9624043201110d8e5ba3b3794ec1485fb95f01be4887941954ac6885b350e7",
+    "claude/Thien-Skill-Document-Evidence-Claude-v1.1.0.zip":
+        "eba9cba922f72bc4205b046d0ced096874ab429268fef2c0cb45e4e863c13261",
+    "openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip":
+        "6d9033446f2b3e53d208dba11fc09f6ba90892fc4f3ce01a9b5155def23bf319",
+    "release-manifest-v1.1.0.json":
+        "98524821dd9cf2b85e53b4b97c3a6845fd60d1d69c42bf843be2de82b2c20ae7",
+    "universal/Thien-Skill-Document-Evidence-Universal-v1.1.0.zip":
+        "9af2c542a487484d0f26b090b9061f80836d386eb885ef1eb4946d95619b9aaa",
+}
 METADATA_CHANGES = {
     "VERSION", "registry/skill-registry-entry.yaml", "LICENSE-APPLICATION.md",
     "NOTICE", "THIRD-PARTY-NOTICES.md", "assets/brand/PROVENANCE.md",
@@ -28,13 +45,7 @@ METADATA_CHANGES = {
 class FinalReleaseWorkflowTests(frozen.Phase3PackagedWorkflowTests):
     @classmethod
     def setUpClass(cls) -> None:
-        config = frozen.read_json(frozen.REPOSITORY / "build/config.json")
-        if config["version"] != "1.1.0":
-            raise AssertionError("This acceptance suite is specifically for final 1.1.0")
-        archives = {
-            platform: f"{platform}/{config['artifact_names'][platform]}"
-            for platform in frozen.PLATFORMS
-        }
+        archives = dict(FROZEN_110_ARCHIVES)
         expected_names = {
             *archives.values(), "PARITY-v1.1.0.json", "release-manifest-v1.1.0.json",
         }
@@ -46,11 +57,15 @@ class FinalReleaseWorkflowTests(frozen.Phase3PackagedWorkflowTests):
             inventory[name] = digest
         if set(inventory) != expected_names:
             raise AssertionError("Final checksum inventory has unexpected/missing entries")
+        if inventory != FROZEN_110_SHA256:
+            raise AssertionError("Frozen 1.1.0 checksum inventory changed")
         parity = frozen.read_json(frozen.DIST / "PARITY-v1.1.0.json")
         patcher = mock.patch.multiple(
             frozen, RELEASE="1.1.0", CORE_SHA256=parity["core_sha256"],
-            FROZEN_SHA256=inventory, ARCHIVE_NAMES=archives,
+            FROZEN_SHA256=dict(FROZEN_110_SHA256), ARCHIVE_NAMES=archives,
             DISTRIBUTION_FILES=FINAL_DISTRIBUTION,
+            ARCHIVE_TIMESTAMP=(2026, 8, 27, 0, 0, 0),
+            WORKFLOW_READINESS_STATUS="READY_FOR_LIMITED_USE",
         )
         patcher.start()
         cls.addClassCleanup(patcher.stop)
@@ -91,8 +106,7 @@ class FinalReleaseWorkflowTests(frozen.Phase3PackagedWorkflowTests):
                 self.assertFalse(any("HANDOFF.md" in name or "__pycache__" in name for name in package.original_hashes))
         self.assert_same_outputs(cores)
 
-    def test_final_identity_and_current_report_names(self) -> None:
-        self.assertEqual((frozen.REPOSITORY / "VERSION").read_text().strip(), "1.1.0")
+    def test_frozen_110_identity_and_report_names(self) -> None:
         for platform, package in self.packages.items():
             with self.subTest(platform=platform):
                 self.assertEqual(package.manifest["version"], "1.1.0")

@@ -68,6 +68,8 @@ Theo document/use case, critical có thể gồm document/vendor/customer/tax/ac
 
 Critical failure phải hiện trong `critical_field_failures`; overall summary không che status. Nếu intended use thay đổi, critical-field set phải được review.
 
+Readiness roll-up là deterministic theo intended use: missing/truncated page hoặc critical failure làm objective/decision/completeness claim không thể hỗ trợ thì top-level `BLOCKED`; nếu phần lỗi được cô lập và phần còn lại chỉ được bàn giao để human review, dùng tối đa `READY_FOR_HUMAN_REVIEW` với coverage/exclusion rõ. `DRAFT` chỉ mô tả intermediate chưa bàn giao, không thay cho hai kết luận này.
+
 ## Human-review triggers
 
 - critical confidence low/unknown hoặc field illegible/obscured;

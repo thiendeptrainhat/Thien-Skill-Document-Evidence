@@ -145,29 +145,29 @@ class PackagingTestCase(unittest.TestCase):
             config["display_name"],
             "Thien Skill — Document Intelligence, Evidence & Reconciliation",
         )
-        self.assertEqual(config["version"], "1.1.0")
+        self.assertEqual(config["version"], "1.2.0")
         self.assertEqual(config["status"], "Testing")
-        self.assertEqual(config["release_date"], "2026-08-27")
+        self.assertEqual(config["release_date"], "2026-09-01")
         self.assertEqual(config["repository_status"], "private")
         self.assertNotIn("repository", config)
         self.assertEqual(
             config["distribution_files"],
             [
                 "INSTALLATION.md",
-                "ACCEPTANCE-REPORT-v1.1.0.md",
-                "LEGAL-REVIEW-v1.1.0.md",
+                "ACCEPTANCE-REPORT-v1.2.0.md",
+                "LEGAL-REVIEW-v1.2.0.md",
             ],
         )
         self.assertEqual(
             config["preserved_dist_versions"],
-            ["1.0.0", "1.1.0-rc.1", "1.1.0-rc.2"],
+            ["1.0.0", "1.1.0-rc.2", "1.1.0"],
         )
         self.assertEqual(
             config["artifact_names"],
             {
-                "openai": "Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip",
-                "claude": "Thien-Skill-Document-Evidence-Claude-v1.1.0.zip",
-                "universal": "Thien-Skill-Document-Evidence-Universal-v1.1.0.zip",
+                "openai": "Thien-Skill-Document-Evidence-OpenAI-v1.2.0.zip",
+                "claude": "Thien-Skill-Document-Evidence-Claude-v1.2.0.zip",
+                "universal": "Thien-Skill-Document-Evidence-Universal-v1.2.0.zip",
             },
         )
         for platform in ("openai", "claude"):
@@ -253,29 +253,28 @@ class PackagingTestCase(unittest.TestCase):
         unexpected.write_text("not generated\n", encoding="utf-8")
         with self.assertRaisesRegex(BUILD.PackagingError, "unexpected unmanaged.txt"):
             BUILD.build_release(self.project, check=True)
+        with self.assertRaisesRegex(BUILD.PackagingError, "unexpected unmanaged.txt"):
+            BUILD.build_release(self.project)
 
-    def test_exact_check_ignores_regular_finder_metadata_only(self) -> None:
-        outputs = BUILD.build_release(self.project)
+    def test_repository_hygiene_gate_rejects_finder_metadata_without_deleting_it(self) -> None:
+        BUILD.build_release(self.project)
         metadata_paths = [self.project / "dist/.DS_Store", self.project / "dist/openai/.DS_Store"]
         for path in metadata_paths:
             path.write_bytes(b"synthetic Finder metadata")
-        self.assertEqual(BUILD.build_release(self.project, check=True), outputs)
+        with self.assertRaisesRegex(BUILD.PackagingError, "metadata/cache path"):
+            BUILD.build_release(self.project, check=True)
         for path in metadata_paths:
             self.assertEqual(path.read_bytes(), b"synthetic Finder metadata")
-        unmanaged = self.project / "dist/openai/.unmanaged"
-        unmanaged.write_text("not a release artifact\n", encoding="utf-8")
-        with self.assertRaisesRegex(BUILD.PackagingError, "unexpected openai/.unmanaged"):
-            BUILD.build_release(self.project, check=True)
 
     def test_exact_check_does_not_ignore_finder_named_symlink(self) -> None:
         BUILD.build_release(self.project)
         target = self.project / "finder-target"
         target.write_bytes(b"not an ordinary Finder metadata file")
         (self.project / "dist/.DS_Store").symlink_to(target)
-        with self.assertRaisesRegex(BUILD.PackagingError, "unexpected .DS_Store"):
+        with self.assertRaisesRegex(BUILD.PackagingError, ".DS_Store"):
             BUILD.build_release(self.project, check=True)
         target.unlink()  # Also reject the now-dangling link in this private fixture.
-        with self.assertRaisesRegex(BUILD.PackagingError, "unexpected .DS_Store"):
+        with self.assertRaisesRegex(BUILD.PackagingError, ".DS_Store"):
             BUILD.build_release(self.project, check=True)
 
     def test_archive_layout_permissions_manifests_legal_and_core_parity(self) -> None:

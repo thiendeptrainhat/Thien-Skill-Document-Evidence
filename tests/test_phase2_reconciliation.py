@@ -281,7 +281,9 @@ class Phase2ReconciliationTests(unittest.TestCase):
         result = decode_json(files["reconciliation-result.json"])
         self.assertEqual(result["status"], "PASS")
         self.assertEqual(result["links"][0]["status"], "EXACT_MATCH")
-        self.assertEqual(manifest["status"], "READY_FOR_LIMITED_USE")
+        package = decode_json(files["workbook-package.json"])
+        self.assertEqual(manifest["status"], "READY_FOR_HUMAN_REVIEW")
+        self.assertEqual(package["status"], manifest["status"])
 
     def test_custom_dotted_source_mapping_is_resolved_deterministically(self) -> None:
         temporary, root = copy_fixture()
@@ -509,7 +511,11 @@ class Phase2ReconciliationTests(unittest.TestCase):
             if link["rule_id"] == "payment-request-to-bank"
         )
         self.assertEqual(settlement["status"], "PARTIAL_MATCH")
-        self.assertEqual(manifest["status"], "READY_FOR_LIMITED_USE")
+        self.assertEqual(manifest["status"], "READY_FOR_HUMAN_REVIEW")
+        self.assertEqual(
+            decode_json(files["workbook-package.json"])["status"],
+            manifest["status"],
+        )
 
     def test_workflow_package_is_byte_stable_role_conditional_and_formula_safe(self) -> None:
         temporary, root = copy_fixture()
@@ -532,6 +538,22 @@ class Phase2ReconciliationTests(unittest.TestCase):
         po_record = next(record for record in records if record["role"] == "PO")
         self.assertEqual(po_record["fields"]["po_number"], "000123")
         package = decode_json(first["workbook-package.json"])
+        release = (SKILL / "VERSION").read_text(encoding="utf-8").strip()
+        self.assertEqual(first_manifest["skill_id"], "thien-skill-document-evidence")
+        self.assertEqual(first_manifest["skill_release_version"], release)
+        self.assertEqual(first_manifest["tool_version"], "1.0.0")
+        self.assertNotIn("skill_release_version", package)
+        self.assertEqual(package["skill_version"], "1.0.0")
+        self.assertEqual(package["schema_version"], "1.0.0")
+        self.assertEqual(
+            package["run_manifest"]["tool_versions"]["thien-skill-document-evidence"],
+            release,
+        )
+        self.assertEqual(
+            package["run_manifest"]["tool_versions"]["thien-record-reconciler"],
+            "1.0.0",
+        )
+        self.assertEqual(package["status"], first_manifest["status"])
         po_number = next(
             field
             for field in package["extracted_fields"]
@@ -617,7 +639,15 @@ class Phase2ReconciliationTests(unittest.TestCase):
         affected = [link for link in result["links"] if link["rule_id"] == "po-to-grn"]
         self.assertTrue(affected)
         self.assertTrue(all(link["status"] == "HUMAN_REVIEW_REQUIRED" for link in affected))
-        self.assertEqual(manifest["status"], "READY_FOR_HUMAN_REVIEW")
+        self.assertIn(
+            "MISSING_REQUIRED_ROLE",
+            {issue["issue_code"] for issue in manifest["preparation_issues"]},
+        )
+        self.assertEqual(manifest["status"], "BLOCKED")
+        self.assertEqual(
+            decode_json(files["workbook-package.json"])["status"],
+            manifest["status"],
+        )
 
     def test_per_file_failure_missing_roles_and_conditional_sheets_are_explicit(self) -> None:
         temporary, root = copy_fixture()
@@ -633,7 +663,11 @@ class Phase2ReconciliationTests(unittest.TestCase):
         self.assertIn("accessible", scope["coverage_statement"].casefold())
         issue_codes = {issue["issue_code"] for issue in manifest["preparation_issues"]}
         self.assertIn("MISSING_REQUIRED_ROLE", issue_codes)
-        self.assertEqual(manifest["status"], "READY_FOR_HUMAN_REVIEW")
+        self.assertEqual(manifest["status"], "BLOCKED")
+        self.assertEqual(
+            decode_json(files["workbook-package.json"])["status"],
+            manifest["status"],
+        )
         self.assertIn("PURCHASE_ORDERS", manifest["workbook_sheets"])
         self.assertNotIn("GOODS_RECEIPTS", manifest["workbook_sheets"])
         self.assertNotIn("INVOICES", manifest["workbook_sheets"])
@@ -644,7 +678,7 @@ class Phase2ReconciliationTests(unittest.TestCase):
             decode_json(files["workbook-package.validation.json"])["status"], "PASS"
         )
 
-    def test_nonpass_reconciliation_is_never_labeled_ready_for_limited_use(self) -> None:
+    def test_automated_reconciliation_never_exceeds_human_review_readiness(self) -> None:
         temporary, root = copy_fixture()
         self.addCleanup(temporary.cleanup)
         receipt = read_json(root / "fixture" / "grn.json")
@@ -666,11 +700,26 @@ class Phase2ReconciliationTests(unittest.TestCase):
         self.assertNotEqual(manifest["status"], "READY_FOR_LIMITED_USE")
         self.assertEqual(
             WORKFLOW.workflow_readiness_status("FAIL", []),
-            "READY_FOR_HUMAN_REVIEW",
+            "BLOCKED",
         )
         self.assertEqual(
             WORKFLOW.workflow_readiness_status("BLOCKED", []),
+            "BLOCKED",
+        )
+        self.assertEqual(
+            WORKFLOW.workflow_readiness_status("PASS", []),
             "READY_FOR_HUMAN_REVIEW",
+        )
+        self.assertEqual(
+            WORKFLOW.workflow_readiness_status("PASS_WITH_WARNINGS", []),
+            "READY_FOR_HUMAN_REVIEW",
+        )
+        self.assertEqual(
+            WORKFLOW.workflow_readiness_status(
+                "PASS",
+                [{"issue_code": "MISSING_REQUIRED_ROLE"}],
+            ),
+            "BLOCKED",
         )
 
     def test_duplicate_business_content_with_distinct_ids_is_retained_and_flagged(self) -> None:
@@ -791,9 +840,22 @@ class Phase2ReconciliationTests(unittest.TestCase):
         )
         self.assertEqual(completed.returncode, 0, completed.stderr)
         summary = json.loads(completed.stdout)
-        self.assertEqual(summary["status"], "READY_FOR_LIMITED_USE")
+        self.assertEqual(summary["status"], "READY_FOR_HUMAN_REVIEW")
         output = root / "reconciliation-output"
         self.assertTrue((output / "reconciliation-workbook.xlsx").is_file())
+        workflow_manifest = read_json(output / "workflow-manifest.json")
+        workbook_package = read_json(output / "workbook-package.json")
+        self.assertEqual(workflow_manifest["status"], workbook_package["status"])
+        self.assertEqual(workflow_manifest["skill_release_version"], "1.2.0")
+        self.assertNotIn("skill_release_version", workbook_package)
+        self.assertEqual(
+            workbook_package["run_manifest"]["tool_versions"][
+                "thien-skill-document-evidence"
+            ],
+            "1.2.0",
+        )
+        self.assertEqual(workflow_manifest["tool_version"], "1.0.0")
+        self.assertEqual(workbook_package["skill_version"], "1.0.0")
 
         validation = subprocess.run(
             [
@@ -843,6 +905,74 @@ class Phase2ReconciliationTests(unittest.TestCase):
             },
             before,
         )
+
+    def test_copied_candidate_reads_its_bundled_release_version(self) -> None:
+        temporary, root = copy_fixture()
+        self.addCleanup(temporary.cleanup)
+        candidate = root / "candidate-skill"
+        shutil.copytree(SKILL, candidate)
+        command = [
+            sys.executable,
+            "-B",
+            str(candidate / "scripts" / "prepare_reconciliation_workbook.py"),
+            "--root",
+            str(root),
+            "--profile-id",
+            "PR_PO",
+            "--input",
+            "fixture/pr.json",
+            "--input",
+            "fixture/po.json",
+            "--output-dir",
+            "candidate-output",
+        ]
+        environment = dict(os.environ)
+        environment["PYTHONDONTWRITEBYTECODE"] = "1"
+        completed = subprocess.run(
+            command,
+            cwd=root,
+            env=environment,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        release = (candidate / "VERSION").read_text(encoding="utf-8").strip()
+        manifest = read_json(root / "candidate-output" / "workflow-manifest.json")
+        package = read_json(root / "candidate-output" / "workbook-package.json")
+        self.assertEqual(release, "1.2.0")
+        self.assertEqual(manifest["skill_release_version"], release)
+        self.assertNotIn("skill_release_version", package)
+        self.assertEqual(
+            package["run_manifest"]["tool_versions"]["thien-skill-document-evidence"],
+            release,
+        )
+        self.assertEqual(manifest["status"], "READY_FOR_HUMAN_REVIEW")
+        self.assertEqual(package["status"], manifest["status"])
+        self.assertEqual(manifest["tool_version"], "1.0.0")
+        self.assertEqual(package["skill_version"], "1.0.0")
+
+    def test_bundled_release_version_loader_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            version_file = Path(temporary) / "VERSION"
+            with mock.patch.object(
+                WORKFLOW.RECONCILE,
+                "RELEASE_VERSION_FILE",
+                version_file,
+            ):
+                version_file.write_text("release-candidate\n", encoding="ascii")
+                with self.assertRaisesRegex(
+                    WORKFLOW.RECONCILE.ReconciliationError,
+                    "invalid bundled release version",
+                ):
+                    WORKFLOW.RECONCILE.load_skill_release_version()
+
+                version_file.write_bytes(b"1" * 257)
+                with self.assertRaisesRegex(
+                    WORKFLOW.RECONCILE.ReconciliationError,
+                    "256-byte safety limit",
+                ):
+                    WORKFLOW.RECONCILE.load_skill_release_version()
 
 
 if __name__ == "__main__":

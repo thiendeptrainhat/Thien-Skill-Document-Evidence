@@ -1,0 +1,170 @@
+{
+  "schema_version": "1.0.0",
+  "record_type": "QA_REMEDIATION_PHASE_2",
+  "recorded_at": "2026-08-31T23:20:00+07:00",
+  "baseline_release": "1.1.0",
+  "baseline_release_state": "FINAL_FROZEN",
+  "baseline_commit": "f4dd3446bc3b77511013958ee14aa0e7c402224d",
+  "phase": 2,
+  "phase_status": "COMPLETE",
+  "implementation_status": "SOURCE_REMEDIATED",
+  "overall_assessment": "READY_FOR_PHASE_3_INDEPENDENT_RETEST",
+  "readiness": "READY_FOR_HUMAN_REVIEW",
+  "scope": {
+    "mode": "LOCAL_OFFLINE_REMEDIATION_AND_VERIFICATION",
+    "source_modified": true,
+    "version_modified": false,
+    "repository_dist_modified": false,
+    "release_published": false,
+    "dependencies_installed": false,
+    "network_accessed": false,
+    "external_services_accessed": false,
+    "candidate_artifacts_location": "PRIVATE_TMP_ONLY",
+    "candidate_artifacts_retained": false,
+    "preexisting_changes_preserved": [
+      "HANDOFF.md"
+    ],
+    "repository_outputs": [
+      "PHASE2-REMEDIATION-v1.1.0.md",
+      "qa/phase2-1.1.0/verification.json"
+    ]
+  },
+  "findings": [
+    {
+      "id": "IQA-001",
+      "severity": "HIGH",
+      "disposition": "REMEDIATED_SOURCE_AND_CANDIDATE_VERIFIED",
+      "control": "atomic RAG overwrite preserves or restores previous output across destination races"
+    },
+    {
+      "id": "IQA-002",
+      "severity": "HIGH",
+      "disposition": "REMEDIATED_SOURCE_AND_CANDIDATE_VERIFIED",
+      "control": "bounded namespace-tolerant relationship XML parsing with fail-closed malformed and unsafe declarations"
+    },
+    {
+      "id": "IQA-003",
+      "severity": "HIGH",
+      "disposition": "REMEDIATED_SOURCE_AND_CANDIDATE_VERIFIED",
+      "control": "human-review ceiling plus deterministic BLOCKED roll-up for failure unknown status or missing required role"
+    },
+    {
+      "id": "IQA-004",
+      "severity": "HIGH",
+      "disposition": "REMEDIATED_SOURCE_AND_CANDIDATE_VERIFIED",
+      "control": "fresh bundled schema validation and exact comparison against supplied validation evidence"
+    },
+    {
+      "id": "IQA-005",
+      "severity": "MEDIUM",
+      "disposition": "REMEDIATED_SOURCE_AND_CANDIDATE_VERIFIED",
+      "control": "checksum and security metadata derive from one immutable captured snapshot"
+    },
+    {
+      "id": "IQA-006",
+      "severity": "MEDIUM",
+      "disposition": "REMEDIATED_SOURCE_AND_CANDIDATE_VERIFIED",
+      "control": "bundled release provenance in workflow manifest and extraction-package run_manifest.tool_versions while retaining the closed 1.0.0 wire contract"
+    },
+    {
+      "id": "IQA-007",
+      "severity": "MEDIUM",
+      "disposition": "REMEDIATED_SOURCE_STRUCTURAL_AND_VISUAL_VERIFIED",
+      "control": "column-specific widths wrapped styles and adaptive row height with representative 659-character visual retest"
+    },
+    {
+      "id": "IQA-008",
+      "severity": "LOW",
+      "disposition": "REMEDIATED_DOCUMENTATION_VERIFIED",
+      "control": "accurate distinction between current and retained historical distribution archives"
+    }
+  ],
+  "finding_counts": {
+    "remediated": 8,
+    "source_blockers_remaining": 0,
+    "release_closure_deferred_to_phase_3": 8
+  },
+  "execution": {
+    "full_unittest_suite": {
+      "status": "PASS_WITH_OPTIONAL_SKIP",
+      "tests": 162,
+      "passed": 161,
+      "skipped": 1,
+      "skip_reason": "plugin-creator quick validation unavailable because PyYAML is not installed"
+    },
+    "candidate_package_native_remediation_tests": {
+      "status": "PASS",
+      "passed": 44,
+      "total": 44
+    },
+    "candidate_build": {
+      "status": "PASS",
+      "exact_check": "PASS",
+      "generated_artifacts": 6,
+      "repository_promotion": "NOT_PERFORMED"
+    },
+    "candidate_checksums": {
+      "status": "PASS",
+      "passed": 5,
+      "total": 5
+    },
+    "candidate_zip_structure": {
+      "universal": "PASS",
+      "openai": "PASS",
+      "claude": "PASS"
+    },
+    "xlsx_visual_retest": {
+      "status": "PASS",
+      "representative_long_cell_characters": 659,
+      "wrap": true,
+      "adaptive_row_height": true,
+      "formula_error_matches": 0,
+      "extreme_value_limit": "Excel row height capped at 405 points; complete cell value remains stored"
+    },
+    "independent_retests": {
+      "canonical_source": "READY_NO_SOURCE_BLOCKER",
+      "repository_hygiene": "PASS_WITH_WARNINGS",
+      "release_approval": "NOT_REQUESTED"
+    },
+    "git_diff_check": "PASS"
+  },
+  "repository_hygiene": {
+    "status": "PASS_WITH_WARNINGS",
+    "confirmed_junk_or_orphans_remaining": 0,
+    "duplicate_groups": 7,
+    "duplicate_groups_allowlisted": 7,
+    "preserved_dist_versions": 3,
+    "retention_cap": 3,
+    "dist_bytes": 36206018,
+    "soft_line_warnings": [
+      "thien-skill-document-evidence/scripts/build_rag_package.py:2264",
+      "thien-skill-document-evidence/scripts/prepare_reconciliation_workbook.py:1961",
+      "thien-skill-document-evidence/scripts/reconcile_records.py:2145",
+      "thien-skill-document-evidence/scripts/render_canonical_artifacts.py:2308"
+    ],
+    "controls": [
+      "actual working-tree scan before build and exact check",
+      "fail-closed directory traversal including unreadable paths",
+      "linked-worktree root git metadata allowed while nested git metadata is rejected",
+      "secret cache coverage temporary and generated Office patterns rejected",
+      "repository dist file brand source-line retention and duplicate budgets",
+      "unmanaged dist artifacts rejected by build and check modes"
+    ]
+  },
+  "release_guard": {
+    "version": "1.1.0",
+    "dist_diff": false,
+    "frozen_release_contains_phase_2_changes": false,
+    "same_version_overwrite_allowed": false,
+    "version_and_promotion_decision": "DEFERRED_TO_PHASE_3"
+  },
+  "not_tested_or_not_closed": [
+    "live OpenAI or Claude installation",
+    "real OCR scans handwriting and full bank statements",
+    "live RAG ingestion embedding indexing and retrieval quality",
+    "broad native Office or LibreOffice fidelity",
+    "performance volume and resource exhaustion",
+    "64 behavioral catalog scenarios",
+    "independent release promotion approval"
+  ]
+}

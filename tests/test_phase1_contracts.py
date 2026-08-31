@@ -184,6 +184,18 @@ class Phase1ContractTests(unittest.TestCase):
         self.assertEqual(
             extraction["properties"]["schema_version"]["const"], "1.0.0"
         )
+        self.assertNotIn("skill_release_version", extraction["properties"])
+        extraction_validator = validator("extraction-package.schema.json")
+        legacy_package = load_json(ROOT / "tests" / "fixtures" / "workbook-package.json")
+        self.assertEqual(extraction_validator.validate(legacy_package), [])
+        release_aware_package = copy.deepcopy(legacy_package)
+        release_aware_package["run_manifest"]["tool_versions"][
+            "thien-skill-document-evidence"
+        ] = "1.2.0"
+        self.assertEqual(extraction_validator.validate(release_aware_package), [])
+        invalid_top_level_release = copy.deepcopy(release_aware_package)
+        invalid_top_level_release["skill_release_version"] = "1.2.0"
+        self.assertTrue(extraction_validator.validate(invalid_top_level_release))
         self.assertEqual(
             reconciliation["properties"]["schema_version"]["const"], "1.0.0"
         )
@@ -207,7 +219,7 @@ class Phase1ContractTests(unittest.TestCase):
 
     def test_phase1_behavioral_catalog_is_complete_and_specification_only(self) -> None:
         catalog = load_json(ROOT / "tests" / "behavioral_cases.json")
-        self.assertEqual(catalog["skill_version"], "1.1.0")
+        self.assertEqual(catalog["skill_version"], "1.2.0")
         self.assertEqual(catalog["catalog_status"], "SPECIFICATION_ONLY")
         cases = catalog["cases"]
         self.assertEqual(

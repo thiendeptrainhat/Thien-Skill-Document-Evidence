@@ -177,7 +177,7 @@ Config versioned và approved:
 
 `matching_profile_id` có thể nằm trong task request/profile registry, còn config v1.0 vẫn giữ contract hiện hữu. Không thêm field vào config cũ nếu schema không cho phép; liên kết hai object bằng task/run metadata và hashes.
 
-`schema_version`/`config_version` và reconciliation script/tool compatibility `1.0.0` không phải RC release label và không được relabel. Ghi release provenance bằng `skill_id`/`skill_release_version` trong companion task/artifact objects hoặc release manifest liên kết; giữ config/tool version riêng để tái thực hiện logic v1.
+`schema_version`/`config_version`, extraction-package `skill_version` và reconciliation script/tool compatibility `1.0.0` không phải release label và không được relabel. Workflow manifest ghi `skill_id`/`skill_release_version` lấy từ bundled `VERSION`; extraction package giữ nguyên closed wire contract v1.0.0 và ghi release trong map mở sẵn `run_manifest.tool_versions["thien-skill-document-evidence"]`. Cách này để validator v1.0.0 cũ vẫn chấp nhận output mới. Giữ config/tool version riêng để tái thực hiện logic v1.
 
 Mỗi numeric tolerance là decimal string với unit/basis/owner/approval reference. Currency conversion mặc định disabled; rate/source/date chưa được cấp thì không convert.
 
@@ -185,7 +185,7 @@ Mỗi numeric tolerance là decimal string với unit/basis/owner/approval refer
 
 `scripts/prepare_reconciliation_workbook.py` nhận requested structured JSON/canonical extraction packages trong authorized root, inventory/cô lập lỗi từng file, classify theo named/custom profile, materialize config chỉ từ approved policy input, gọi `scripts/reconcile_records.py` và sinh role-aware workbook/package. Raw PDF/ảnh/attachment cần upstream inventory/classification/extraction; helper không tự OCR, gọi model hoặc mạng.
 
-Output directory được stage cạnh đích rồi publish no-overwrite bằng rename. Nó gồm `matching-profile.json`, `records.json`, `reconciliation-config.json`, `reconciliation-result.json`, `workbook-package.json`, validation report, `reconciliation-workbook.xlsx` và `workflow-manifest.json`. Chỉ tạo role sheet có dữ liệu; luôn giữ `MATCH_RESULTS`, `DISCREPANCIES`, `HUMAN_REVIEW`, `SOURCE_INDEX` hoặc `RUN_LOG` khi có ý nghĩa theo package. `READY_FOR_LIMITED_USE` chỉ hợp lệ khi không có preparation issue và deterministic reconciliation đạt pass state; mọi non-pass chuyển human review, không tự phê duyệt nghiệp vụ.
+Output directory được stage cạnh đích rồi publish no-overwrite bằng rename. Nó gồm `matching-profile.json`, `records.json`, `reconciliation-config.json`, `reconciliation-result.json`, `workbook-package.json`, validation report, `reconciliation-workbook.xlsx` và `workflow-manifest.json`. Chỉ tạo role sheet có dữ liệu; luôn giữ `MATCH_RESULTS`, `DISCREPANCIES`, `HUMAN_REVIEW`, `SOURCE_INDEX` hoặc `RUN_LOG` khi có ý nghĩa theo package. Workflow manifest và workbook package do helper tự động sinh đều dừng ở `READY_FOR_HUMAN_REVIEW` khi reconciliation còn đủ điều kiện để review; missing required role, trạng thái reconciliation lỗi/bị chặn hoặc trạng thái không nhận diện được phải roll up thành `BLOCKED`. `READY_FOR_LIMITED_USE` chỉ có thể đến từ quyết định human-authorized được ghi nhận ngoài helper. Quality/reconciliation status và preparation issues vẫn được ghi riêng, không tự phê duyệt nghiệp vụ.
 
 ## Output và QA
 

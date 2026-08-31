@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -267,6 +268,58 @@ class WorkbookBuilderSafetyTests(unittest.TestCase):
                 "preview-race-sentinel",
             )
             self.assertFalse(output.exists())
+
+    def test_release_provenance_uses_existing_run_manifest_map(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_temporary:
+            temporary = Path(raw_temporary)
+            node_modules = self._install_fake_artifact_tool(temporary)
+            package_data = json.loads(PACKAGE_FIXTURE.read_text(encoding="utf-8"))
+            package_data["run_manifest"]["tool_versions"][
+                "thien-skill-document-evidence"
+            ] = "1.2.0"
+            package = temporary / "release-aware-package.json"
+            package.write_text(
+                json.dumps(package_data, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            report = temporary / "release-aware-package.validation.json"
+            validation = subprocess.run(
+                [
+                    sys.executable,
+                    "-B",
+                    str(ROOT / "thien-skill-document-evidence/scripts/validate_records.py"),
+                    package.name,
+                    "--root",
+                    str(temporary),
+                    "--schema-root",
+                    str(ROOT / "thien-skill-document-evidence/schemas"),
+                    "--schema",
+                    "common/extraction-package.schema.json",
+                    "--output",
+                    report.name,
+                ],
+                cwd=temporary,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(validation.returncode, 0, validation.stdout + validation.stderr)
+
+            output = temporary / "result.xlsx"
+            result = self._run(
+                [
+                    "--package",
+                    str(package),
+                    "--schema-validation-report",
+                    str(report),
+                    "--output",
+                    str(output),
+                ],
+                node_modules=node_modules,
+                extra_environment={"DOCUMENT_EVIDENCE_PYTHON": sys.executable},
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertEqual(output.read_text(encoding="utf-8"), "fake-xlsx")
 
 
 if __name__ == "__main__":

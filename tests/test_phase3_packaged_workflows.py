@@ -64,6 +64,8 @@ DISTRIBUTION_FILES = {
     "ACCEPTANCE-REPORT-v1.1.0-rc.2.md",
     "LEGAL-REVIEW-v1.1.0-rc.2.md",
 }
+ARCHIVE_TIMESTAMP = (2026, 8, 27, 0, 0, 0)
+WORKFLOW_READINESS_STATUS = "READY_FOR_LIMITED_USE"
 ROLE_SHEETS = {
     "PURCHASE_REQUISITIONS", "PURCHASE_ORDERS", "GOODS_RECEIPTS", "INVOICES",
     "PAYMENT_REQUESTS", "BANK_TRANSACTIONS", "OUTBOUND_INVOICES", "GOODS_ISSUES",
@@ -143,8 +145,8 @@ def safe_archive_payload(path: Path, expected_sha256: str) -> dict[str, bytes]:
             expected_mode = 0o755 if "scripts" in parts else 0o644
             if stat.S_IMODE(mode) != expected_mode:
                 raise ValueError(f"unexpected archive permissions: {name}")
-            if member.date_time != (2026, 8, 27, 0, 0, 0):
-                raise ValueError(f"unexpected RC2 archive timestamp: {name}")
+            if member.date_time != ARCHIVE_TIMESTAMP:
+                raise ValueError(f"unexpected frozen archive timestamp: {name}")
             total_size += member.file_size
             if member.file_size > 16 * 1024 * 1024 or total_size > 64 * 1024 * 1024:
                 raise ValueError("archive decompressed size exceeds acceptance limit")
@@ -831,7 +833,7 @@ class Phase3PackagedWorkflowTests(unittest.TestCase):
             with self.subTest(platform=platform, profile=profile):
                 root = self.workspace(platform)
                 output, manifest, result, package, records, _ = self.workflow(platform, root, profile, documents)
-                self.assertEqual(manifest["status"], "READY_FOR_LIMITED_USE")
+                self.assertEqual(manifest["status"], WORKFLOW_READINESS_STATUS)
                 self.assertEqual(result["status"], "PASS")
                 self.assertEqual({link["rule_id"] for link in result["links"]}, rule_ids)
                 self.assertEqual(len(result["links"]), len(rule_ids))
@@ -895,7 +897,7 @@ class Phase3PackagedWorkflowTests(unittest.TestCase):
                     self.assertTrue(affected)
                     self.assertEqual({link["status"] for link in affected}, {"HUMAN_REVIEW_REQUIRED"})
                 else:
-                    self.assertEqual(manifest["status"], "READY_FOR_LIMITED_USE")
+                    self.assertEqual(manifest["status"], WORKFLOW_READINESS_STATUS)
                     self.assertEqual(result["status"], "PASS_WITH_WARNINGS")
                     self.assertEqual(Counter((link["rule_id"], link["status"]) for link in result["links"]), {
                         ("po-to-grn", "PARTIAL_MATCH"): 2,
@@ -943,7 +945,7 @@ class Phase3PackagedWorkflowTests(unittest.TestCase):
                 path = root / f"{name}.zip"
                 with zipfile.ZipFile(path, "w") as archive:
                     for member_name, mode in members:
-                        info = zipfile.ZipInfo(member_name, (2026, 8, 27, 0, 0, 0))
+                        info = zipfile.ZipInfo(member_name, ARCHIVE_TIMESTAMP)
                         info.create_system = 3
                         info.external_attr = mode << 16
                         archive.writestr(info, b"synthetic unsafe-archive fixture")

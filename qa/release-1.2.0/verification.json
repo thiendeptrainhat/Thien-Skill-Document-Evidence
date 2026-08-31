@@ -1,0 +1,211 @@
+{
+  "schema_version": "1.0.0",
+  "record_type": "PHASE3_FINAL_INDEPENDENT_QA_AND_LOCAL_PROMOTION",
+  "recorded_on": "2026-09-01",
+  "skill_id": "thien-skill-document-evidence",
+  "version": "1.2.0",
+  "release_status": "Final",
+  "qa_status": "Testing",
+  "decision": "GO_LOCAL_PROMOTION",
+  "repository_state": "LOCAL_UNCOMMITTED_WORKING_TREE",
+  "baseline_commit": "f4dd3446bc3b77511013958ee14aa0e7c402224d",
+  "external_publication": "NOT_PERFORMED",
+  "version_decision": {
+    "level": "MINOR",
+    "selected": "1.2.0",
+    "rejected": "1.1.1",
+    "reasons": [
+      "Generic workbook package export now requires a trusted local Python 3 runtime for fresh validation.",
+      "Phase 3 found that the provisional top-level extraction-package provenance field would be rejected by older strict v1.0.0 validators.",
+      "The compatibility-safe correction retains the closed extraction wire contract at 1.0.0 and records release provenance in the existing open run_manifest.tool_versions map."
+    ]
+  },
+  "independent_review": {
+    "relationship": "AUTOMATED_REVIEW_BRANCHES; HUMAN_INDEPENDENCE_UNVERIFIED",
+    "branches": [
+      {
+        "scope": "source and adversarial finding reperform",
+        "initial_disposition": "GO_FOR_NEW_VERSION"
+      },
+      {
+        "scope": "SemVer, schema compatibility, retention and release governance",
+        "initial_disposition": "NO_GO_UNTIL_WIRE_COMPATIBILITY_AND_VERSION_STRATEGY_FIXED"
+      },
+      {
+        "scope": "candidate packaging, frozen-oracle separation and promotion gates",
+        "initial_disposition": "NO_GO_UNTIL_VERSIONED_CANDIDATE_AND_PACKAGE_NATIVE_REPERFORM"
+      }
+    ],
+    "adjudication": "All identified release blockers were remediated and reverified before the final GO decision."
+  },
+  "compatibility": {
+    "extraction_schema_version": "1.0.0",
+    "extraction_package_version": "1.0.0",
+    "extraction_skill_version": "1.0.0",
+    "reconciliation_tool_version": "1.0.0",
+    "top_level_skill_release_version_allowed": false,
+    "release_provenance_path": "run_manifest.tool_versions.thien-skill-document-evidence",
+    "companion_workflow_release_provenance": "skill_release_version"
+  },
+  "phase1_findings": {
+    "total": 8,
+    "reperformed_pass": 8,
+    "open_high_or_critical": 0,
+    "ids": [
+      "IQA-001",
+      "IQA-002",
+      "IQA-003",
+      "IQA-004",
+      "IQA-005",
+      "IQA-006",
+      "IQA-007",
+      "IQA-008"
+    ]
+  },
+  "execution": {
+    "full_regression": {
+      "status": "PASS_WITH_OPTIONAL_SKIP",
+      "tests": 188,
+      "passed": 187,
+      "skipped": 1,
+      "skip_reason": "skill-creator quick validation is unavailable because PyYAML is not installed; no dependency was installed"
+    },
+    "current_package_native": {
+      "status": "PASS",
+      "tests": 26,
+      "passed": 26,
+      "platforms": [
+        "openai",
+        "claude",
+        "universal"
+      ],
+      "reconciliation_profiles_reperformed": 9,
+      "readiness_ceiling": "READY_FOR_HUMAN_REVIEW",
+      "missing_required_role": "BLOCKED"
+    },
+    "frozen_historical_package_native": {
+      "status": "PASS",
+      "tests": 46,
+      "passed": 46,
+      "releases": [
+        "1.1.0-rc.2",
+        "1.1.0"
+      ]
+    },
+    "build": {
+      "status": "PASS",
+      "generated_outputs": 6,
+      "second_exact_check": "PASS",
+      "checksum_entries": 5,
+      "checksum_entries_passed": 5,
+      "zip_crc_layout_permissions": "PASS",
+      "portable_core_parity": "PASS",
+      "core_file_count": 87,
+      "core_sha256": "6b187c90092723c611a186bb14fd3fd5ab47d3bb5aec78dcc78ea56619d499d5",
+      "canonical_file_count": 88,
+      "canonical_sha256": "8242c3227527c357660395f7de5280d1a08b98fb283d4aeffec0a7155fef1523"
+    },
+    "repository_hygiene": {
+      "status": "PASS_WITH_SOFT_WARNINGS",
+      "confirmed_junk_or_orphans": 0,
+      "unmanaged_dist_artifacts": 0,
+      "unallowlisted_duplicate_groups": 0,
+      "soft_line_warnings": [
+        "thien-skill-document-evidence/scripts/build_rag_package.py:2264",
+        "thien-skill-document-evidence/scripts/prepare_reconciliation_workbook.py:1961",
+        "thien-skill-document-evidence/scripts/reconcile_records.py:2147",
+        "thien-skill-document-evidence/scripts/render_canonical_artifacts.py:2308"
+      ]
+    },
+    "git_diff_check": "PASS"
+  },
+  "artifacts": [
+    {
+      "path": "dist/PARITY-v1.2.0.json",
+      "size_bytes": 589,
+      "sha256": "3e9062661cdddad43be26efc528844fc89a1e3063f5b6f78b7c7432240c4608c"
+    },
+    {
+      "path": "dist/SHA256SUMS-v1.2.0.txt",
+      "size_bytes": 549,
+      "role": "checksum_inventory"
+    },
+    {
+      "path": "dist/release-manifest-v1.2.0.json",
+      "size_bytes": 1751,
+      "sha256": "6ddc9ab1175292c4bfab0be6a8f161f5bf5bf68aa7506b988beed9aa21d5356f"
+    },
+    {
+      "path": "dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.2.0.zip",
+      "size_bytes": 3823640,
+      "file_count": 100,
+      "sha256": "7ec6d8bca0963d62dab14e10fd89a973023fe7e19678272f79839e0418bcb3ad"
+    },
+    {
+      "path": "dist/claude/Thien-Skill-Document-Evidence-Claude-v1.2.0.zip",
+      "size_bytes": 2721365,
+      "file_count": 97,
+      "sha256": "a1ce64711304abf4238428ab9ff1afbda6c0f1a06ddff53b034274d5e540cfe6"
+    },
+    {
+      "path": "dist/universal/Thien-Skill-Document-Evidence-Universal-v1.2.0.zip",
+      "size_bytes": 2684079,
+      "file_count": 91,
+      "sha256": "d544effcbc375ac22ccaeee6559f950790536582a9cf8cee4ce2f708c4552088"
+    }
+  ],
+  "behavioral_catalog": {
+    "total": 64,
+    "executed_pass": 8,
+    "partial": 34,
+    "not_executed": 22,
+    "claim": "PARTIAL_BEHAVIORAL_COVERAGE_ONLY",
+    "evidence": "qa/phase3-1.2.0/behavioral-disposition.json"
+  },
+  "visual_qa": {
+    "status": "PASS",
+    "sheets_rendered": 1,
+    "sheets_total": 1,
+    "representative_long_cell_characters": 659,
+    "formula_error_matches": 0,
+    "evidence": "qa/release-1.2.0/visual-verification.json"
+  },
+  "retention": {
+    "preserved_historical_versions": [
+      "1.0.0",
+      "1.1.0-rc.2",
+      "1.1.0"
+    ],
+    "retired_from_dist": "1.1.0-rc.1",
+    "retired_files": 6,
+    "retired_bytes": 8926278,
+    "recovery_commit": "f4dd3446bc3b77511013958ee14aa0e7c402224d",
+    "evidence": "qa/release-1.2.0/retention-retirement.json"
+  },
+  "legal_release_control": {
+    "master_license_sha256": "ced33214d371fabe382d3ca303042af7219ad96fb98acdd1b858d0d89478d4b5",
+    "master_license_changed": false,
+    "root_canonical_legal_pairs_byte_identical": true,
+    "legal_review_refreshed": false,
+    "new_legal_opinion": false
+  },
+  "residual_nonclaims": [
+    "22 behavioral scenarios remain NOT_EXECUTED and 34 are only PARTIAL",
+    "live OpenAI, ChatGPT, Codex or Claude installation",
+    "real OCR scans, handwriting and full bank-statement extraction accuracy",
+    "live RAG ingestion, embedding, indexing or retrieval quality",
+    "broad native Office or LibreOffice fidelity",
+    "performance, scale and resource-exhaustion behavior",
+    "production approval, platform certification, legal opinion or business approval"
+  ],
+  "actions_not_performed": [
+    "dependency installation",
+    "network or external service access",
+    "commit",
+    "tag",
+    "push",
+    "publish",
+    "marketplace submission",
+    "live deployment"
+  ]
+}

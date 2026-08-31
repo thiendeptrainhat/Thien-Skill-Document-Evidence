@@ -26,10 +26,19 @@ import unicodedata
 
 TOOL_NAME = "thien-record-reconciler"
 TOOL_VERSION = "1.0.0"
+SKILL_ID = "thien-skill-document-evidence"
+SCRIPT_ROOT = Path(__file__).resolve().parent
+SKILL_ROOT = SCRIPT_ROOT.parent
+RELEASE_VERSION_FILE = SKILL_ROOT / "VERSION"
 MISSING = object()
 DECIMAL_PATTERN = re.compile(r"^[+-]?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?$")
 IDENTIFIER_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]*$")
 FIELD_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_.:-]*$")
+SEMVER_PATTERN = re.compile(
+    r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)"
+    r"(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?"
+    r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$"
+)
 MAX_DECIMAL_CHARACTERS = 10_000
 
 COMPARATORS = {
@@ -218,7 +227,12 @@ def resolve_output_file(root: Path, raw_path: str | Path) -> Path:
     return lexical
 
 
-def read_regular_nofollow(path: Path, *, label: str) -> bytes:
+def read_regular_nofollow(
+    path: Path,
+    *,
+    label: str,
+    max_bytes: int | None = None,
+) -> bytes:
     flags = os.O_RDONLY
     if hasattr(os, "O_NOFOLLOW"):
         flags |= os.O_NOFOLLOW
@@ -230,12 +244,35 @@ def read_regular_nofollow(path: Path, *, label: str) -> bytes:
         handle = os.fdopen(descriptor, "rb")
         descriptor = -1
         with handle:
-            return handle.read()
+            data = handle.read() if max_bytes is None else handle.read(max_bytes + 1)
+        if max_bytes is not None and len(data) > max_bytes:
+            raise ReconciliationError(f"{label} exceeds {max_bytes}-byte safety limit")
+        return data
     except OSError as exc:
         raise ReconciliationError(f"cannot safely read {label}: {exc}") from exc
     finally:
         if descriptor >= 0:
             os.close(descriptor)
+
+
+def load_skill_release_version() -> str:
+    data = read_regular_nofollow(
+        RELEASE_VERSION_FILE,
+        label="bundled release version",
+        max_bytes=256,
+    )
+    try:
+        version = data.decode("ascii").strip()
+    except UnicodeDecodeError as exc:
+        raise ReconciliationError(
+            "bundled release version must be an ASCII semantic version"
+        ) from exc
+    if SEMVER_PATTERN.fullmatch(version) is None:
+        raise ReconciliationError(f"invalid bundled release version: {version!r}")
+    return version
+
+
+SKILL_RELEASE_VERSION = load_skill_release_version()
 
 
 def load_json_object(path: Path, *, label: str) -> tuple[dict[str, object], bytes]:
@@ -1897,22 +1934,17 @@ def canonical_package_view(result: Mapping[str, object]) -> dict[str, object]:
         execution_status = "SUCCEEDED"
     else:
         execution_status = "SUCCEEDED_WITH_WARNINGS"
-    readiness = (
-        "READY_FOR_HUMAN_REVIEW"
-        if status == "CONDITIONAL"
-        else "READY_FOR_LIMITED_USE"
-    )
     return {
         "schema_version": "1.0.0",
         "package_id": result["package_id"],
         "package_version": "1.0.0",
-        "skill_id": "thien-skill-document-evidence",
+        "skill_id": SKILL_ID,
         "skill_version": TOOL_VERSION,
         "run_id": manifest["run_id"],
         "engagement_id": None,
         "case_id": None,
         "route": "LINK_RECONCILE",
-        "status": readiness,
+        "status": "READY_FOR_HUMAN_REVIEW",
         "run_manifest": {
             "started_at": "UNKNOWN",
             "completed_at": "UNKNOWN",
@@ -1923,7 +1955,10 @@ def canonical_package_view(result: Mapping[str, object]) -> dict[str, object]:
                 "reconciliation_config": "1.0.0",
                 "reconciliation_result": "1.0.0",
             },
-            "tool_versions": {TOOL_NAME: TOOL_VERSION},
+            "tool_versions": {
+                TOOL_NAME: TOOL_VERSION,
+                SKILL_ID: SKILL_RELEASE_VERSION,
+            },
             "source_content_ids": [f"sha256:{manifest['input_sha256']}"],
             "config_checksums": {
                 "reconciliation_config": manifest["config_sha256"]

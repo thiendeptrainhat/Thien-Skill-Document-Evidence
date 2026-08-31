@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 from datetime import date
 import hashlib
+import importlib.util
 import io
 import json
 import os
@@ -52,6 +53,21 @@ SECRET_PATTERNS = {
 
 class PackagingError(ValueError):
     """Raised when canonical input or a generated release is unsafe or invalid."""
+
+
+def _check_repository_hygiene(project_root: Path) -> dict[str, object]:
+    """Load the adjacent gate without requiring build/ to be a Python package."""
+
+    module_path = Path(__file__).with_name("check_repository_hygiene.py")
+    spec = importlib.util.spec_from_file_location("document_evidence_repository_hygiene", module_path)
+    if spec is None or spec.loader is None:
+        raise PackagingError(f"cannot load repository hygiene gate: {module_path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    try:
+        return module.check_repository(project_root)
+    except (OSError, module.HygieneError) as exc:
+        raise PackagingError(str(exc)) from exc
 
 
 def sha256_bytes(data: bytes) -> str:
@@ -941,10 +957,19 @@ def build_release(project_root: Path = ROOT, *, check: bool = False) -> dict[str
     """Render current artifacts while preserving configured historical releases."""
 
     project_root = Path(project_root)
+    _check_repository_hygiene(project_root)
     config = load_config(project_root)
     outputs = render_release(project_root)
     dist = project_root / "dist"
     preserved = _validate_preserved_dist(dist, config) if dist.is_dir() else set()
+    existing = {
+        path.relative_to(dist).as_posix()
+        for path in dist.rglob("*")
+        if (path.is_file() or path.is_symlink())
+    } if dist.is_dir() else set()
+    unexpected = sorted(existing - set(outputs) - preserved)
+    if unexpected:
+        raise PackagingError("release contains unexpected " + ", ".join(unexpected))
     if check:
         mismatches: list[str] = []
         for relative, expected in outputs.items():
@@ -953,17 +978,6 @@ def build_release(project_root: Path = ROOT, *, check: bool = False) -> dict[str
                 mismatches.append(f"missing {relative}")
             elif path.read_bytes() != expected:
                 mismatches.append(f"content mismatch {relative}")
-        existing = {
-            path.relative_to(dist).as_posix()
-            for path in dist.rglob("*")
-            if (path.is_file() or path.is_symlink())
-            # Finder metadata is not a release artifact. Do not ignore a
-            # symlink with that name or any other unexpected file.
-            and not (path.name == ".DS_Store" and not path.is_symlink())
-        } if dist.is_dir() else set()
-        unexpected = sorted(existing - set(outputs) - preserved)
-        if unexpected:
-            mismatches.append("unexpected " + ", ".join(unexpected))
         if mismatches:
             raise PackagingError("release check failed: " + "; ".join(mismatches))
         return outputs
