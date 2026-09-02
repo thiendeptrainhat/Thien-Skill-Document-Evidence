@@ -1,0 +1,134 @@
+{
+  "schema_version": "1.0.0",
+  "release": {
+    "version": "1.2.1",
+    "display_name": "Thiện's Skill — Document Intelligence & Reconciliation",
+    "status": "Final",
+    "qa_status": "Testing complete",
+    "decision": "GO_LOCAL_PATCH_READY_FOR_COMMIT",
+    "decision_date": "2026-09-02"
+  },
+  "baseline": {
+    "version": "1.2.0",
+    "git_tag": "v1.2.0",
+    "git_commit": "0ecc8619d2c0b38945fbac0e33f61a71b7230d80"
+  },
+  "scope": {
+    "change": "Display identity, patch-version metadata and version-directory distribution layout",
+    "technical_id": "thien-skill-document-evidence",
+    "technical_id_changed": false,
+    "artifact_basename": "Thien-Skill-Document-Evidence",
+    "artifact_basename_changed": false,
+    "dist_layout": "version-directory-v1",
+    "dist_layout_changed": true,
+    "contract_versions_changed": false,
+    "contract_version": "1.0.0",
+    "runtime_behavior_changed": false,
+    "logo_or_icon_bytes_changed": false
+  },
+  "validation": {
+    "full_regression": {
+      "tests": 170,
+      "passed": 169,
+      "optional_skips": 1,
+      "result": "PASS",
+      "skip_reason": "The optional skill quick validator could not run because PyYAML is not installed; no dependency was installed."
+    },
+    "candidate_package_native": {
+      "tests": 26,
+      "passed": 26,
+      "result": "PASS"
+    },
+    "combined_release_oracles": {
+      "tests": 54,
+      "passed": 54,
+      "covered_versions": [
+        "1.1.0",
+        "1.2.0",
+        "1.2.1"
+      ],
+      "result": "PASS"
+    },
+    "deterministic_exact_build": "PASS",
+    "release_directories_verified": 4,
+    "checksum_entries_verified": 20,
+    "current_release_checksum_entries_verified": 5,
+    "checksum_result": "PASS",
+    "dist_layout_result": "PASS",
+    "repository_hygiene": "PASS",
+    "git_diff_check": "PASS",
+    "canonical_file_count": 88,
+    "canonical_sha256": "b30359dac53c239e3d710a16125ea6e9ee816ee1fd8878a6ad97539f38090167",
+    "portable_core_file_count": 87,
+    "portable_core_sha256": "215133a1fda548c0b7574137a14bb6ebe5f60bcace46bf1c5f3bf8ebfee764dc"
+  },
+  "artifacts": [
+    {
+      "path": "dist/1.2.1/Thien-Skill-Document-Evidence-OpenAI-v1.2.1.zip",
+      "size_bytes": 3823350,
+      "file_count": 100,
+      "sha256": "5dc2dd816794a488c64622a64643ce26e3841dd501717602ff8f645a64499cbc"
+    },
+    {
+      "path": "dist/1.2.1/Thien-Skill-Document-Evidence-Claude-v1.2.1.zip",
+      "size_bytes": 2721082,
+      "file_count": 97,
+      "sha256": "9038ed6ce521ac5a7ff54575ed62fd996a63f80b7c4fedfb78af596968c034c3"
+    },
+    {
+      "path": "dist/1.2.1/Thien-Skill-Document-Evidence-Universal-v1.2.1.zip",
+      "size_bytes": 2683790,
+      "file_count": 91,
+      "sha256": "93884daaa54ff0504f883303afd3564c50a1d7540a5ed3b56f66ca6c187fdc43"
+    },
+    {
+      "path": "dist/1.2.1/PARITY.json",
+      "size_bytes": 589,
+      "sha256": "59ee5309428ae12eb6a55a2e5f0a69fe4f6e59e64a5fb19c84575d0620a4f2c0"
+    },
+    {
+      "path": "dist/1.2.1/release-manifest.json",
+      "size_bytes": 1752,
+      "sha256": "be43c54308915c68875b5f1236137676566d758376ab3ebf76277c41dc113a60"
+    },
+    {
+      "path": "dist/1.2.1/SHA256SUMS",
+      "size_bytes": 511,
+      "sha256": "f1e2c4f4f0dfeefce73362b2dc1b70a0f82cfb6298ec0bde25dedad652bda57b",
+      "verification": "5/5 PASS"
+    }
+  ],
+  "unchanged_assets": {
+    "logo_large_sha256": "020a47a3f1cb04108044a789046b63416ce892c39325597740889579fa56d69e",
+    "icon_128_sha256": "58695db646890241066245437d567095b50928899017764ba23a74509e2ee12"
+  },
+  "legal_integrity": {
+    "master_license_sha256": "ced332145c9d6e9fe84864f0061c72565115538751d213b04479807f4cd4d4b5",
+    "license_application_pair_sha256": "f37a8b3d5653ac6b67ac91fd6f627e99a065a94fe56fbc554853df2595b13b14",
+    "notice_pair_sha256": "98742bf06fed040098448156889ca9ca296c43fdf1e198404b7aa6bdde9f3f1d",
+    "third_party_notices_pair_sha256": "18d95164d2d7a8b3613cb2ca0d3033137a3a34fd85cd0ef998c704c9da8831a0",
+    "root_and_canonical_pairs_byte_identical": true
+  },
+  "retention": {
+    "preserved_historical_versions": [
+      "1.0.0",
+      "1.1.0",
+      "1.2.0"
+    ],
+    "retired_release": "1.1.0-rc.2",
+    "retired_files": 6,
+    "retired_bytes": 9225461,
+    "evidence": "qa/release-1.2.1/retention-retirement.json",
+    "dist_layout_migration_evidence": "qa/release-1.2.1/dist-layout-migration.json",
+    "recoverable_from": "v1.2.0"
+  },
+  "actions_not_performed": [
+    "git stage",
+    "git commit",
+    "git push",
+    "create tag v1.2.1",
+    "publish",
+    "install",
+    "access external services"
+  ]
+}

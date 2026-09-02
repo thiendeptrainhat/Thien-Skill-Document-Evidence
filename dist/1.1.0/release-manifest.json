@@ -3,39 +3,40 @@
     {
       "file_count": 100,
       "format": "native-openai-plugin",
-      "path": "openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0-rc.2.zip",
+      "path": "Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip",
       "platform": "openai",
       "root_layout": "thien-skill-document-evidence/",
-      "sha256": "bc4e26afeace3633fd8f8ab7def510d532cc700dd63ed3dbbf4f8bdcb7a1a514",
-      "size_bytes": 3821458
+      "sha256": "6d9033446f2b3e53d208dba11fc09f6ba90892fc4f3ce01a9b5155def23bf319",
+      "size_bytes": 3818419
     },
     {
       "file_count": 97,
       "format": "native-claude-plugin",
-      "path": "claude/Thien-Skill-Document-Evidence-Claude-v1.1.0-rc.2.zip",
+      "path": "Thien-Skill-Document-Evidence-Claude-v1.1.0.zip",
       "platform": "claude",
       "root_layout": "thien-skill-document-evidence/",
-      "sha256": "ff2e3d17ebb24ca193d35fa49c10b655dd26335eabcf7f1c9414f914d0bfb748",
-      "size_bytes": 2719185
+      "sha256": "eba9cba922f72bc4205b046d0ced096874ab429268fef2c0cb45e4e863c13261",
+      "size_bytes": 2716147
     },
     {
       "file_count": 91,
       "format": "universal-agent-skill",
-      "path": "universal/Thien-Skill-Document-Evidence-Universal-v1.1.0-rc.2.zip",
+      "path": "Thien-Skill-Document-Evidence-Universal-v1.1.0.zip",
       "platform": "universal",
       "root_layout": "thien-skill-document-evidence/",
-      "sha256": "6d13e21fe7fd177da0da96a06cfb9afedbf2fb848eebf546015c3da0e9b3bc7d",
-      "size_bytes": 2681864
+      "sha256": "9af2c542a487484d0f26b090b9061f80836d386eb885ef1eb4946d95619b9aaa",
+      "size_bytes": 2678854
     }
   ],
+  "artifact_directory": "dist/1.1.0",
   "canonical_file_count": 88,
-  "canonical_sha256": "151dc06010f22c34d91a5cb7c228c124ab6ff4db2be8e694da522a6d40a2fb60",
+  "canonical_sha256": "0dcf6c12e4e880fa54f3b8a67d99e6048796ac472d8eb2fece2274cd70fde88b",
   "canonical_source": "thien-skill-document-evidence",
   "display_name": "Thien Skill — Document Intelligence, Evidence & Reconciliation",
   "license": "Tran Ngoc Thien's Skills Commercial Source-Available License 2.0",
   "parity": {
-    "core_sha256": "226878464dd7c2a39a173511b342f67c2f62babc5047f992d88fe52bd2eed580",
-    "path": "PARITY-v1.1.0-rc.2.json",
+    "core_sha256": "7c67b20eba5c884289449f363b6c2b49ca0f05422e516a7c2cec20ce792c7c9c",
+    "path": "PARITY.json",
     "status": "PASS"
   },
   "release_date": "2026-08-27",
@@ -43,5 +44,5 @@
   "schema_version": 1,
   "skill_id": "thien-skill-document-evidence",
   "status": "Testing",
-  "version": "1.1.0-rc.2"
+  "version": "1.1.0"
 }

@@ -846,13 +846,13 @@ class Phase2ReconciliationTests(unittest.TestCase):
         workflow_manifest = read_json(output / "workflow-manifest.json")
         workbook_package = read_json(output / "workbook-package.json")
         self.assertEqual(workflow_manifest["status"], workbook_package["status"])
-        self.assertEqual(workflow_manifest["skill_release_version"], "1.2.0")
+        self.assertEqual(workflow_manifest["skill_release_version"], "1.2.1")
         self.assertNotIn("skill_release_version", workbook_package)
         self.assertEqual(
             workbook_package["run_manifest"]["tool_versions"][
                 "thien-skill-document-evidence"
             ],
-            "1.2.0",
+            "1.2.1",
         )
         self.assertEqual(workflow_manifest["tool_version"], "1.0.0")
         self.assertEqual(workbook_package["skill_version"], "1.0.0")
@@ -940,7 +940,7 @@ class Phase2ReconciliationTests(unittest.TestCase):
         release = (candidate / "VERSION").read_text(encoding="utf-8").strip()
         manifest = read_json(root / "candidate-output" / "workflow-manifest.json")
         package = read_json(root / "candidate-output" / "workbook-package.json")
-        self.assertEqual(release, "1.2.0")
+        self.assertEqual(release, "1.2.1")
         self.assertEqual(manifest["skill_release_version"], release)
         self.assertNotIn("skill_release_version", package)
         self.assertEqual(

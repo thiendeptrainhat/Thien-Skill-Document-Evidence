@@ -1,11 +1,12 @@
 {
   "schema_version": 1,
   "skill_id": "thien-skill-document-evidence",
-  "display_name": "Thien Skill — Document Intelligence, Evidence & Reconciliation",
+  "display_name": "Thiện's Skill — Document Intelligence & Reconciliation",
   "artifact_basename": "Thien-Skill-Document-Evidence",
-  "version": "1.2.0",
+  "dist_layout": "version-directory-v1",
+  "version": "1.2.1",
   "status": "Testing",
-  "release_date": "2026-09-01",
+  "release_date": "2026-09-02",
   "repository_status": "private",
   "canonical_source": "thien-skill-document-evidence",
   "license_name": "Tran Ngoc Thien's Skills Commercial Source-Available License 2.0",
@@ -18,8 +19,8 @@
   ],
   "distribution_files": [
     "INSTALLATION.md",
-    "ACCEPTANCE-REPORT-v1.2.0.md",
-    "LEGAL-REVIEW-v1.2.0.md"
+    "ACCEPTANCE-REPORT-v1.2.1.md",
+    "LEGAL-REVIEW-v1.2.1.md"
   ],
   "brand_assets": {
     "icon": "assets/brand/icon-small.png",
@@ -30,14 +31,14 @@
     "claude": "platform/claude/plugin.json"
   },
   "artifact_names": {
-    "openai": "Thien-Skill-Document-Evidence-OpenAI-v1.2.0.zip",
-    "claude": "Thien-Skill-Document-Evidence-Claude-v1.2.0.zip",
-    "universal": "Thien-Skill-Document-Evidence-Universal-v1.2.0.zip"
+    "openai": "Thien-Skill-Document-Evidence-OpenAI-v1.2.1.zip",
+    "claude": "Thien-Skill-Document-Evidence-Claude-v1.2.1.zip",
+    "universal": "Thien-Skill-Document-Evidence-Universal-v1.2.1.zip"
   },
   "preserved_dist_versions": [
     "1.0.0",
-    "1.1.0-rc.2",
-    "1.1.0"
+    "1.1.0",
+    "1.2.0"
   ],
   "max_member_bytes": 16777216,
   "max_archive_bytes": 50000000,

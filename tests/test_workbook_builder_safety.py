@@ -276,7 +276,7 @@ class WorkbookBuilderSafetyTests(unittest.TestCase):
             package_data = json.loads(PACKAGE_FIXTURE.read_text(encoding="utf-8"))
             package_data["run_manifest"]["tool_versions"][
                 "thien-skill-document-evidence"
-            ] = "1.2.0"
+            ] = "1.2.1"
             package = temporary / "release-aware-package.json"
             package.write_text(
                 json.dumps(package_data, ensure_ascii=False, indent=2, sort_keys=True) + "\n",

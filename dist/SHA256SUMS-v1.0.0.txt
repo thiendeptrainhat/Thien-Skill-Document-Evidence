@@ -1,5 +1,0 @@
-8804602e7b6c3e7678749e4bd2f06f7eb50450c5d7eaf5595a367aacca14d627  PARITY-v1.0.0.json
-38243aa58c953a3092ac4ce611f6d7315bceaa4dc686131b4e5704de7a83db5c  claude/Thien-Skill-Document-Evidence-Claude-v1.0.0.zip
-cb8aa92c2e47d81ef1e75f8cbe0c530e343b6746829dd18a441751de675e2f40  openai/Thien-Skill-Document-Evidence-OpenAI-v1.0.0.zip
-a7e66d827e06d0e875390bbd5d97df0b4e309632edaa4e3164a947626c9373ad  release-manifest-v1.0.0.json
-79ca2f44e11577852363d2ab3f83fe42c0e5f0b641aa4c8a9596ab7525c58624  universal/Thien-Skill-Document-Evidence-Universal-v1.0.0.zip

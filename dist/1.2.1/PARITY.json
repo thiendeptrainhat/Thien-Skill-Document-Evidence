@@ -8,11 +8,11 @@
     "agents/openai.yaml"
   ],
   "core_file_count": 87,
-  "core_sha256": "226878464dd7c2a39a173511b342f67c2f62babc5047f992d88fe52bd2eed580",
+  "core_sha256": "215133a1fda548c0b7574137a14bb6ebe5f60bcace46bf1c5f3bf8ebfee764dc",
   "distribution_files": [
     "INSTALLATION.md",
-    "ACCEPTANCE-REPORT-v1.1.0-rc.2.md",
-    "LEGAL-REVIEW-v1.1.0-rc.2.md"
+    "ACCEPTANCE-REPORT-v1.2.1.md",
+    "LEGAL-REVIEW-v1.2.1.md"
   ],
   "ignored_generated_files": [
     "PACKAGE-MANIFEST.json"
@@ -20,5 +20,5 @@
   "schema_version": 1,
   "skill_id": "thien-skill-document-evidence",
   "status": "PASS",
-  "version": "1.1.0-rc.2"
+  "version": "1.2.1"
 }

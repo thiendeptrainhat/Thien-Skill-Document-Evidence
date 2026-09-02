@@ -1,65 +1,65 @@
-"""Reperform the existing packaged oracles for the final 1.1.0 identity.
+"""Reperform package-native oracles for the frozen final 1.1.0 identity.
 
-RC2's test module and its pinned bytes remain unchanged. This subclass uses
-the new release checksum inventory and separately limits core differences to
-the six intended release-metadata files. No workflow assertions are relaxed.
+The retired RC2 artifact is no longer required at runtime. The 1.1.0 release
+remains protected by literal checksums, canonical/core digests, and the full
+workflow harness.
 """
 
 from __future__ import annotations
 
-import hashlib
+from pathlib import PurePosixPath
 from unittest import mock
 
-from tests import test_phase3_packaged_workflows as frozen
+from tests import package_workflow_harness as frozen
 
 
-RC2_HASHES = dict(frozen.FROZEN_SHA256)
-RC2_ARCHIVES = dict(frozen.ARCHIVE_NAMES)
-RC2_DISTRIBUTION = set(frozen.DISTRIBUTION_FILES)
+RC2_DISTRIBUTION = {
+    "INSTALLATION.md",
+    "ACCEPTANCE-REPORT-v1.1.0-rc.2.md",
+    "LEGAL-REVIEW-v1.1.0-rc.2.md",
+}
 FINAL_DISTRIBUTION = {
     "INSTALLATION.md", "ACCEPTANCE-REPORT-v1.1.0.md", "LEGAL-REVIEW-v1.1.0.md",
 }
 FROZEN_110_ARCHIVES = {
-    "openai": "openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip",
-    "claude": "claude/Thien-Skill-Document-Evidence-Claude-v1.1.0.zip",
-    "universal": "universal/Thien-Skill-Document-Evidence-Universal-v1.1.0.zip",
+    "openai": "1.1.0/Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip",
+    "claude": "1.1.0/Thien-Skill-Document-Evidence-Claude-v1.1.0.zip",
+    "universal": "1.1.0/Thien-Skill-Document-Evidence-Universal-v1.1.0.zip",
 }
 FROZEN_110_SHA256 = {
-    "PARITY-v1.1.0.json":
+    "1.1.0/PARITY.json":
         "fb9624043201110d8e5ba3b3794ec1485fb95f01be4887941954ac6885b350e7",
-    "claude/Thien-Skill-Document-Evidence-Claude-v1.1.0.zip":
+    "1.1.0/Thien-Skill-Document-Evidence-Claude-v1.1.0.zip":
         "eba9cba922f72bc4205b046d0ced096874ab429268fef2c0cb45e4e863c13261",
-    "openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip":
+    "1.1.0/Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip":
         "6d9033446f2b3e53d208dba11fc09f6ba90892fc4f3ce01a9b5155def23bf319",
-    "release-manifest-v1.1.0.json":
-        "98524821dd9cf2b85e53b4b97c3a6845fd60d1d69c42bf843be2de82b2c20ae7",
-    "universal/Thien-Skill-Document-Evidence-Universal-v1.1.0.zip":
+    "1.1.0/release-manifest.json":
+        "6c71cd4d41ca6661ddeb915870d2e983e40586a16f16900c8d14941ae5d722f2",
+    "1.1.0/Thien-Skill-Document-Evidence-Universal-v1.1.0.zip":
         "9af2c542a487484d0f26b090b9061f80836d386eb885ef1eb4946d95619b9aaa",
 }
-METADATA_CHANGES = {
-    "VERSION", "registry/skill-registry-entry.yaml", "LICENSE-APPLICATION.md",
-    "NOTICE", "THIRD-PARTY-NOTICES.md", "assets/brand/PROVENANCE.md",
-}
-
-
 class FinalReleaseWorkflowTests(frozen.Phase3PackagedWorkflowTests):
     @classmethod
     def setUpClass(cls) -> None:
         archives = dict(FROZEN_110_ARCHIVES)
         expected_names = {
-            *archives.values(), "PARITY-v1.1.0.json", "release-manifest-v1.1.0.json",
+            *(PurePosixPath(path).name for path in archives.values()),
+            "PARITY.json", "release-manifest.json",
         }
         inventory = {}
-        for line in (frozen.DIST / "SHA256SUMS-v1.1.0.txt").read_text().splitlines():
+        for line in (frozen.DIST / "1.1.0/SHA256SUMS").read_text().splitlines():
             digest, name = line.split("  ", 1)
             if name in inventory:
                 raise AssertionError(f"Duplicate checksum entry: {name}")
             inventory[name] = digest
         if set(inventory) != expected_names:
             raise AssertionError("Final checksum inventory has unexpected/missing entries")
-        if inventory != FROZEN_110_SHA256:
+        if inventory != {
+            PurePosixPath(path).name: digest
+            for path, digest in FROZEN_110_SHA256.items()
+        }:
             raise AssertionError("Frozen 1.1.0 checksum inventory changed")
-        parity = frozen.read_json(frozen.DIST / "PARITY-v1.1.0.json")
+        parity = frozen.read_json(frozen.DIST / "1.1.0/PARITY.json")
         patcher = mock.patch.multiple(
             frozen, RELEASE="1.1.0", CORE_SHA256=parity["core_sha256"],
             FROZEN_SHA256=dict(FROZEN_110_SHA256), ARCHIVE_NAMES=archives,
@@ -74,7 +74,7 @@ class FinalReleaseWorkflowTests(frozen.Phase3PackagedWorkflowTests):
     def test_frozen_hashes_embedded_manifests_and_exact_core_parity(self) -> None:
         # The inherited version of this identity check intentionally names
         # RC2 report files literally. Keep its checks but select final paths.
-        release = frozen.read_json(frozen.DIST / "release-manifest-v1.1.0.json")
+        release = frozen.read_json(frozen.DIST / "1.1.0/release-manifest.json")
         self.assertEqual(release["version"], "1.1.0")
         cores = {}
         for platform, package in self.packages.items():
@@ -118,36 +118,16 @@ class FinalReleaseWorkflowTests(frozen.Phase3PackagedWorkflowTests):
                 for filename in RC2_DISTRIBUTION - FINAL_DISTRIBUTION:
                     self.assertFalse((package.root / filename).exists())
 
-    def test_final_core_only_changes_release_metadata(self) -> None:
-        for platform, package in self.packages.items():
-            with self.subTest(platform=platform):
-                old_relative = RC2_ARCHIVES[platform]
-                old_files = frozen.safe_archive_payload(
-                    frozen.DIST / old_relative, RC2_HASHES[old_relative],
-                )
-                prefix = "" if platform == "universal" else f"skills/{frozen.SKILL_ID}/"
-                old_core = {
-                    path[len(prefix):]: payload
-                    for path, payload in old_files.items()
-                    if path.startswith(prefix)
-                    and not path[len(prefix):].startswith("agents/")
-                    and path[len(prefix):] != "PACKAGE-MANIFEST.json"
-                    and path[len(prefix):] not in RC2_DISTRIBUTION
-                }
-                current_core = {
-                    path: (package.skill / path).read_bytes()
-                    for path in frozen.tree_hashes(package.skill)
-                    if not path.startswith("agents/")
-                    and path != "PACKAGE-MANIFEST.json"
-                    and path not in FINAL_DISTRIBUTION
-                }
-                self.assertEqual(set(current_core), set(old_core))
-                changed = {path for path in current_core if current_core[path] != old_core[path]}
-                self.assertEqual(changed, METADATA_CHANGES)
-                self.assertEqual(len(current_core), 87)
-                for path in current_core.keys() - METADATA_CHANGES:
-                    self.assertEqual(
-                        hashlib.sha256(current_core[path]).hexdigest(),
-                        hashlib.sha256(old_core[path]).hexdigest(),
-                        path,
-                    )
+    def test_frozen_110_manifest_pins_canonical_identity(self) -> None:
+        release = frozen.read_json(frozen.DIST / "1.1.0/release-manifest.json")
+        parity = frozen.read_json(frozen.DIST / "1.1.0/PARITY.json")
+        self.assertEqual(release["canonical_file_count"], 88)
+        self.assertEqual(
+            release["canonical_sha256"],
+            "0dcf6c12e4e880fa54f3b8a67d99e6048796ac472d8eb2fece2274cd70fde88b",
+        )
+        self.assertEqual(parity["core_file_count"], 87)
+        self.assertEqual(
+            parity["core_sha256"],
+            "7c67b20eba5c884289449f363b6c2b49ca0f05422e516a7c2cec20ce792c7c9c",
+        )

@@ -87,7 +87,7 @@ class PackagingTestCase(unittest.TestCase):
             )
         (self.skill / "agents/openai.yaml").write_text(
             "interface:\n"
-            "  display_name: \"Thien Skill — Document Intelligence, Evidence & Reconciliation\"\n"
+            "  display_name: \"Thiện's Skill — Document Intelligence & Reconciliation\"\n"
             "  short_description: \"Extract and reconcile traceable document evidence\"\n"
             f"  default_prompt: \"Use ${self.config['skill_id']} to build an evidence register.\"\n"
             "  icon_small: \"./assets/brand/icon-small.png\"\n"
@@ -117,7 +117,7 @@ class PackagingTestCase(unittest.TestCase):
         return str(self.config["skill_id"])
 
     def artifact_relative(self, platform: str) -> str:
-        return f"{platform}/{self.config['artifact_names'][platform]}"
+        return f"{self.config['version']}/{self.config['artifact_names'][platform]}"
 
     @staticmethod
     def sha256(data: bytes) -> str:
@@ -143,31 +143,32 @@ class PackagingTestCase(unittest.TestCase):
         self.assertEqual(config["skill_id"], "thien-skill-document-evidence")
         self.assertEqual(
             config["display_name"],
-            "Thien Skill — Document Intelligence, Evidence & Reconciliation",
+            "Thiện's Skill — Document Intelligence & Reconciliation",
         )
-        self.assertEqual(config["version"], "1.2.0")
+        self.assertEqual(config["version"], "1.2.1")
+        self.assertEqual(config["dist_layout"], "version-directory-v1")
         self.assertEqual(config["status"], "Testing")
-        self.assertEqual(config["release_date"], "2026-09-01")
+        self.assertEqual(config["release_date"], "2026-09-02")
         self.assertEqual(config["repository_status"], "private")
         self.assertNotIn("repository", config)
         self.assertEqual(
             config["distribution_files"],
             [
                 "INSTALLATION.md",
-                "ACCEPTANCE-REPORT-v1.2.0.md",
-                "LEGAL-REVIEW-v1.2.0.md",
+                "ACCEPTANCE-REPORT-v1.2.1.md",
+                "LEGAL-REVIEW-v1.2.1.md",
             ],
         )
         self.assertEqual(
             config["preserved_dist_versions"],
-            ["1.0.0", "1.1.0-rc.2", "1.1.0"],
+            ["1.0.0", "1.1.0", "1.2.0"],
         )
         self.assertEqual(
             config["artifact_names"],
             {
-                "openai": "Thien-Skill-Document-Evidence-OpenAI-v1.2.0.zip",
-                "claude": "Thien-Skill-Document-Evidence-Claude-v1.2.0.zip",
-                "universal": "Thien-Skill-Document-Evidence-Universal-v1.2.0.zip",
+                "openai": "Thien-Skill-Document-Evidence-OpenAI-v1.2.1.zip",
+                "claude": "Thien-Skill-Document-Evidence-Claude-v1.2.1.zip",
+                "universal": "Thien-Skill-Document-Evidence-Universal-v1.2.1.zip",
             },
         )
         for platform in ("openai", "claude"):
@@ -223,9 +224,10 @@ class PackagingTestCase(unittest.TestCase):
     def test_release_manifests_checksums_and_exact_check_mode(self) -> None:
         outputs = BUILD.build_release(self.project)
         version = self.config["version"]
-        manifest_name = f"release-manifest-v{version}.json"
-        parity_name = f"PARITY-v{version}.json"
-        checksum_name = f"SHA256SUMS-v{version}.txt"
+        release_prefix = f"{version}/"
+        manifest_name = f"{release_prefix}release-manifest.json"
+        parity_name = f"{release_prefix}PARITY.json"
+        checksum_name = f"{release_prefix}SHA256SUMS"
         expected = {
             *(self.artifact_relative(platform) for platform in BUILD.PLATFORMS),
             manifest_name,
@@ -238,6 +240,7 @@ class PackagingTestCase(unittest.TestCase):
         manifest = json.loads(outputs[manifest_name])
         parity = json.loads(outputs[parity_name])
         self.assertEqual(manifest["status"], "Testing")
+        self.assertEqual(manifest["artifact_directory"], f"dist/{version}")
         self.assertEqual(manifest["repository_status"], "private")
         self.assertNotIn("repository", manifest)
         self.assertEqual(manifest["parity"]["status"], "PASS")
@@ -247,7 +250,10 @@ class PackagingTestCase(unittest.TestCase):
         checksum_text = outputs[checksum_name].decode("utf-8")
         for relative, data in outputs.items():
             if relative != checksum_name:
-                self.assertIn(f"{self.sha256(data)}  {relative}\n", checksum_text)
+                self.assertIn(
+                    f"{self.sha256(data)}  {PurePosixPath(relative).name}\n",
+                    checksum_text,
+                )
 
         unexpected = self.project / "dist/unmanaged.txt"
         unexpected.write_text("not generated\n", encoding="utf-8")
@@ -258,7 +264,10 @@ class PackagingTestCase(unittest.TestCase):
 
     def test_repository_hygiene_gate_rejects_finder_metadata_without_deleting_it(self) -> None:
         BUILD.build_release(self.project)
-        metadata_paths = [self.project / "dist/.DS_Store", self.project / "dist/openai/.DS_Store"]
+        metadata_paths = [
+            self.project / "dist/.DS_Store",
+            self.project / f"dist/{self.config['version']}/.DS_Store",
+        ]
         for path in metadata_paths:
             path.write_bytes(b"synthetic Finder metadata")
         with self.assertRaisesRegex(BUILD.PackagingError, "metadata/cache path"):

@@ -1,0 +1,137 @@
+{
+  "schema_version": "1.0.0",
+  "migration_date": "2026-09-02",
+  "release": "1.2.1",
+  "status": "PASS",
+  "baseline": {
+    "git_commit": "0ecc8619d2c0b38945fbac0e33f61a71b7230d80",
+    "git_tag": "v1.2.0",
+    "layout": "platform-split-v1"
+  },
+  "target": {
+    "layout": "version-directory-v1",
+    "pattern_source": "Thien-Risk-Process-Control",
+    "artifact_directory": "dist/<version>",
+    "files_per_release": [
+      "Thien-Skill-Document-Evidence-OpenAI-v<version>.zip",
+      "Thien-Skill-Document-Evidence-Claude-v<version>.zip",
+      "Thien-Skill-Document-Evidence-Universal-v<version>.zip",
+      "SHA256SUMS",
+      "release-manifest.json",
+      "PARITY.json"
+    ]
+  },
+  "path_mapping": {
+    "versions": [
+      "1.0.0",
+      "1.1.0",
+      "1.2.0",
+      "1.2.1"
+    ],
+    "artifacts": "dist/<platform>/Thien-Skill-Document-Evidence-<Platform>-v<version>.zip -> dist/<version>/Thien-Skill-Document-Evidence-<Platform>-v<version>.zip",
+    "checksums": "dist/SHA256SUMS-v<version>.txt -> dist/<version>/SHA256SUMS",
+    "manifest": "dist/release-manifest-v<version>.json -> dist/<version>/release-manifest.json",
+    "parity": "dist/PARITY-v<version>.json -> dist/<version>/PARITY.json"
+  },
+  "controls": {
+    "historical_zip_bytes_immutable": true,
+    "historical_git_tags_rewritten": false,
+    "historical_manifest_change_scope": "Artifact directory, artifact paths and parity path only",
+    "historical_checksum_change_scope": "Local filenames and normalized historical manifest hash only",
+    "current_candidate_rebuilt": true,
+    "duplicate_artifact_copies_retained": false,
+    "root_level_dist_files_retained": false,
+    "platform_directories_retained": false
+  },
+  "historical_zip_integrity": [
+    {
+      "version": "1.0.0",
+      "platform": "openai",
+      "old_path": "dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.0.0.zip",
+      "new_path": "dist/1.0.0/Thien-Skill-Document-Evidence-OpenAI-v1.0.0.zip",
+      "sha256": "cb8aa92c2e47d81ef1e75f8cbe0c530e343b6746829dd18a441751de675e2f40"
+    },
+    {
+      "version": "1.0.0",
+      "platform": "claude",
+      "old_path": "dist/claude/Thien-Skill-Document-Evidence-Claude-v1.0.0.zip",
+      "new_path": "dist/1.0.0/Thien-Skill-Document-Evidence-Claude-v1.0.0.zip",
+      "sha256": "38243aa58c953a3092ac4ce611f6d7315bceaa4dc686131b4e5704de7a83db5c"
+    },
+    {
+      "version": "1.0.0",
+      "platform": "universal",
+      "old_path": "dist/universal/Thien-Skill-Document-Evidence-Universal-v1.0.0.zip",
+      "new_path": "dist/1.0.0/Thien-Skill-Document-Evidence-Universal-v1.0.0.zip",
+      "sha256": "79ca2f44e11577852363d2ab3f83fe42c0e5f0b641aa4c8a9596ab7525c58624"
+    },
+    {
+      "version": "1.1.0",
+      "platform": "openai",
+      "old_path": "dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip",
+      "new_path": "dist/1.1.0/Thien-Skill-Document-Evidence-OpenAI-v1.1.0.zip",
+      "sha256": "6d9033446f2b3e53d208dba11fc09f6ba90892fc4f3ce01a9b5155def23bf319"
+    },
+    {
+      "version": "1.1.0",
+      "platform": "claude",
+      "old_path": "dist/claude/Thien-Skill-Document-Evidence-Claude-v1.1.0.zip",
+      "new_path": "dist/1.1.0/Thien-Skill-Document-Evidence-Claude-v1.1.0.zip",
+      "sha256": "eba9cba922f72bc4205b046d0ced096874ab429268fef2c0cb45e4e863c13261"
+    },
+    {
+      "version": "1.1.0",
+      "platform": "universal",
+      "old_path": "dist/universal/Thien-Skill-Document-Evidence-Universal-v1.1.0.zip",
+      "new_path": "dist/1.1.0/Thien-Skill-Document-Evidence-Universal-v1.1.0.zip",
+      "sha256": "9af2c542a487484d0f26b090b9061f80836d386eb885ef1eb4946d95619b9aaa"
+    },
+    {
+      "version": "1.2.0",
+      "platform": "openai",
+      "old_path": "dist/openai/Thien-Skill-Document-Evidence-OpenAI-v1.2.0.zip",
+      "new_path": "dist/1.2.0/Thien-Skill-Document-Evidence-OpenAI-v1.2.0.zip",
+      "sha256": "7ec6d8bca0963d62dab14e10fd89a973023fe7e19678272f79839e0418bcb3ad"
+    },
+    {
+      "version": "1.2.0",
+      "platform": "claude",
+      "old_path": "dist/claude/Thien-Skill-Document-Evidence-Claude-v1.2.0.zip",
+      "new_path": "dist/1.2.0/Thien-Skill-Document-Evidence-Claude-v1.2.0.zip",
+      "sha256": "a1ce64711304abf4238428ab9ff1afbda6c0f1a06ddff53b034274d5e540cfe6"
+    },
+    {
+      "version": "1.2.0",
+      "platform": "universal",
+      "old_path": "dist/universal/Thien-Skill-Document-Evidence-Universal-v1.2.0.zip",
+      "new_path": "dist/1.2.0/Thien-Skill-Document-Evidence-Universal-v1.2.0.zip",
+      "sha256": "d544effcbc375ac22ccaeee6559f950790536582a9cf8cee4ce2f708c4552088"
+    }
+  ],
+  "historical_metadata_reindex": [
+    {
+      "version": "1.0.0",
+      "parity_sha256_unchanged": "8804602e7b6c3e7678749e4bd2f06f7eb50450c5d7eaf5595a367aacca14d627",
+      "manifest_sha256_before": "a7e66d827e06d0e875390bbd5d97df0b4e309632edaa4e3164a947626c9373ad",
+      "manifest_sha256_after": "cd16d7239366ee45398e8ecdad8698eac3ac24a3d4557bd263a50cfadf1fb5b6",
+      "checksum_sha256_before": "e5618beb2d9d362e8f7d976da36a40effedbf1f0de437a609eebe242f4ff000b",
+      "checksum_sha256_after": "72225121b0c656292d5f741d7e76ea14f28abf4eea2a3fef5d637bab77dcae27"
+    },
+    {
+      "version": "1.1.0",
+      "parity_sha256_unchanged": "fb9624043201110d8e5ba3b3794ec1485fb95f01be4887941954ac6885b350e7",
+      "manifest_sha256_before": "98524821dd9cf2b85e53b4b97c3a6845fd60d1d69c42bf843be2de82b2c20ae7",
+      "manifest_sha256_after": "6c71cd4d41ca6661ddeb915870d2e983e40586a16f16900c8d14941ae5d722f2",
+      "checksum_sha256_before": "37e32465977296c40997023f00086ea7e4ba56aa09093174af5f3952a8c6a95b",
+      "checksum_sha256_after": "20d8cbde5d63c45af9d6ed33ad3210323be003e08643fec9ae33412abcda5edb"
+    },
+    {
+      "version": "1.2.0",
+      "parity_sha256_unchanged": "3e9062661cdddad43be26efc528844fc89a1e3063f5b6f78b7c7432240c4608c",
+      "manifest_sha256_before": "6ddc9ab1175292c4bfab0be6a8f161f5bf5bf68aa7506b988beed9aa21d5356f",
+      "manifest_sha256_after": "aa67863065a808522986b12598f2104c354646b2d96a9b27233825126604bc81",
+      "checksum_sha256_before": "da6897a68c0c4eac71f0b9edf6e1b0680592515b1c371eab2238bce65a1984fc",
+      "checksum_sha256_after": "67f5a813eee98bd7a178ff713111c380541abb5a449272e472aa9713db556689"
+    }
+  ]
+}

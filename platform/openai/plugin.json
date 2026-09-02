@@ -1,6 +1,6 @@
 {
   "name": "thien-skill-document-evidence",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Convert, structure, prepare for RAG, reconcile, and package document evidence with traceable provenance and controlled human review.",
   "author": {
     "name": "Tran Ngoc Thien",
@@ -18,7 +18,7 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Thien Skill — Document Intelligence, Evidence & Reconciliation",
+    "displayName": "Thiện's Skill — Document Intelligence & Reconciliation",
     "shortDescription": "Convert and reconcile traceable document evidence",
     "longDescription": "A traceable document-intelligence skill for conversion, RAG source preparation, extraction, page-level evidence, extensible reconciliation, exception handling, and controlled review.",
     "developerName": "Tran Ngoc Thien",

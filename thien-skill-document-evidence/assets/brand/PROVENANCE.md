@@ -63,7 +63,7 @@ The source image was processed under these rules:
 
 ### 3. Inventory and hashes verified on 23 August 2026
 
-The single bilingual table above is controlling for filenames, dimensions, formats, transformations, and SHA-256 values. It covers the unchanged `1100`, `512`, `400`, `128`, and `64` pixel assets distributed with versions `1.0.0`, `1.1.0-rc.1`, `1.1.0-rc.2`, `1.1.0`, and `1.2.0`.
+The single bilingual table above is controlling for filenames, dimensions, formats, transformations, and SHA-256 values. It covers the unchanged `1100`, `512`, `400`, `128`, and `64` pixel assets distributed with versions `1.0.0`, `1.1.0-rc.1`, `1.1.0-rc.2`, `1.1.0`, `1.2.0`, and `1.2.1`.
 
 ### 4. Brand-use restrictions
 

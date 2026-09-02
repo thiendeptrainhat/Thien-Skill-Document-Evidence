@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "thien-skill-document-evidence",
-  "displayName": "Thien Skill — Document Intelligence, Evidence & Reconciliation",
-  "version": "1.2.0",
+  "displayName": "Thiện's Skill — Document Intelligence & Reconciliation",
+  "version": "1.2.1",
   "description": "Convert, structure, prepare for RAG, reconcile, and package document evidence with traceable provenance and controlled human review.",
   "author": {
     "name": "Tran Ngoc Thien",

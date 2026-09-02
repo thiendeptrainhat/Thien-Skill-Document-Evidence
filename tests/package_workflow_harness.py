@@ -1,4 +1,4 @@
-"""Offline acceptance of the frozen RC2 archives, not live-platform acceptance.
+"""Reusable package-workflow harness with frozen RC2 defaults.
 
 Every executable is taken from a hash-pinned ZIP and run by absolute path in
 an isolated Python subprocess, with an empty working directory outside the

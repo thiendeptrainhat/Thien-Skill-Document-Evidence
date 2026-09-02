@@ -4,7 +4,7 @@ description: Kiểm kê, phân loại, trích xuất, chuyển đổi và đối
 license: LicenseRef-Tran-Ngoc-Thien-Skills-2.0; xem LICENSE.md
 ---
 
-# Thien Skill — Document Intelligence, Evidence & Reconciliation
+# Thiện's Skill — Document Intelligence & Reconciliation
 
 ## Sứ mệnh
 

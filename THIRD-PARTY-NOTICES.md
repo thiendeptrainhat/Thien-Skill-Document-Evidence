@@ -4,9 +4,9 @@
 
 ## I. Bản tiếng Việt — ưu tiên áp dụng
 
-### 1. Phạm vi kiểm kê của phiên bản 1.2.0
+### 1. Phạm vi kiểm kê của phiên bản 1.2.1
 
-Theo kiểm kê canonical skill tại ngày `1 September 2026`, phiên bản `1.2.0` không vendor hoặc đóng gói thư viện/mã nguồn thực thi của bên thứ ba, binary, OCR model, AI model, dataset, font, credential, cloud connector hoặc bản sao tài liệu chính thức. JSON Schema, tài liệu phương pháp và metadata được phát hành trong canonical skill là thành phần của Skill chỉ trong phạm vi quyền thực tế của Chủ sở hữu.
+Theo kiểm kê canonical skill tại ngày `2 September 2026`, phiên bản `1.2.1` không vendor hoặc đóng gói thư viện/mã nguồn thực thi của bên thứ ba, binary, OCR model, AI model, dataset, font, credential, cloud connector hoặc bản sao tài liệu chính thức. JSON Schema, tài liệu phương pháp và metadata được phát hành trong canonical skill là thành phần của Skill chỉ trong phạm vi quyền thực tế của Chủ sở hữu.
 
 Runtime, thư viện, model, API, ứng dụng, hệ điều hành, dịch vụ cloud hoặc plugin host có thể có sẵn trong môi trường người sử dụng không được gộp vào Skill chỉ vì Skill có thể tương tác với chúng. Mỗi thành phần đó tiếp tục chịu điều khoản và giấy phép riêng của nhà cung cấp. Skill không tự tải, tự cài hoặc tái cấp phép chúng.
 
@@ -46,9 +46,9 @@ Nếu một bản phát hành tương lai bổ sung thành phần bên thứ ba,
 
 ## II. English version — Vietnamese version prevails
 
-### 1. Version 1.2.0 inventory scope
+### 1. Version 1.2.1 inventory scope
 
-Based on the canonical-Skill inventory as of `1 September 2026`, version `1.2.0` does not vendor or package third-party executable source libraries, binaries, OCR models, AI models, datasets, fonts, credentials, cloud connectors, or copies of official documents. JSON Schemas, methodology documents, and metadata released in the canonical Skill are Skill components only to the extent of the Owner's actual rights.
+Based on the canonical-Skill inventory as of `2 September 2026`, version `1.2.1` does not vendor or package third-party executable source libraries, binaries, OCR models, AI models, datasets, fonts, credentials, cloud connectors, or copies of official documents. JSON Schemas, methodology documents, and metadata released in the canonical Skill are Skill components only to the extent of the Owner's actual rights.
 
 A runtime, library, model, API, application, operating system, cloud service, or host plugin available in a user's environment is not bundled merely because the Skill can interact with it. Each remains governed by its provider's separate terms and license. The Skill does not automatically download, install, or relicense it.
 

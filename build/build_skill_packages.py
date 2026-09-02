@@ -131,9 +131,11 @@ def load_config(project_root: Path = ROOT) -> dict[str, object]:
         raise PackagingError("skill_id must be at most 64 lowercase letters, digits, and hyphens")
     for key in (
         "display_name", "artifact_basename", "version", "status", "release_date",
-        "repository_status", "canonical_source", "license_name",
+        "repository_status", "canonical_source", "license_name", "dist_layout",
     ):
         _require_string(config, key)
+    if config["dist_layout"] != "version-directory-v1":
+        raise PackagingError("dist_layout must be version-directory-v1")
     if config["status"] != "Testing":
         raise PackagingError("pre-production releases must retain status Testing")
     if config["repository_status"] != "private":
@@ -744,14 +746,14 @@ def _release_paths_for_version(
 ) -> dict[str, str]:
     basename = str(config["artifact_basename"])
     paths = {
-        platform: f"{platform}/{basename}-{PLATFORM_LABELS[platform]}-v{version}.zip"
+        platform: f"{version}/{basename}-{PLATFORM_LABELS[platform]}-v{version}.zip"
         for platform in PLATFORMS
     }
     paths.update(
         {
-            "parity": f"PARITY-v{version}.json",
-            "manifest": f"release-manifest-v{version}.json",
-            "checksums": f"SHA256SUMS-v{version}.txt",
+            "parity": f"{version}/PARITY.json",
+            "manifest": f"{version}/release-manifest.json",
+            "checksums": f"{version}/SHA256SUMS",
         }
     )
     return paths
@@ -766,6 +768,7 @@ def _validate_preserved_dist(
     for version in config.get("preserved_dist_versions", []):
         paths = _release_paths_for_version(config, str(version))
         expected = set(paths.values())
+        release_root = dist / str(version)
         present = {relative for relative in expected if (dist / relative).is_file()}
         if not present:
             continue
@@ -791,11 +794,18 @@ def _validate_preserved_dist(
             if relative in declarations:
                 raise PackagingError(f"duplicate preserved checksum path: {relative}")
             declarations[relative] = match.group(1)
-        checksum_targets = expected - {paths["checksums"]}
+        checksum_targets = {
+            PurePosixPath(relative).name
+            for relative in expected - {paths["checksums"]}
+        }
         if set(declarations) != checksum_targets:
             raise PackagingError(f"preserved checksum inventory mismatch for v{version}")
         for relative, declared in declarations.items():
-            actual = sha256_bytes((dist / relative).read_bytes())
+            if len(PurePosixPath(relative).parts) != 1:
+                raise PackagingError(
+                    f"preserved checksum path must be local to dist/{version}: {relative}"
+                )
+            actual = sha256_bytes((release_root / relative).read_bytes())
             if actual != declared:
                 raise PackagingError(f"preserved release checksum mismatch: {relative}")
 
@@ -808,6 +818,16 @@ def _validate_preserved_dist(
             raise PackagingError(f"preserved release manifest version mismatch for v{version}")
         if not isinstance(parity, dict) or parity.get("version") != version:
             raise PackagingError(f"preserved parity version mismatch for v{version}")
+        if release_manifest.get("artifact_directory") != f"dist/{version}":
+            raise PackagingError(f"preserved artifact directory mismatch for v{version}")
+        historical_artifacts = release_manifest.get("artifacts")
+        if not isinstance(historical_artifacts, list) or {
+            item.get("path") for item in historical_artifacts if isinstance(item, dict)
+        } != {PurePosixPath(paths[platform]).name for platform in PLATFORMS}:
+            raise PackagingError(f"preserved artifact paths mismatch for v{version}")
+        historical_parity = release_manifest.get("parity")
+        if not isinstance(historical_parity, dict) or historical_parity.get("path") != "PARITY.json":
+            raise PackagingError(f"preserved parity path mismatch for v{version}")
         historical_release_date = release_manifest.get("release_date")
         if not isinstance(historical_release_date, str):
             raise PackagingError(f"preserved release date is missing for v{version}")
@@ -866,6 +886,8 @@ def render_release(project_root: Path = ROOT) -> dict[str, bytes]:
     inspected: dict[str, dict[str, object]] = {}
     artifact_names = config["artifact_names"]
     assert isinstance(artifact_names, dict)
+    version = str(config["version"])
+    release_prefix = f"{version}/"
 
     for platform in PLATFORMS:
         package_files = _make_package_files(
@@ -873,13 +895,13 @@ def render_release(project_root: Path = ROOT) -> dict[str, bytes]:
         )
         archive = write_zip_bytes(str(config["skill_id"]), package_files, _zip_time(config))
         inspected[platform] = inspect_archive(archive, config, platform)
-        relative = f"{platform}/{artifact_names[platform]}"
+        relative = f"{release_prefix}{artifact_names[platform]}"
         outputs[relative] = archive
         artifact_entries.append(
             {
                 "platform": platform,
                 "format": inspected[platform]["manifest"]["package_format"],
-                "path": relative,
+                "path": str(artifact_names[platform]),
                 "root_layout": f"{config['skill_id']}/",
                 "sha256": sha256_bytes(archive),
                 "size_bytes": len(archive),
@@ -892,7 +914,8 @@ def render_release(project_root: Path = ROOT) -> dict[str, bytes]:
     if any(tree_sha256(result["core"]) != core_digest for result in inspected.values()):
         raise PackagingError("OpenAI/Claude/Universal core hash divergence")
 
-    parity_name = f"PARITY-v{config['version']}.json"
+    parity_filename = "PARITY.json"
+    parity_name = f"{release_prefix}{parity_filename}"
     outputs[parity_name] = json_bytes(
         {
             "schema_version": 1,
@@ -911,7 +934,8 @@ def render_release(project_root: Path = ROOT) -> dict[str, bytes]:
             "distribution_files": list(config["distribution_files"]),
         }
     )
-    manifest_name = f"release-manifest-v{config['version']}.json"
+    manifest_filename = "release-manifest.json"
+    manifest_name = f"{release_prefix}{manifest_filename}"
     release_manifest: dict[str, object] = {
         "schema_version": 1,
         "skill_id": config["skill_id"],
@@ -921,19 +945,21 @@ def render_release(project_root: Path = ROOT) -> dict[str, bytes]:
         "release_date": config["release_date"],
         "repository_status": config["repository_status"],
         "canonical_source": config["canonical_source"],
+        "artifact_directory": f"dist/{version}",
         "canonical_sha256": canonical_digest,
         "canonical_file_count": len(canonical),
         "license": config["license_name"],
         "artifacts": artifact_entries,
-        "parity": {"status": "PASS", "path": parity_name, "core_sha256": core_digest},
+        "parity": {"status": "PASS", "path": parity_filename, "core_sha256": core_digest},
     }
     if config.get("repository") is not None:
         release_manifest["repository"] = config["repository"]
     outputs[manifest_name] = json_bytes(release_manifest)
     checksums = "".join(
-        f"{sha256_bytes(outputs[relative])}  {relative}\n" for relative in sorted(outputs)
+        f"{sha256_bytes(outputs[relative])}  {PurePosixPath(relative).name}\n"
+        for relative in sorted(outputs)
     ).encode("utf-8")
-    outputs[f"SHA256SUMS-v{config['version']}.txt"] = checksums
+    outputs[f"{release_prefix}SHA256SUMS"] = checksums
     return dict(sorted(outputs.items()))
 
 
